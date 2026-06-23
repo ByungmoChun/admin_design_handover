@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playtoon Admin · 풀 비주얼 시안 — AC 내 정보 (공통 계정 화면)</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --bg:#F5F4F2;--surf:#FFFFFF;--surf-2:#FAFAF9;--line:#E6E4E1;--line-2:#F0EEEC;
+  --ink:#1A1917;--ink-2:#44423E;--ink-3:#6E6B66;--ink-4:#9C9893;
+  --brand:#C7242D;--brand-h:#A22F2C;--brand-a:#7F2523;--brand-wash:#FBEAEA;
+  --lav:#A99DE4;--lav-d:#6E5FB8;--lav-wash:#F1EFFB;--lav-line:#DCD6F4;
+  --danger:#E5484D;--danger-d:#C2363B;--danger-wash:#FDECEC;--danger-line:#F1C9CB;
+  --ok:#2E9E5B;--ok-d:#1F7A43;--ok-wash:#E8F6EE;
+  --warn:#D9870A;--warn-d:#B36C00;--warn-wash:#FCF3E2;
+  --info:#3A6FE0;--info-wash:#EAF0FD;
+  --cp:#3D3A35;--cp-wash:#EDEAE6;--cp-line:#D9D5CF;
+  --r-s:6px;--r:10px;--r-l:14px;--pill:999px;
+  --sh-s:0 1px 2px rgba(26,25,23,.06),0 1px 1px rgba(26,25,23,.04);
+  --sh-m:0 4px 14px rgba(26,25,23,.08),0 1px 3px rgba(26,25,23,.05);
+  --skel-base:#EDECEA;--skel-shine:#F8F7F6;
+  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Segoe UI',Roboto,'Noto Sans KR',sans-serif;
+  --mono:'SFMono-Regular',ui-monospace,'JetBrains Mono','Roboto Mono',Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:#E9E7E3;color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+.num{font-variant-numeric:tabular-nums}
+
+.docbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:18px;padding:11px 22px;background:#161412;color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.4)}
+.docbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.docbar .logo .sq{width:22px;height:22px;border-radius:6px;background:var(--brand);display:grid;place-items:center;font-size:12px;font-weight:900}
+.docbar .v{font-size:11px;font-weight:700;color:#bdb9b3;font-family:var(--mono)}
+.docbar .sp{flex:1}
+.docbar .basis{font-size:11.5px;color:#cfcbc5;display:flex;align-items:center;gap:7px}
+.docbar .basis b{color:#fff}
+.ann-toggle{display:flex;align-items:center;gap:7px;font-size:12px;color:#cfcbc5;cursor:pointer;user-select:none}
+.ann-toggle .sw{width:34px;height:19px;border-radius:var(--pill);background:#4a443f;position:relative;transition:.18s}
+.ann-toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.18s}
+.ann-toggle.on .sw{background:var(--lav)}.ann-toggle.on .sw::after{left:17px}
+
+.stage{max-width:1320px;margin:0 auto;padding:30px 26px 90px}
+.screen-head{display:flex;align-items:flex-end;gap:14px;margin:6px 2px 18px;flex-wrap:wrap}
+.screen-head .id{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;padding:5px 11px;border-radius:var(--r-s);background:var(--ink)}
+.screen-head h1{font-size:23px;font-weight:800;letter-spacing:-.5px}
+.screen-head .role{font-size:11px;font-weight:800;padding:5px 10px;border-radius:var(--pill);background:var(--surf-2);color:var(--ink-2);border:1px solid var(--line)}
+.screen-head p{flex-basis:100%;font-size:13px;color:var(--ink-3);margin-top:2px;max-width:820px}
+
+.frame{position:relative;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-m);overflow:hidden}
+.frame .browser{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--surf-2);border-bottom:1px solid var(--line)}
+.frame .browser .dots{display:flex;gap:6px}.frame .browser .dots i{width:10px;height:10px;border-radius:50%;display:block;background:#d8d4cf}
+.frame .browser .url{flex:1;font-family:var(--mono);font-size:11px;color:var(--ink-3);background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:5px 12px}
+
+.app{display:grid;grid-template-columns:228px 1fr;min-height:680px}
+.side{background:var(--surf);border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column}
+.side .brand{display:flex;align-items:center;gap:9px;padding:6px 8px 16px;font-weight:800;font-size:15px}
+.side .brand .sq{width:26px;height:26px;border-radius:7px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:900}
+.side .grp{font-size:10px;font-weight:800;letter-spacing:.6px;color:var(--ink-4);text-transform:uppercase;padding:14px 10px 6px}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-s);font-size:13px;font-weight:600;color:var(--ink-2);text-decoration:none;margin-bottom:2px}
+.nav a .ic{width:17px;flex:none;opacity:.8;text-align:center}
+.nav a:hover{background:var(--surf-2);color:var(--ink)}
+.nav a.on{background:var(--brand-wash);color:var(--brand-a);font-weight:700}
+.nav a.lav{color:var(--lav-d)}
+.side .me{margin-top:auto;display:flex;align-items:center;gap:9px;padding:10px;border-top:1px solid var(--line-2)}
+.side .me .av{width:30px;height:30px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;background:linear-gradient(135deg,#E0565E,#C7242D)}
+.side .me .nm{font-size:12.5px;font-weight:700;line-height:1.2}.side .me .rl{font-size:10.5px;color:var(--ink-3)}
+
+.main{display:flex;flex-direction:column;background:var(--bg)}
+.topbar{display:flex;align-items:center;gap:14px;padding:13px 26px;background:var(--surf);border-bottom:1px solid var(--line)}
+.topbar .crumb{font-size:12px;color:var(--ink-3);font-weight:600}.topbar .crumb b{color:var(--ink);font-weight:700}
+.topbar .sp{flex:1}
+.topbar .bell{width:34px;height:34px;border-radius:var(--r-s);border:1px solid var(--line);background:#fff;display:grid;place-items:center;position:relative}
+.topbar .bell::after{content:"";position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--brand)}
+.topbar .av{width:34px;height:34px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800;background:linear-gradient(135deg,#E0565E,#C7242D)}
+
+.content{padding:24px 26px 40px;flex:1}
+.phead{margin-bottom:18px}.phead h2{font-size:21px;font-weight:800;letter-spacing:-.4px}.phead .sub{font-size:13px;color:var(--ink-3);margin-top:6px}
+
+.acwrap{display:grid;grid-template-columns:180px 1fr;gap:22px;align-items:start}
+.subnav{position:sticky;top:14px;display:flex;flex-direction:column;gap:2px}
+.subnav a{font-size:12.5px;font-weight:600;color:var(--ink-3);text-decoration:none;padding:8px 11px;border-radius:var(--r-s);border-left:2px solid transparent}
+.subnav a:hover{background:var(--surf);color:var(--ink)}
+.subnav a.on{background:var(--surf);color:var(--ink);font-weight:700;border-left-color:var(--brand)}
+.subnav a.danger.on{border-left-color:var(--danger)}
+
+.sect{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-s);margin-bottom:18px;overflow:hidden}
+.sect .sh{padding:15px 18px;border-bottom:1px solid var(--line-2);display:flex;align-items:center;gap:9px}
+.sect .sh h3{font-size:14.5px;font-weight:800}
+.sect .sh .tag{font-size:10px;font-weight:800;padding:3px 8px;border-radius:var(--pill)}
+.tag.pub{background:var(--info-wash);color:var(--info)}
+.tag.priv{background:var(--surf-2);color:var(--ink-3);border:1px solid var(--line)}
+.tag.cpm{background:var(--cp-wash);color:var(--cp);border:1px solid var(--cp-line)}
+.sect .sh .sp{flex:1}
+.sect .sb{padding:18px}
+
+.avrow{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.avrow .big{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#E0565E,#C7242D);color:#fff;display:grid;place-items:center;font-size:24px;font-weight:800}
+.avrow .actions{display:flex;gap:8px}
+.avrow .hint{font-size:11px;color:var(--ink-4);margin-top:6px}
+
+.field{margin-bottom:15px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:6px}
+.field label .req{color:var(--brand)}
+.field input,.field select,.field textarea{width:100%;border:1.5px solid var(--line);border-radius:var(--r-s);padding:9px 12px;font-family:var(--font);font-size:13px;color:var(--ink);background:#fff}
+.field input:focus{outline:0;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-wash)}
+.field input::placeholder{color:var(--ink-4)}
+.field input.ro{background:var(--surf-2);color:var(--ink-3);border-style:dashed}
+.field .help{font-size:11px;color:var(--ink-4);margin-top:6px;line-height:1.5}
+.field .help b{color:var(--ink-3)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row3{display:grid;grid-template-columns:1.2fr 1.6fr 1fr;gap:14px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-family:var(--font);font-weight:700;font-size:12.5px;padding:9px 16px;border-radius:var(--r-s);border:0;cursor:pointer}
+.btn.brand{background:var(--brand);color:#fff}.btn.brand:hover{background:var(--brand-h)}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink-2)}
+.btn.dgr{background:#fff;border:1px solid var(--danger-line);color:var(--danger-d)}
+.btn.dgr.solid{background:var(--danger);color:#fff;border:0}
+.btn.sm{padding:7px 13px;font-size:12px}
+.sect .sf{padding:13px 18px;border-top:1px solid var(--line-2);background:var(--surf-2);display:flex;align-items:center;gap:10px}
+.sect .sf .sp{flex:1}.sect .sf .note{font-size:11px;color:var(--ink-4)}
+
+.vbadge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--pill)}
+.vbadge.ok{background:var(--ok-wash);color:var(--ok-d)}
+.vbadge.warn{background:var(--warn-wash);color:var(--warn-d)}
+
+/* read-only / CP-managed lock */
+.lockbar{display:flex;align-items:center;gap:9px;background:var(--cp-wash);border:1px solid var(--cp-line);border-radius:var(--r-s);padding:10px 13px;margin-bottom:14px;font-size:12px;color:var(--cp)}
+.lockbar b{font-weight:800}
+
+/* 2FA / toggle */
+.tg{width:42px;height:24px;border-radius:var(--pill);background:#d8d4cf;position:relative;flex:none;cursor:pointer}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.18s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.tg.on{background:var(--ok)}.tg.on::after{left:20px}
+.tg.forced{background:var(--ok);opacity:.55;cursor:not-allowed}.tg.forced::after{left:20px}
+.secrow{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid var(--line-2)}
+.secrow:last-child{border-bottom:0}
+.secrow .ttl{font-size:13px;font-weight:700;color:var(--ink)}
+.secrow .ds{font-size:11.5px;color:var(--ink-4);margin-top:2px}
+.secrow .sp{flex:1}
+
+/* linked accounts */
+.lkrow{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid var(--line-2)}
+.lkrow:last-child{border-bottom:0}
+.lkrow .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:14px;font-weight:800;color:#fff;flex:none}
+.ic.g{background:#fff;color:#4285F4;border:1px solid var(--line)}
+.ic.a{background:#000}.ic.k{background:#FEE500;color:#3C1E1E}.ic.n{background:#03C75A}
+.lkrow .nm{font-size:13px;font-weight:700;color:var(--ink)}.lkrow .ds{font-size:11px;color:var(--ink-4)}
+.lkrow .sp{flex:1}
+
+/* danger zone */
+.danger-zone{border-color:var(--danger-line)}
+.danger-zone .sh{border-bottom-color:var(--danger-line)}
+.danger-zone .sh h3{color:var(--danger-d)}
+.dzrow{display:flex;align-items:center;gap:13px;padding:6px 0}
+.dzrow .ttl{font-size:13px;font-weight:700;color:var(--ink)}.dzrow .ds{font-size:11.5px;color:var(--ink-4);margin-top:2px}.dzrow .sp{flex:1}
+
+/* ANNOTATION */
+.pin{position:absolute;width:24px;height:24px;border-radius:50%;background:var(--lav);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;box-shadow:0 2px 8px rgba(110,95,184,.5);border:2px solid #fff;z-index:30}
+.pin.b{background:var(--brand);box-shadow:0 2px 8px rgba(199,36,45,.5)}.pin.c{background:var(--cp)}.pin.d{background:var(--danger);box-shadow:0 2px 8px rgba(229,72,77,.5)}
+body.no-ann .pin{display:none}
+.spec{margin-top:24px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-s)}
+.spec .sh{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}.spec .sh h3{font-size:14px;font-weight:800}
+.spec .sh .tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--pill);color:var(--ink-2);background:var(--surf-2);border:1px solid var(--line)}
+.anns{padding:6px 0}
+.ann{display:grid;grid-template-columns:30px 1fr;gap:13px;padding:14px 20px;border-bottom:1px solid var(--line-2)}.ann:last-child{border-bottom:0}
+.ann .n{width:24px;height:24px;border-radius:50%;color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;background:var(--ink)}
+.ann .n.b{background:var(--brand)}.ann .n.c{background:var(--cp)}.ann .n.d{background:var(--danger)}
+.ann .body h4{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:5px}
+.ann .body p{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+.ann .body .meta{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.ann .body .meta .m{font-size:10.5px;font-weight:700;font-family:var(--mono);padding:3px 8px;border-radius:var(--r-s);background:var(--surf-2);border:1px solid var(--line);color:var(--ink-2)}
+.ann .body .ex{margin-top:9px;border-radius:var(--r-s);padding:9px 12px;font-size:11.5px;color:var(--ink-2);line-height:1.6;background:var(--surf-2);border:1px solid var(--line)}
+.ann .body .ex b{color:var(--ink)}
+.ann .body .copy{margin-top:8px;font-size:11.5px;color:var(--ink-3)}
+.ann .body .copy code{font-family:var(--mono);font-size:11px;background:var(--surf-2);border:1px solid var(--line);padding:1px 6px;border-radius:4px;color:var(--ink-2)}
+
+/* role branch table */
+.branch{margin-top:24px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-s);overflow:hidden}
+.branch .sh{padding:15px 20px;border-bottom:1px solid var(--line);font-size:14px;font-weight:800}
+table.bt{width:100%;border-collapse:collapse;font-size:12px}
+table.bt th{text-align:left;font-size:10.5px;font-weight:800;color:var(--ink-3);text-transform:uppercase;letter-spacing:.3px;padding:11px 16px;background:var(--surf-2);border-bottom:1px solid var(--line)}
+table.bt td{padding:11px 16px;border-bottom:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+table.bt tr:last-child td{border-bottom:0}
+table.bt td.sec{font-weight:800;color:var(--ink);white-space:nowrap}
+table.bt .y{color:var(--ok-d);font-weight:700}.bt .nn{color:var(--ink-4)}.bt .cpx{color:var(--cp);font-weight:700}
+
+.states{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.st{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-s)}
+.st .sl{font-size:10.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-3);padding:10px 13px;border-bottom:1px solid var(--line-2);background:var(--surf-2)}
+.st .sbody{padding:14px 13px;min-height:82px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.st small{font-size:10.5px;color:var(--ink-4);line-height:1.55}
+
+.resp{margin-top:22px;background:var(--surf);border:1px dashed var(--line);border-radius:var(--r);padding:16px 19px}
+.resp h4{font-size:12.5px;font-weight:800;margin-bottom:9px}
+.resp ul{list-style:none;display:grid;gap:7px}.resp li{font-size:12px;color:var(--ink-2);display:flex;gap:9px}.resp li b{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:108px}
+
+.foot{max-width:1320px;margin:40px auto 0;padding:22px 26px 0;border-top:1px solid var(--line);color:var(--ink-3);font-size:11.5px;line-height:1.8}.foot b{color:var(--ink-2)}
+
+@media(max-width:1080px){.app{grid-template-columns:1fr}.side{display:none}.acwrap{grid-template-columns:1fr}.subnav{position:static;flex-direction:row;flex-wrap:wrap;margin-bottom:8px}.subnav a{border-left:0;border-bottom:2px solid transparent}.subnav a.on{border-left:0;border-bottom-color:var(--brand)}.row2,.row3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="docbar">
+  <div class="logo"><span class="sq">P</span> Playtoon Admin</div>
+  <span class="v">풀 비주얼 시안 · V1.1 · 2026.06.23</span>
+  <span class="sp"></span>
+  <span class="basis">기준: <b>개인 author</b> · role별 분기는 주석·표 참조</span>
+  <div class="ann-toggle on" id="annToggle"><span class="sw"></span> 주석</div>
+</div>
+
+<div class="stage">
+  <div class="screen-head"><span class="id">AC</span><h1>내 정보 — 공통 계정 화면</h1><span class="role">전 role 공통</span>
+    <p>모든 role(개인 author · CP author · CP accounting · CP master)이 공유하는 계정 화면. 레이아웃은 같고, <b>섹션별 노출·편집 권한이 role에 따라 분기</b>한다. 대표 분기: 정산 계좌는 개인 author만 편집 가능(CP 소속은 "회사 관리" 잠금), 2FA는 회계·master 강제. 공개 프로필은 독자에게 보이는 정보, 나머지는 비공개.</p>
+  </div>
+
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/me</span></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand"><span class="sq">P</span> Playtoon</div>
+        <div class="grp">작가</div>
+        <nav class="nav"><a href="#"><span class="ic">▥</span> 대시보드</a><a href="#"><span class="ic">₩</span> 회차·가격 제안</a><a href="#"><span class="ic">◷</span> 정산 내역</a></nav>
+        <div class="grp">팀장 (위임)</div><nav class="nav"><a class="lav" href="#"><span class="ic">◆</span> 위임 관리</a></nav>
+        <div class="grp">계정</div><nav class="nav"><a class="on" href="#"><span class="ic">◐</span> 내 정보</a></nav>
+        <div class="me"><span class="av">이</span><div><div class="nm">이든 작가</div><div class="rl">개인 author · 팀장</div></div></div>
+      </aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">계정 · <b>내 정보</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">이</div></div>
+        <div class="content">
+          <div class="phead"><h2>내 정보</h2><div class="sub">프로필·계정·정산 계좌·보안을 관리합니다.</div></div>
+
+          <div class="acwrap">
+            <nav class="subnav">
+              <a class="on" href="#s-profile">공개 프로필</a>
+              <a href="#s-account">계정 정보</a>
+              <a href="#s-payout">정산 계좌</a>
+              <a href="#s-security">보안</a>
+              <a href="#s-linked">연결 계정</a>
+              <a class="danger" href="#s-danger">계정 관리</a>
+            </nav>
+
+            <div>
+              <!-- PROFILE -->
+              <section class="sect" id="s-profile" style="position:relative"><span class="pin b" style="left:-12px;top:14px">1</span>
+                <div class="sh"><h3>공개 프로필</h3><span class="tag pub">● 독자에게 공개</span></div>
+                <div class="sb">
+                  <div class="avrow">
+                    <span class="big">이</span>
+                    <div><div class="actions"><button class="btn ghost sm">이미지 변경</button><button class="btn ghost sm">제거</button></div>
+                      <div class="hint">정사각형 PNG·JPG · 최소 400×400 · 최대 2MB</div></div>
+                  </div>
+                  <div class="field"><label>필명 <span class="req">*</span></label><input value="이든"><div class="help">독자에게 표시되는 이름. 본명과 다를 수 있습니다.</div></div>
+                  <div class="field"><label>한 줄 소개</label><input value="비 오는 날의 이야기를 그립니다." maxlength="60"><div class="help"><b>public_intro</b> · 최대 60자 · 프로필 카드 상단에 노출</div></div>
+                  <div class="row2">
+                    <div class="field"><label>SNS — X(트위터)</label><input value="@eden_rain" placeholder="@아이디"></div>
+                    <div class="field"><label>SNS — 인스타그램</label><input placeholder="@아이디"></div>
+                  </div>
+                  <div class="field"><label>포트폴리오 URL</label><input value="https://eden.portfolio.site" placeholder="https://"><div class="help"><b>public_portfolio_url</b> · 외부 링크. http(s)만 허용</div></div>
+                </div>
+                <div class="sf"><span class="note">변경 사항은 저장 후 프로필에 즉시 반영됩니다.</span><span class="sp"></span><button class="btn ghost sm">되돌리기</button><button class="btn brand sm">변경 사항 저장</button></div>
+              </section>
+
+              <!-- ACCOUNT -->
+              <section class="sect" id="s-account" style="position:relative"><span class="pin" style="left:-12px;top:14px">2</span>
+                <div class="sh"><h3>계정 정보</h3><span class="tag priv">비공개</span></div>
+                <div class="sb">
+                  <div class="field"><label>이메일</label>
+                    <div style="display:flex;gap:10px;align-items:center"><input value="eden@example.com" class="ro" readonly style="flex:1"><span class="vbadge ok">✓ 인증됨</span></div>
+                    <div class="help"><b>email_verified_at</b> 기록됨 · 이메일 변경은 보안 확인 후 가능</div></div>
+                  <div class="row2">
+                    <div class="field"><label>이름(실명)</label><input value="김이든" class="ro" readonly><div class="help">정산·세금용 · 비공개</div></div>
+                    <div class="field"><label>역할 (role)</label><input value="개인 author" class="ro" readonly><div class="help">운영이 부여 · 본인 변경 불가</div></div>
+                  </div>
+                  <div class="row2">
+                    <div class="field"><label>소속</label><input value="개인 (소속 CP 없음)" class="ro" readonly><div class="help"><b>cp_id</b> NULL=개인. CP 소속이면 회사명 표시</div></div>
+                    <div class="field"><label>세금 거주국</label><select><option>대한민국 (KR)</option><option>일본 (JP)</option><option>미국 (US)</option></select><div class="help"><b>tax_resident_country</b> · 기본 KR</div></div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- PAYOUT -->
+              <section class="sect" id="s-payout" style="position:relative"><span class="pin c" style="left:-12px;top:14px">3</span>
+                <div class="sh"><h3>정산 계좌</h3><span class="tag priv">비공개 · 암호화</span></div>
+                <div class="sb">
+                  <div class="field"><label>예금주</label><input value="김이든"><div class="help"><b>payout_account_holder</b> · 실명과 일치해야 정산 가능</div></div>
+                  <div class="row3">
+                    <div class="field"><label>은행</label><select><option>신한은행</option><option>국민은행</option><option>카카오뱅크</option></select></div>
+                    <div class="field"><label>계좌번호</label><input value="110-***-****56" class="num"><div class="help">저장 시 암호화 · 일부만 표시</div></div>
+                    <div class="field"><label style="visibility:hidden">.</label><button class="btn ghost" style="width:100%">계좌 인증</button></div>
+                  </div>
+                </div>
+                <div class="sf"><span class="note">정산 계좌 변경은 본인 인증 후 적용됩니다.</span><span class="sp"></span><button class="btn brand sm">계좌 저장</button></div>
+              </section>
+
+              <!-- SECURITY -->
+              <section class="sect" id="s-security" style="position:relative"><span class="pin" style="left:-12px;top:14px">4</span>
+                <div class="sh"><h3>보안</h3></div>
+                <div class="sb" style="padding-top:6px;padding-bottom:6px">
+                  <div class="secrow"><div><div class="ttl">비밀번호</div><div class="ds">마지막 변경 2026.03.02</div></div><span class="sp"></span><button class="btn ghost sm">비밀번호 변경</button></div>
+                  <div class="secrow" style="position:relative"><span class="pin b" style="right:140px;top:8px;left:auto">5</span>
+                    <div><div class="ttl">2단계 인증 (2FA)</div><div class="ds">로그인 시 인증 앱 코드 추가 입력 · OTP(TOTP)</div></div><span class="sp"></span>
+                    <span style="font-size:11.5px;color:var(--ink-4)">사용 안 함</span><span class="tg"></span><button class="btn ghost sm">2FA 설정</button></div>
+                </div>
+              </section>
+
+              <!-- LINKED -->
+              <section class="sect" id="s-linked" style="position:relative"><span class="pin" style="left:-12px;top:14px">6</span>
+                <div class="sh"><h3>연결 계정</h3><span class="tag priv">소셜 로그인</span></div>
+                <div class="sb" style="padding-top:6px;padding-bottom:6px">
+                  <div class="lkrow"><span class="ic g">G</span><div><div class="nm">Google</div><div class="ds">eden@gmail.com</div></div><span class="sp"></span><button class="btn ghost sm">연결 해제</button></div>
+                  <div class="lkrow"><span class="ic k">K</span><div><div class="nm">Kakao</div><div class="ds">연결됨</div></div><span class="sp"></span><button class="btn ghost sm">연결 해제</button></div>
+                  <div class="lkrow"><span class="ic a">A</span><div><div class="nm">Apple</div><div class="ds">연결 안 됨</div></div><span class="sp"></span><button class="btn ghost sm">연결</button></div>
+                  <div class="lkrow"><span class="ic n">N</span><div><div class="nm">Naver</div><div class="ds">연결 안 됨</div></div><span class="sp"></span><button class="btn ghost sm">연결</button></div>
+                </div>
+                <div class="sf"><span class="note">최소 1개의 로그인 수단은 유지해야 합니다 · USER ↔ AUTHOR는 1:1로 연동됩니다.</span></div>
+              </section>
+
+              <!-- DANGER -->
+              <section class="sect danger-zone" id="s-danger" style="position:relative"><span class="pin d" style="left:-12px;top:14px">7</span>
+                <div class="sh"><h3>계정 관리</h3></div>
+                <div class="sb">
+                  <div class="dzrow"><div><div class="ttl">계정 비활성화</div><div class="ds">로그인이 잠기고 작품은 비공개 처리됩니다. 다시 활성화할 수 있습니다.</div></div><span class="sp"></span><button class="btn dgr sm">비활성화</button></div>
+                  <div style="height:1px;background:var(--danger-line);margin:6px 0"></div>
+                  <div class="dzrow"><div><div class="ttl">계정 탈퇴</div><div class="ds">계정과 데이터가 영구 삭제됩니다. 되돌릴 수 없습니다.</div></div><span class="sp"></span><button class="btn dgr solid sm">탈퇴</button></div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPEC -->
+  <div class="spec"><div class="sh"><h3>스펙 시트 — AC</h3><span class="tag">공통 화면 · role 분기 · 공개/비공개</span></div>
+    <div class="anns">
+      <div class="ann"><div class="n b">1</div><div class="body"><h4>공개 프로필 — 독자 노출</h4>
+        <p>이 섹션만 <b>독자에게 공개</b>(● 공개 태그). 아바타·필명·한 줄 소개·SNS·포트폴리오. 필명은 본명과 분리(본명은 계정 정보에 비공개). 저장 시 프로필 카드에 즉시 반영.</p>
+        <div class="meta"><span class="m">public_avatar_url</span><span class="m">public_intro 60자</span><span class="m">public_sns JSON</span><span class="m">public_portfolio_url</span></div>
+        <div class="ex"><b>예문 / 도움말</b> — 한 줄 소개 placeholder "비 오는 날의 이야기를 그립니다." · 포트폴리오는 http(s)만 허용(검증), 그 외 입력 시 인라인 에러 "올바른 URL을 입력하세요".</div></div></div>
+      <div class="ann"><div class="n">2</div><div class="body"><h4>계정 정보 — 비공개 · 일부 읽기 전용</h4>
+        <p>이메일(인증 배지)·실명·역할·소속·세금 거주국. <b>역할·소속·실명은 읽기 전용</b>(운영/회사가 결정, dashed 보더로 구분). 세금 거주국만 본인 선택.</p>
+        <div class="meta"><span class="m">ro=dashed --surf-2</span><span class="m">role read-only</span><span class="m">cp_id 표시</span></div>
+        <div class="copy">소속 표기: 개인 <code>개인 (소속 CP 없음)</code> / CP <code>스튜디오 노을 (CP-001)</code></div></div></div>
+      <div class="ann"><div class="n c">3</div><div class="body"><h4>정산 계좌 — role 분기 (핵심)</h4>
+        <p>가장 중요한 분기. <b>개인 author는 편집 가능</b>(예금주·은행·계좌·인증·저장). <b>CP 소속(author/accounting)은 잠금</b> — 정산 계좌는 회사가 관리하므로 입력란 대신 "소속 CP가 관리합니다" 잠금 바를 노출하고 필드를 숨김. CP master는 "계좌 변경 요청"만.</p>
+        <div class="meta"><span class="m">개인=편집</span><span class="m">CP author/accounting=잠금</span><span class="m">master=변경 요청</span><span class="m">암호화 저장</span></div>
+        <div class="ex"><b>CP author 잠금 카피</b> — "정산 계좌는 소속 CP(스튜디오 노을)가 관리합니다. 변경이 필요하면 회사 정산 담당에게 문의하세요." (입력 필드 미렌더, 잠금 바만)</div>
+        <div class="copy">계좌번호는 <code>110-***-****56</code> 마스킹 · 저장 시 <code>payout_account_number</code> 암호화</div></div></div>
+      <div class="ann"><div class="n b">4</div><div class="body"><h4>보안 — 비밀번호 · 2FA</h4>
+        <p>비밀번호 변경(마지막 변경일 표기), 2FA 토글+설정. 비밀번호 변경은 별도 플로우(현재 PW→새 PW, 2FA ON이면 OTP 먼저).</p>
+        <div class="meta"><span class="m">TOTP</span><span class="m">마지막 변경일</span></div></div></div>
+      <div class="ann"><div class="n">5</div><div class="body"><h4>2FA — role 분기 (강제)</h4>
+        <p>일반 author는 선택(토글 OFF 기본). <b>CP accounting·CP master는 2FA 강제</b> — 토글이 켜진 채 비활성(끌 수 없음), "정산 권한 계정은 2FA 필수" 안내. 보안 등급을 권한과 연동.</p>
+        <div class="meta"><span class="m">author 선택</span><span class="m">accounting/master 강제 ON</span><span class="m">forced 토글 비활성</span></div>
+        <div class="ex"><b>강제 카피</b> — accounting/master: "정산 권한이 있는 계정은 2단계 인증이 필수입니다. 비활성화할 수 없습니다." (토글 회색 ON + [관리]만)</div></div></div>
+      <div class="ann"><div class="n">6</div><div class="body"><h4>연결 계정 — 1:1 · 마지막 1개 보호</h4>
+        <p>Google·Apple·Kakao·Naver 4종. 연결됨=계정/이메일 표기, 미연결=[연결]. <b>USER↔AUTHOR는 1:1</b>. <b>마지막 1개 로그인 수단은 해제 불가</b>(비밀번호도 소셜도 없으면 로그인 불능).</p>
+        <div class="meta"><span class="m">소셜 4종</span><span class="m">LINKED_ACCOUNT 1:1</span><span class="m">최소 1개 유지</span></div>
+        <div class="ex"><b>에러</b> — 마지막 수단 해제 시도: "마지막 로그인 수단은 해제할 수 없습니다. 다른 수단을 먼저 연결하세요." (해제 버튼 비활성 + 툴팁)</div></div></div>
+      <div class="ann"><div class="n d">7</div><div class="body"><h4>계정 관리 — danger zone</h4>
+        <p>비활성화(가역)와 탈퇴(영구·비가역)를 분리. <b>탈퇴만 danger 레드 솔리드</b> — 진짜 영구 삭제라 D3 "회수"(Lavender)와 명확히 구분된다. 탈퇴는 한 번 더 확인 모달(필명 타이핑 등) 권장.</p>
+        <div class="meta"><span class="m">비활성=outline danger</span><span class="m">탈퇴=solid --danger</span><span class="m">--danger-line 영역</span></div>
+        <div class="ex"><b>색 규칙 재확인</b> — danger 레드는 영구 삭제(계정 탈퇴) 전용. 위임 회수(D3)는 파괴가 아니므로 Lavender. 이 일관성이 "빨강=되돌릴 수 없음"을 학습시킴.</div></div></div>
+    </div>
+  </div>
+
+  <!-- ROLE BRANCH TABLE -->
+  <div class="branch"><div class="sh">역할별 분기 — 같은 화면, 다른 권한</div>
+    <table class="bt">
+      <thead><tr><th>섹션</th><th>개인 author</th><th>CP author</th><th>CP accounting</th><th>CP master</th></tr></thead>
+      <tbody>
+        <tr><td class="sec">공개 프로필</td><td class="y">편집</td><td class="y">편집</td><td class="nn">숨김(비노출 role)</td><td class="y">편집</td></tr>
+        <tr><td class="sec">계정 정보</td><td class="y">조회+세금국</td><td class="y">조회+세금국</td><td class="y">조회+세금국</td><td class="y">조회+세금국</td></tr>
+        <tr><td class="sec">정산 계좌</td><td class="y">편집 가능</td><td class="cpx">잠금 · 회사 관리</td><td class="cpx">잠금 · 회사 관리</td><td class="cpx">변경 요청</td></tr>
+        <tr><td class="sec">보안 · 2FA</td><td>선택</td><td>선택</td><td class="cpx">강제 ON</td><td class="cpx">강제 ON</td></tr>
+        <tr><td class="sec">연결 계정</td><td class="y">관리</td><td class="y">관리</td><td class="y">관리</td><td class="y">관리</td></tr>
+        <tr><td class="sec">계정 관리(탈퇴)</td><td class="y">가능</td><td class="cpx">제한 · 회사 승인</td><td class="cpx">제한 · 회사 승인</td><td class="y">가능(대표 계정)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- STATES -->
+  <div class="states">
+    <div class="st"><div class="sl">정산 계좌 — 개인(편집)</div><div class="sbody"><input style="width:100%;border:1.5px solid var(--brand);border-radius:6px;padding:8px 10px;font-size:12px;box-shadow:0 0 0 3px var(--brand-wash)" value="110-***-****56"><small>편집 가능 · 저장 시 암호화</small></div></div>
+    <div class="st"><div class="sl">정산 계좌 — CP 소속(잠금)</div><div class="sbody"><div class="lockbar" style="margin:0"><span>🔒</span><div><b>소속 CP가 관리</b> · 회사 정산 담당에게 문의</div></div><small>입력 필드 미렌더</small></div></div>
+    <div class="st"><div class="sl">2FA — author(선택)</div><div class="sbody"><div style="display:flex;align-items:center;gap:10px"><span class="tg"></span><small>OFF 기본 · 설정 가능</small></div></div></div>
+    <div class="st"><div class="sl">2FA — 회계/master(강제)</div><div class="sbody"><div style="display:flex;align-items:center;gap:10px"><span class="tg forced"></span><small>ON 고정 · 끌 수 없음</small></div></div></div>
+    <div class="st"><div class="sl">연결 계정 — 마지막 1개</div><div class="sbody"><button class="btn ghost sm" style="opacity:.5;cursor:not-allowed">연결 해제</button><small style="color:var(--danger-d)">마지막 수단은 해제 불가</small></div></div>
+    <div class="st"><div class="sl">이메일 — 미인증</div><div class="sbody"><span class="vbadge warn">⚠ 미인증</span><small>"인증 메일 재발송" 버튼 노출 · 정산 전 인증 권장</small></div></div>
+    <div class="st"><div class="sl">저장 — 변경 없음</div><div class="sbody"><button class="btn brand sm" style="background:#EDECEA;color:var(--ink-4)">변경 사항 저장</button><small>변경 0이면 비활성</small></div></div>
+    <div class="st"><div class="sl">탈퇴 — 확인</div><div class="sbody"><button class="btn dgr solid sm">탈퇴</button><small>클릭 시 재확인 모달(필명 타이핑). danger 레드</small></div></div>
+  </div>
+
+  <div class="resp"><h4>📐 반응형</h4><ul>
+    <li><b>≥1080px</b> 좌 서브내비 180px sticky + 우 섹션 카드 · 정산 계좌 3열</li>
+    <li><b>640–1080px</b> 서브내비 상단 가로 탭 · 폼 2/3열 → 1열</li>
+    <li><b>&lt;640px</b> 섹션 카드 전체폭 · 저장 바 각 섹션 하단 고정 · danger zone 버튼 풀폭</li>
+    <li><b>접근성</b> 모든 입력 label 연결 · 포커스 링 --brand 2px · 토글 role=switch · 탈퇴 확인 포커스 트랩</li>
+  </ul></div>
+
+  <div class="foot">
+    <b>Playtoon Admin · 풀 비주얼 시안 V1.0</b> — 외부 파트너 어드민 · 디자인 시스템 V1.1 · 2026.06.23<br>
+    AC 내 정보(공통) — 공개 프로필 / 계정 정보 / 정산 계좌 / 보안·2FA / 연결 계정 / 계정 관리 · 같은 레이아웃, role별 노출·편집 분기<br>
+    분기 핵심: 정산 계좌 = 개인 author 편집 / CP 소속 잠금(회사 관리) · 2FA = 회계·master 강제 · 탈퇴 = danger 레드(영구 삭제 전용, 회수 Lavender와 구분)<br>
+    스키마 정합 — public_*(공개) · payout_*(암호화) · two_factor_enabled · LINKED_ACCOUNT 1:1·소셜 4종 · email_verified_at · tax_resident_country · status · 앞 시안 전체와 동일 토큰·컴포넌트 · 남은 후보 — 운영자 18화면
+  </div>
+</div>
+
+<script>
+const links=[...document.querySelectorAll('.subnav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('on'));const i=secs.indexOf(e.target);if(i>=0)links[i].classList.add('on');}});},{rootMargin:'-80px 0px -70% 0px'});
+secs.forEach(s=>s&&obs.observe(s));
+const at=document.getElementById('annToggle');
+at.addEventListener('click',()=>{at.classList.toggle('on');document.body.classList.toggle('no-ann',!at.classList.contains('on'));});
+</script>
+<script>/*deeplink*/(function(){try{var p=new URLSearchParams(location.search).get("screen");if(p){var b=document.querySelector('.tabs button[data-v="'+p+'"]');if(b)b.click();}}catch(e){}})();</script>
+</body>
+</html>

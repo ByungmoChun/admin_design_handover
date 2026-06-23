@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playtoon Admin · 네비게이션 · 메뉴 순서 명세 (전 role)</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --bg:#F5F4F2;--surf:#FFFFFF;--surf-2:#FAFAF9;--line:#E6E4E1;--line-2:#F0EEEC;
+  --ink:#1A1917;--ink-2:#44423E;--ink-3:#6E6B66;--ink-4:#9C9893;
+  --brand:#C7242D;--brand-h:#A22F2C;--brand-a:#7F2523;--brand-wash:#FBEAEA;
+  --lav:#A99DE4;--lav-d:#6E5FB8;--lav-wash:#F1EFFB;--lav-line:#DCD6F4;
+  --danger:#E5484D;--danger-d:#C2363B;--danger-wash:#FDECEC;--danger-line:#F1C9CB;
+  --ok:#2E9E5B;--ok-d:#1F7A43;--ok-wash:#E8F6EE;
+  --warn:#D9870A;--warn-d:#B36C00;--warn-wash:#FCF3E2;
+  --info:#3A6FE0;--info-wash:#EAF0FD;
+  --cp:#3D3A35;--cp-wash:#EDEAE6;--cp-line:#D9D5CF;
+  --r-s:6px;--r:10px;--r-l:14px;--pill:999px;
+  --sh-s:0 1px 2px rgba(26,25,23,.06),0 1px 1px rgba(26,25,23,.04);
+  --sh-m:0 4px 14px rgba(26,25,23,.08),0 1px 3px rgba(26,25,23,.05);
+  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Segoe UI',Roboto,'Noto Sans KR',sans-serif;
+  --mono:'SFMono-Regular',ui-monospace,'JetBrains Mono','Roboto Mono',Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:#E9E7E3;color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.55}
+
+.docbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:16px;padding:11px 22px;background:#161412;color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.4)}
+.docbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.docbar .logo .sq{width:22px;height:22px;border-radius:6px;background:var(--brand);display:grid;place-items:center;font-size:12px;font-weight:900}
+.docbar .v{font-size:11px;font-weight:700;color:#bdb9b3;font-family:var(--mono)}
+
+.stage{max-width:1280px;margin:0 auto;padding:30px 26px 90px}
+.head{margin:4px 2px 22px}
+.head .id{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;padding:5px 11px;border-radius:var(--r-s);background:var(--ink);display:inline-block;margin-bottom:11px}
+.head h1{font-size:25px;font-weight:800;letter-spacing:-.6px}
+.head p{font-size:13px;color:var(--ink-3);margin-top:8px;max-width:840px}
+
+.sec{background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-s);margin-bottom:22px;overflow:hidden}
+.sec .sh{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px}
+.sec .sh .nx{width:25px;height:25px;border-radius:50%;background:var(--brand);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;flex:none}
+.sec .sh h2{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.sec .sh .desc{font-size:11.5px;color:var(--ink-4);margin-left:auto;text-align:right;max-width:380px}
+.sec .body{padding:20px}
+
+/* gradient axis */
+.axis{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:stretch}
+.axis .labels{display:flex;flex-direction:column;justify-content:space-between;padding:6px 0;font-size:11px;font-weight:700}
+.axis .labels .t{color:var(--ok-d)}.axis .labels .b{color:var(--brand-a)}
+.axis .labels .mid{color:var(--ink-4);font-weight:600;font-size:10px;writing-mode:vertical-rl;text-orientation:mixed;align-self:center;letter-spacing:1px}
+.ladder{display:flex;flex-direction:column;gap:8px}
+.rung{display:grid;grid-template-columns:118px 1fr;gap:14px;align-items:center;border:1px solid var(--line);border-radius:var(--r-s);padding:11px 14px;background:var(--surf-2)}
+.rung .gname{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
+.rung .gname .gi{width:9px;height:9px;border-radius:2px}
+.rung .why{font-size:12px;color:var(--ink-2);line-height:1.5}
+.rung .why b{color:var(--ink)}
+.g-overview .gi{background:#8a8782}.g-content .gi{background:var(--info)}.g-partner .gi{background:var(--lav-d)}
+.g-commerce .gi{background:var(--brand)}.g-ops .gi{background:var(--warn-d)}.g-system .gi{background:var(--ink)}
+.axisbar{width:8px;border-radius:var(--pill);background:linear-gradient(180deg,var(--ok) 0%,var(--info) 22%,var(--lav-d) 40%,var(--brand) 60%,var(--warn-d) 80%,var(--ink) 100%)}
+.axiswrap{display:grid;grid-template-columns:14px 1fr;gap:14px}
+
+/* sidebar tree */
+.tree{width:262px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-s);overflow:hidden}
+.tree .tb{display:flex;align-items:center;gap:9px;padding:12px 13px;border-bottom:1px solid var(--line-2);font-weight:800;font-size:13px}
+.tree .tb .sq{width:24px;height:24px;border-radius:7px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:900}
+.tree .tb .badge{margin-left:auto;font-size:9px;font-weight:800;color:var(--ink-4);border:1px solid var(--line);border-radius:var(--pill);padding:2px 7px}
+.tree .tb .badge.cp{color:var(--cp);background:var(--cp-wash);border-color:var(--cp-line)}
+.tree .body2{padding:8px 8px 10px}
+.grp{display:flex;align-items:center;gap:6px;font-size:9.5px;font-weight:800;letter-spacing:.5px;color:var(--ink-4);text-transform:uppercase;padding:11px 9px 5px}
+.grp .gn{font-family:var(--mono);font-size:9px;color:var(--ink-4);font-weight:700}
+.grp .chev{margin-left:auto;font-size:9px;color:var(--ink-4)}
+.mi{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:var(--r-s);font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:1px}
+.mi .sid{font-family:var(--mono);font-size:9px;color:var(--ink-4);min-width:30px}
+.mi .ic{width:15px;text-align:center;opacity:.75}
+.mi:hover{background:var(--surf-2)}
+.mi.active{background:var(--brand-wash);color:var(--brand-a);font-weight:700}
+.mi.active .sid{color:var(--brand-a)}
+.mi.lav{color:var(--lav-d)}
+.mi .sp{flex:1}
+.mi .dot{width:6px;height:6px;border-radius:50%;background:var(--brand)}
+.mi .dot.lavd{background:var(--lav)}
+.mi.hidden{color:var(--ink-4);text-decoration:line-through;opacity:.7}
+.mi.hidden .ic{opacity:.4}
+.grp.hiddenh{color:var(--ink-4)}
+.tree .foot{padding:9px 13px;border-top:1px solid var(--line-2);display:flex;align-items:center;gap:8px}
+.tree .foot .av{width:26px;height:26px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:10px;font-weight:800}
+.av.op{background:linear-gradient(135deg,#3a3733,#1a1917)}.av.au{background:linear-gradient(135deg,#E0565E,#C7242D)}.av.cp{background:linear-gradient(135deg,#5a5650,#2c2a27)}
+.tree .foot .nm{font-size:11px;font-weight:700}.tree .foot .rl{font-size:9.5px;color:var(--ink-3)}
+
+.opwrap{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.opnote{flex:1;min-width:280px}
+.opnote .gh{font-size:12.5px;font-weight:800;margin:14px 0 5px;display:flex;align-items:center;gap:8px}
+.opnote .gh:first-child{margin-top:0}
+.opnote .gh .gi{width:9px;height:9px;border-radius:2px}
+.opnote .gh .ord{font-family:var(--mono);font-size:10px;color:var(--ink-4);font-weight:700}
+.opnote p{font-size:12px;color:var(--ink-2);line-height:1.6;padding-left:17px}
+.opnote p b{color:var(--ink)}
+
+/* external 4 role grid */
+.ext{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:start}
+.ext .col .ct{font-size:12.5px;font-weight:800;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.ext .col .ct .pill{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:var(--pill)}
+.pill.au{background:var(--brand-wash);color:var(--brand-a)}.pill.cp{background:var(--cp-wash);color:var(--cp)}
+.ext .tree{width:100%}
+.ext .note{font-size:11px;color:var(--ink-3);line-height:1.55;margin-top:9px;padding:9px 11px;background:var(--surf-2);border:1px solid var(--line);border-radius:var(--r-s)}
+.ext .note b{color:var(--ink)}
+
+/* rules */
+.rules{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.rule{border:1px solid var(--line);border-radius:var(--r);padding:15px 16px;background:var(--surf-2)}
+.rule h4{font-size:13px;font-weight:800;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.rule h4 .k{font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:var(--ink);padding:2px 7px;border-radius:var(--r-s)}
+.rule p{font-size:12px;color:var(--ink-2);line-height:1.6}.rule p b{color:var(--ink)}
+.rule .demo{margin-top:10px;display:flex;flex-direction:column;gap:5px;background:#fff;border:1px solid var(--line);border-radius:var(--r-s);padding:8px}
+.dm{display:flex;align-items:center;gap:8px;padding:6px 9px;border-radius:var(--r-s);font-size:11.5px;font-weight:600;color:var(--ink-2)}
+.dm .sid{font-family:var(--mono);font-size:9px;color:var(--ink-4);min-width:28px}
+.dm.active{background:var(--brand-wash);color:var(--brand-a);font-weight:700}
+.dm.hidden{color:var(--ink-4);text-decoration:line-through;opacity:.65}
+.dm .sp{flex:1}.dm .dot{width:6px;height:6px;border-radius:50%;background:var(--brand)}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;padding:13px 16px;background:var(--surf-2);border:1px dashed var(--line);border-radius:var(--r);margin-top:4px}
+.lg{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--ink-2)}
+.lg .sw{width:22px;height:14px;border-radius:4px}
+.lg .sw.active{background:var(--brand-wash);border:1px solid #f1d4d5}
+.lg .sw.lav{background:var(--lav-wash);border:1px solid var(--lav-line)}
+.lg .dot{width:7px;height:7px;border-radius:50%;background:var(--brand)}
+.lg .dot.lavd{background:var(--lav)}
+.lg .ln{text-decoration:line-through;color:var(--ink-4)}
+
+.foot{max-width:1280px;margin:38px auto 0;padding:20px 26px 0;border-top:1px solid var(--line);color:var(--ink-3);font-size:11.5px;line-height:1.8}.foot b{color:var(--ink-2)}
+
+@media(max-width:1000px){.ext{grid-template-columns:repeat(2,1fr)}.rules{grid-template-columns:1fr}.opwrap{flex-direction:column}.tree{width:100%}}
+@media(max-width:560px){.ext{grid-template-columns:1fr}.axis{grid-template-columns:1fr}.rung{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="docbar">
+  <div class="logo"><span class="sq">P</span> Playtoon Admin</div>
+  <span class="v">네비게이션 · 메뉴 순서 명세 · 전 role · V1.0 · 2026.06.23</span>
+</div>
+
+<div class="stage">
+  <div class="head">
+    <span class="id">NAV-SPEC</span>
+    <h1>네비게이션 · 메뉴 순서 명세 (전 role)</h1>
+    <p>운영자(6그룹/18라우트)와 외부 4 role(개인 author · CP author · CP master · CP accounting)의 메뉴 순서를 한곳에 정리한다. 외부 role 메뉴는 운영자 메뉴를 권한으로 거른 부분집합이 아니라 <b>role별 독립 메뉴 체계</b>다. 순서는 두 축 — 빈도(자주 쓰는 것 위로)와 권한 그래디언트(민감·고권한 아래로) — 로 정한다.</p>
+  </div>
+
+  <!-- 1. 순서 2원칙 -->
+  <div class="sec">
+    <div class="sh"><span class="nx">1</span><h2>순서 2원칙 — 빈도 ↓ · 권한(민감도) ↑</h2><span class="desc">위로 갈수록 매일·일상·저위험 / 아래로 갈수록 가끔·설정·고권한. 운영자 6그룹의 배열 근거.</span></div>
+    <div class="body">
+      <div class="axis">
+        <div class="labels"><span class="t">▲ 자주 · 저권한</span><span class="mid">빈도↓ 권한↑</span><span class="b">▼ 가끔 · 고권한</span></div>
+        <div class="axiswrap">
+          <div class="axisbar"></div>
+          <div class="ladder">
+            <div class="rung g-overview"><div class="gname"><span class="gi"></span>개요</div><div class="why">매일 첫 착지. 운영 현황·할 일 큐. <b>최상단 고정</b>.</div></div>
+            <div class="rung g-content"><div class="gname"><span class="gi"></span>콘텐츠</div><div class="why">핵심 일상 업무(검수·가격·노출). 가장 자주 들어가는 그룹이라 위쪽.</div></div>
+            <div class="rung g-partner"><div class="gname"><span class="gi"></span>파트너십</div><div class="why">콘텐츠 공급 주체(작가·CP) 관리. 콘텐츠 바로 옆.</div></div>
+            <div class="rung g-commerce"><div class="gname"><span class="gi"></span>커머스</div><div class="why">돈·재화. <b>고위험·저빈도</b>(환불·정산)라 중하단.</div></div>
+            <div class="rung g-ops"><div class="gname"><span class="gi"></span>운영</div><div class="why">주기적 백오피스 도구(알림·배치·감사). 일상 빈도 낮음.</div></div>
+            <div class="rung g-system"><div class="gname"><span class="gi"></span>시스템</div><div class="why">권한·관리자·초대. <b>최소 빈도·최고 권한</b>이라 맨 아래.</div></div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--ink-3);margin-top:14px;line-height:1.6"><b style="color:var(--ink-2)">그룹 내부 순서</b>는 라이프사이클을 따른다 — 콘텐츠: 작품(S-10) → 회차·가격(S-11) → 게시물(S-12) → 모더레이션(S-13) → 노출(S-14). 커머스: 결제(S-30) → 지갑(S-31) → 쿠폰(S-32) → 정산(S-33). 시스템: 관리자(S-50) → 역할(S-51) → 초대(S-52).</p>
+    </div>
+  </div>
+
+  <!-- 2. 운영자 풀 메뉴 -->
+  <div class="sec">
+    <div class="sh"><span class="nx">2</span><h2>운영자 — 6그룹 / 18라우트</h2><span class="desc">단일 어드민 일원화. 권한(RBAC)에 따라 항목·그룹이 숨겨질 뿐, 순서는 고정.</span></div>
+    <div class="body">
+      <div class="opwrap">
+        <div class="tree">
+          <div class="tb"><span class="sq">P</span> Playtoon <span class="badge">운영자</span></div>
+          <div class="body2">
+            <div class="grp"><span>개요</span><span class="gn">S-0x</span><span class="chev">▾</span></div>
+            <div class="mi active"><span class="sid">S-00</span><span class="ic">▥</span> 대시보드</div>
+            <div class="grp"><span>콘텐츠</span><span class="gn">S-1x</span><span class="chev">▾</span></div>
+            <div class="mi"><span class="sid">S-10</span><span class="ic">▤</span> 시리즈·검수</div>
+            <div class="mi"><span class="sid">S-11</span><span class="ic">₩</span> 회차·가격<span class="sp"></span><span class="dot"></span></div>
+            <div class="mi"><span class="sid">S-12</span><span class="ic">◰</span> 게시물</div>
+            <div class="mi"><span class="sid">S-13</span><span class="ic">⌗</span> 태그·금칙어</div>
+            <div class="mi"><span class="sid">S-14</span><span class="ic">▦</span> 큐레이션·배너</div>
+            <div class="grp"><span>파트너십</span><span class="gn">S-2x</span><span class="chev">▾</span></div>
+            <div class="mi"><span class="sid">S-20</span><span class="ic">◐</span> 크리에이터</div>
+            <div class="mi"><span class="sid">S-21</span><span class="ic">⬡</span> 파트너·위임</div>
+            <div class="grp"><span>커머스</span><span class="gn">S-3x</span><span class="chev">▾</span></div>
+            <div class="mi"><span class="sid">S-30</span><span class="ic">₩</span> 결제·환불</div>
+            <div class="mi"><span class="sid">S-31</span><span class="ic">▱</span> 지갑·원장</div>
+            <div class="mi"><span class="sid">S-32</span><span class="ic">◷</span> 쿠폰</div>
+            <div class="mi"><span class="sid">S-33</span><span class="ic">∑</span> 정산·RS·MG<span class="sp"></span><span class="dot"></span></div>
+            <div class="grp"><span>운영</span><span class="gn">S-4x</span><span class="chev">▾</span></div>
+            <div class="mi"><span class="sid">S-40</span><span class="ic">🔔</span> 알림·캠페인</div>
+            <div class="mi"><span class="sid">S-41</span><span class="ic">◴</span> 스케줄러·배치</div>
+            <div class="mi"><span class="sid">S-42</span><span class="ic">▤</span> 감사 로그</div>
+            <div class="grp"><span>시스템</span><span class="gn">S-5x</span><span class="chev">▾</span></div>
+            <div class="mi"><span class="sid">S-50</span><span class="ic">◐</span> 관리자</div>
+            <div class="mi"><span class="sid">S-51</span><span class="ic">⚿</span> 역할(RBAC)</div>
+            <div class="mi"><span class="sid">S-52</span><span class="ic">✉</span> 초대</div>
+          </div>
+          <div class="foot"><span class="av op">운</span><div><div class="nm">momo</div><div class="rl">Super Admin</div></div></div>
+        </div>
+        <div class="opnote">
+          <div class="gh g-overview"><span class="gi"></span>개요 <span class="ord">1 · S-00</span></div>
+          <p>로그인 직후 착지. 매일 보는 화면이라 무조건 최상단. role별 위젯이 갈린다.</p>
+          <div class="gh g-content"><span class="gi"></span>콘텐츠 <span class="ord">2 · S-10~14</span></div>
+          <p>운영자가 가장 자주 쓰는 일상 업무. <b>라이프사이클 순</b>: 작품 → 회차·가격 → 게시물 → 태그·금칙어 → 큐레이션(노출).</p>
+          <div class="gh g-partner"><span class="gi"></span>파트너십 <span class="ord">3 · S-20~21</span></div>
+          <p>콘텐츠를 공급하는 주체. 콘텐츠와 붙어 있어야 자연스럽다. 크리에이터(개인) → 파트너(CP·위임).</p>
+          <div class="gh g-commerce"><span class="gi"></span>커머스 <span class="ord">4 · S-30~33</span></div>
+          <p>돈·재화. 환불·정산은 <b>고위험·승인 동반</b>이라 일상 업무 아래. 결제 → 지갑 → 쿠폰 → 정산.</p>
+          <div class="gh g-ops"><span class="gi"></span>운영 <span class="ord">5 · S-40~42</span></div>
+          <p>주기적 백오피스(알림·배치·감사). 매일은 아님. 감사 로그가 그룹 끝(읽기 전용 기록).</p>
+          <div class="gh g-system"><span class="gi"></span>시스템 <span class="ord">6 · S-50~52</span></div>
+          <p>관리자·권한·초대. <b>최고 권한·최소 빈도</b>라 맨 아래. 관리자 → 역할(RBAC) → 초대.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 외부 4 role 메뉴 -->
+  <div class="sec">
+    <div class="sh"><span class="nx">3</span><h2>외부 4 role — 독립 메뉴 체계</h2><span class="desc">운영자 6그룹을 쓰지 않는다. role마다 자기 관점의 메뉴를 새로 짠다. 공통 흐름: 홈 → 제작/업무 → 정산/매출 → 위임 → 계정.</span></div>
+    <div class="body">
+      <div class="ext">
+        <!-- 개인 author -->
+        <div class="col">
+          <div class="ct"><span class="pill au">개인 author</span> = 팀장</div>
+          <div class="tree">
+            <div class="tb"><span class="sq">P</span> Playtoon</div>
+            <div class="body2">
+              <div class="grp"><span>작가</span></div>
+              <div class="mi active"><span class="ic">▥</span> 대시보드</div>
+              <div class="mi"><span class="ic">₩</span> 회차·가격 제안</div>
+              <div class="mi"><span class="ic">◷</span> 정산 내역</div>
+              <div class="grp"><span>팀장 (위임)</span></div>
+              <div class="mi lav"><span class="ic">◆</span> 위임 관리<span class="sp"></span><span class="dot lavd"></span></div>
+              <div class="grp"><span>계정</span></div>
+              <div class="mi"><span class="ic">◐</span> 내 정보</div>
+            </div>
+            <div class="foot"><span class="av au">이</span><div><div class="nm">이든 작가</div><div class="rl">개인 author · 팀장</div></div></div>
+          </div>
+          <div class="note">정산을 <b>직접 수령</b>하므로 "정산 내역" 있음. <b>위임 관리는 팀장일 때만</b> 등장(팀 없으면 숨김). 가격은 제안까지(확정 없음).</div>
+        </div>
+
+        <!-- CP author -->
+        <div class="col">
+          <div class="ct"><span class="pill au">CP author</span> 소속</div>
+          <div class="tree">
+            <div class="tb"><span class="sq">P</span> Playtoon <span class="badge cp">소속</span></div>
+            <div class="body2">
+              <div class="grp"><span>작가</span></div>
+              <div class="mi active"><span class="ic">▥</span> 대시보드</div>
+              <div class="mi"><span class="ic">₩</span> 회차·가격 제안</div>
+              <div class="mi"><span class="ic">▤</span> 내 작품·매출</div>
+              <div class="grp"><span>팀장 (위임)</span></div>
+              <div class="mi lav"><span class="ic">◆</span> 위임 관리</div>
+              <div class="grp"><span>계정</span></div>
+              <div class="mi"><span class="ic">◐</span> 내 정보</div>
+            </div>
+            <div class="foot"><span class="av au">소</span><div><div class="nm">소이 작가</div><div class="rl">CP author · 노을</div></div></div>
+          </div>
+          <div class="note">개인 author와 같은 흐름이나, 정산은 CP 몫이라 "정산 내역" 대신 <b>"내 작품·매출"(조회)</b>. 위임은 본인 팀일 때만.</div>
+        </div>
+
+        <!-- CP master -->
+        <div class="col">
+          <div class="ct"><span class="pill cp">CP master</span> 최광</div>
+          <div class="tree">
+            <div class="tb"><span class="sq">P</span> Playtoon <span class="badge cp">CP</span></div>
+            <div class="body2">
+              <div class="grp"><span>CP master</span></div>
+              <div class="mi active"><span class="ic">▥</span> 대시보드</div>
+              <div class="mi"><span class="ic">◐</span> 소속 작가</div>
+              <div class="mi"><span class="ic">▤</span> 작품 관리</div>
+              <div class="mi"><span class="ic">∑</span> 정산·계약</div>
+              <div class="mi lav"><span class="ic">◆</span> 위임 관리</div>
+              <div class="mi"><span class="ic">⚙</span> 설정</div>
+            </div>
+            <div class="foot"><span class="av cp">노</span><div><div class="nm">스튜디오 노을</div><div class="rl">CP master</div></div></div>
+          </div>
+          <div class="note">회사 전체 관제라 <b>가장 넓은 6메뉴</b>. 작가 여러 명을 거느려 "소속 작가" 추가. 회사 전체 위임 발급 가능.</div>
+        </div>
+
+        <!-- CP accounting -->
+        <div class="col">
+          <div class="ct"><span class="pill cp">CP accounting</span> 최소</div>
+          <div class="tree">
+            <div class="tb"><span class="sq">P</span> Playtoon <span class="badge cp">CP</span></div>
+            <div class="body2">
+              <div class="grp"><span>CP accounting</span></div>
+              <div class="mi active"><span class="ic">₩</span> 정산</div>
+              <div class="mi"><span class="ic">◐</span> 내 정보</div>
+              <div class="grp hiddenh"><span>권한 밖 (숨김)</span></div>
+              <div class="mi hidden"><span class="ic">▥</span> 대시보드</div>
+              <div class="mi hidden"><span class="ic">◐</span> 소속 작가</div>
+              <div class="mi hidden"><span class="ic">▤</span> 작품 관리</div>
+              <div class="mi hidden"><span class="ic">◆</span> 위임 관리</div>
+              <div class="mi hidden"><span class="ic">⚙</span> 설정</div>
+            </div>
+            <div class="foot"><span class="av cp">한</span><div><div class="nm">한지 회계</div><div class="rl">CP accounting</div></div></div>
+          </div>
+          <div class="note"><b>가장 좁은 2메뉴</b>. 나머지는 회색 비활성이 아니라 <b>아예 렌더 안 함</b>(취소선은 설명용일 뿐 실제 화면엔 없음).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 동작 규칙 -->
+  <div class="sec">
+    <div class="sh"><span class="nx">4</span><h2>동작 규칙 — 접힘 · 활성 · 숨김</h2><span class="desc">순서는 고정, 표시 여부·상태는 규칙으로 제어.</span></div>
+    <div class="body">
+      <div class="rules">
+        <div class="rule">
+          <h4><span class="k">ACTIVE</span> 활성 상태</h4>
+          <p>현재 라우트 항목 = <b>brand-wash 배경 + brand 텍스트</b>. 좌측 인디케이터로 강조. 그룹 헤더는 활성 항목을 포함하면 자동 펼침 유지.</p>
+          <div class="demo">
+            <div class="dm"><span class="sid">S-10</span> 시리즈·검수</div>
+            <div class="dm active"><span class="sid">S-11</span> 회차·가격 <span class="sp"></span><span class="dot"></span></div>
+            <div class="dm"><span class="sid">S-12</span> 게시물</div>
+          </div>
+        </div>
+        <div class="rule">
+          <h4><span class="k">COLLAPSE</span> 그룹 접힘</h4>
+          <p>그룹 헤더(▾) 클릭 시 접힘/펼침 토글. <b>기본 전체 펼침</b>, 활성 항목 포함 그룹은 접어도 자동 펼침. 접힘 상태는 세션 유지(localStorage 미사용 — 서버/메모리).</p>
+          <div class="demo">
+            <div class="dm" style="font-weight:800;color:var(--ink-3)"><span class="sp"></span>커머스 <span style="margin-left:auto;font-size:10px">▸ 접힘</span></div>
+            <div class="dm" style="font-weight:800;color:var(--ink-3)"><span class="sp"></span>운영 <span style="margin-left:auto;font-size:10px">▾ 펼침</span></div>
+            <div class="dm"><span class="sid">S-40</span> 알림·캠페인</div>
+          </div>
+        </div>
+        <div class="rule">
+          <h4><span class="k">HIDE</span> 권한별 숨김 (핵심)</h4>
+          <p>권한 없는 항목은 <b>회색 비활성이 아니라 렌더하지 않음</b>. 그룹의 모든 항목이 숨겨지면 <b>그룹 헤더도 숨김</b>. "왜 못 누르지?" 혼란 방지. 잠금(비활성)은 예외적으로만.</p>
+          <div class="demo">
+            <div class="dm"><span class="sid">S-30</span> 결제·환불</div>
+            <div class="dm hidden"><span class="sid">S-33</span> 정산·RS·MG <span class="sp"></span><span style="font-size:9px;color:var(--ink-4)">settlement 권한 없음</span></div>
+            <div class="dm" style="color:var(--ink-4);font-size:10.5px"><span class="sp"></span>↑ 실제로는 줄 자체가 사라짐</div>
+          </div>
+        </div>
+        <div class="rule">
+          <h4><span class="k">BADGE</span> 배지 · 점 · 알림</h4>
+          <p><b>todo 점(brand)</b> = 신설 화면(S-11·S-33). <b>위임 점(Lavender)</b> = 활성 위임 알림. 숫자 배지 = 미처리 카운트(검수 대기 등). 점·배지는 순서에 영향 없음.</p>
+          <div class="demo">
+            <div class="dm"><span class="sid">S-11</span> 회차·가격 <span class="sp"></span><span class="dot"></span></div>
+            <div class="dm" style="color:var(--lav-d)"><span class="ic" style="width:15px;text-align:center">◆</span> 위임 관리 <span class="sp"></span><span class="dot" style="background:var(--lav)"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="lg"><span class="sw active"></span> 활성(현재 라우트)</div>
+        <div class="lg"><span class="sw lav"></span> 위임(Lavender 전용)</div>
+        <div class="lg"><span class="dot"></span> todo 점(신설 S-11·S-33)</div>
+        <div class="lg"><span class="dot lavd"></span> 위임 알림 점</div>
+        <div class="lg"><span class="ln">취소선</span> = 설명용(실제 화면엔 렌더 안 함)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>Playtoon Admin · 네비게이션·메뉴 순서 명세 V1.0</b> — ScreenSpec V1.0 정본 · 디자인 시스템 V1.1 · 2026.06.23<br>
+    운영자 = 6그룹/18라우트 고정 순서(개요→콘텐츠→파트너십→커머스→운영→시스템, 그룹 내 라이프사이클 순) · 외부 4 role = role별 독립 메뉴(권한으로 거른 부분집합 아님)<br>
+    순서 2원칙 = 빈도↓ · 권한(민감도)↑ · 동작 규칙 = 활성(brand-wash) / 그룹 접힘(기본 펼침·활성 그룹 자동 펼침) / <b>권한 없으면 숨김(렌더 안 함, 비활성 아님)</b> / todo·위임 점 배지<br>
+    이 명세는 8개 시안 파일(외부 M·A·CA·D·P·AC + 운영자 OP1·OP2·OP3)의 사이드바에 이미 적용된 순서를 단일 문서로 정본화한 것.
+  </div>
+</div>
+</body>
+</html>

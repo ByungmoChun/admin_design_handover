@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playtoon Admin · 운영자 18화면 [1/3] 개요·콘텐츠 — S-00·S-10·S-11·S-12·S-13·S-14</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --bg:#F5F4F2;--surf:#FFFFFF;--surf-2:#FAFAF9;--line:#E6E4E1;--line-2:#F0EEEC;
+  --ink:#1A1917;--ink-2:#44423E;--ink-3:#6E6B66;--ink-4:#9C9893;
+  --brand:#C7242D;--brand-h:#A22F2C;--brand-a:#7F2523;--brand-wash:#FBEAEA;
+  --lav:#A99DE4;--lav-d:#6E5FB8;--lav-wash:#F1EFFB;--lav-line:#DCD6F4;
+  --danger:#E5484D;--danger-d:#C2363B;--danger-wash:#FDECEC;--danger-line:#F1C9CB;
+  --ok:#2E9E5B;--ok-d:#1F7A43;--ok-wash:#E8F6EE;
+  --warn:#D9870A;--warn-d:#B36C00;--warn-wash:#FCF3E2;
+  --info:#3A6FE0;--info-wash:#EAF0FD;
+  --r-s:6px;--r:10px;--r-l:14px;--pill:999px;
+  --sh-s:0 1px 2px rgba(26,25,23,.06),0 1px 1px rgba(26,25,23,.04);
+  --sh-m:0 4px 14px rgba(26,25,23,.08),0 1px 3px rgba(26,25,23,.05);
+  --skel-base:#EDECEA;--skel-shine:#F8F7F6;
+  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Segoe UI',Roboto,'Noto Sans KR',sans-serif;
+  --mono:'SFMono-Regular',ui-monospace,'JetBrains Mono','Roboto Mono',Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:#E9E7E3;color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+.num{font-variant-numeric:tabular-nums}
+
+.docbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:16px;padding:11px 22px;background:#161412;color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.4);flex-wrap:wrap}
+.docbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.docbar .logo .sq{width:22px;height:22px;border-radius:6px;background:var(--brand);display:grid;place-items:center;font-size:12px;font-weight:900}
+.docbar .v{font-size:11px;font-weight:700;color:#bdb9b3;font-family:var(--mono)}
+.docbar .sp{flex:1}
+.tabs{display:flex;gap:3px;background:#241f1c;padding:4px;border-radius:var(--pill);flex-wrap:wrap}
+.tabs button{appearance:none;border:0;background:transparent;color:#cfcbc5;font-family:var(--font);font-weight:700;font-size:11.5px;padding:6px 11px;border-radius:var(--pill);cursor:pointer;transition:.16s}
+.tabs button:hover{color:#fff}.tabs button.on{background:#fff;color:#161412}
+.ann-toggle{display:flex;align-items:center;gap:7px;font-size:12px;color:#cfcbc5;cursor:pointer;user-select:none}
+.ann-toggle .sw{width:34px;height:19px;border-radius:var(--pill);background:#4a443f;position:relative;transition:.18s}
+.ann-toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.18s}
+.ann-toggle.on .sw{background:var(--lav)}.ann-toggle.on .sw::after{left:17px}
+
+.stage{max-width:1340px;margin:0 auto;padding:28px 24px 90px}
+.view{display:none}.view.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.screen-head{display:flex;align-items:flex-end;gap:13px;margin:4px 2px 16px;flex-wrap:wrap}
+.screen-head .id{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;padding:5px 11px;border-radius:var(--r-s);background:var(--ink)}
+.screen-head h1{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.screen-head .route{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);background:var(--surf-2);border:1px solid var(--line);padding:4px 9px;border-radius:var(--r-s)}
+.sb{font-size:10px;font-weight:800;padding:4px 9px;border-radius:var(--pill);letter-spacing:.3px}
+.sb.live{background:var(--ok-wash);color:var(--ok-d)}
+.sb.thin{background:var(--warn-wash);color:var(--warn-d)}
+.sb.todo{background:var(--brand-wash);color:var(--brand-a)}
+.sb.capture{background:var(--info-wash);color:var(--info)}
+.screen-head p{flex-basis:100%;font-size:12.5px;color:var(--ink-3);margin-top:2px;max-width:880px}
+.permrow{flex-basis:100%;display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.perm{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--ink-3);background:var(--surf-2);border:1px solid var(--line);padding:2px 7px;border-radius:var(--r-s)}
+.perm.new{color:var(--brand-a);background:var(--brand-wash);border-color:#f1d4d5;border-style:dashed}
+.perm.biz{color:var(--lav-d);background:var(--lav-wash);border-color:var(--lav-line)}
+
+.frame{position:relative;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-m);overflow:hidden}
+.frame .browser{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--surf-2);border-bottom:1px solid var(--line)}
+.frame .browser .dots{display:flex;gap:6px}.frame .browser .dots i{width:10px;height:10px;border-radius:50%;display:block;background:#d8d4cf}
+.frame .browser .url{flex:1;font-family:var(--mono);font-size:11px;color:var(--ink-3);background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:5px 12px}
+
+/* operator shell — 6-group/18-route sidebar */
+.app{display:grid;grid-template-columns:236px 1fr;min-height:640px}
+.side{background:var(--surf);border-right:1px solid var(--line);padding:14px 11px;display:flex;flex-direction:column;overflow:auto}
+.side .brand{display:flex;align-items:center;gap:9px;padding:5px 8px 12px;font-weight:800;font-size:14px}
+.side .brand .sq{width:24px;height:24px;border-radius:7px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:900}
+.side .brand .opbadge{margin-left:auto;font-size:9px;font-weight:800;color:var(--ink-4);border:1px solid var(--line);border-radius:var(--pill);padding:2px 7px}
+.side .grp{font-size:9.5px;font-weight:800;letter-spacing:.5px;color:var(--ink-4);text-transform:uppercase;padding:11px 9px 4px}
+.nav a{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:var(--r-s);font-size:12px;font-weight:600;color:var(--ink-2);text-decoration:none;margin-bottom:1px}
+.nav a .sid{font-family:var(--mono);font-size:9px;color:var(--ink-4)}
+.nav a:hover{background:var(--surf-2);color:var(--ink)}
+.nav a.on{background:var(--brand-wash);color:var(--brand-a);font-weight:700}
+.nav a.on .sid{color:var(--brand-a)}
+.nav a .sp{flex:1}
+.nav a .td{width:6px;height:6px;border-radius:50%;background:var(--brand);flex:none}
+.side .me{margin-top:12px;display:flex;align-items:center;gap:9px;padding:9px;border-top:1px solid var(--line-2)}
+.side .me .av{width:28px;height:28px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;background:linear-gradient(135deg,#3a3733,#1a1917)}
+.side .me .nm{font-size:12px;font-weight:700;line-height:1.2}.side .me .rl{font-size:10px;color:var(--ink-3)}
+
+.main{display:flex;flex-direction:column;background:var(--bg);min-width:0}
+.topbar{display:flex;align-items:center;gap:13px;padding:12px 22px;background:var(--surf);border-bottom:1px solid var(--line)}
+.topbar .crumb{font-size:12px;color:var(--ink-3);font-weight:600}.topbar .crumb b{color:var(--ink);font-weight:700}
+.topbar .sp{flex:1}
+.topbar .bell{width:32px;height:32px;border-radius:var(--r-s);border:1px solid var(--line);background:#fff;display:grid;place-items:center;position:relative}
+.topbar .bell::after{content:"";position:absolute;top:7px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--brand)}
+.topbar .av{width:32px;height:32px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;background:linear-gradient(135deg,#3a3733,#1a1917)}
+.content{padding:20px 22px 34px;flex:1;min-width:0}
+
+.phead{margin-bottom:16px}.phead .row{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.phead h2{font-size:20px;font-weight:800;letter-spacing:-.4px}.phead .sub{font-size:12.5px;color:var(--ink-3);margin-top:5px}.phead .sp{flex:1}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font);font-weight:700;font-size:12.5px;padding:8px 15px;border-radius:var(--r-s);border:0;cursor:pointer}
+.btn.brand{background:var(--brand);color:#fff}.btn.brand:hover{background:var(--brand-h)}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink-2)}
+.btn.dgr{background:#fff;border:1px solid var(--danger-line);color:var(--danger-d)}
+.btn.ok{background:var(--ok);color:#fff}
+.btn.sm{padding:6px 11px;font-size:11.5px}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
+.kpi{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px;box-shadow:var(--sh-s);position:relative}
+.kpi .lab{font-size:11px;font-weight:700;color:var(--ink-3)}
+.kpi .val{font-size:25px;font-weight:800;letter-spacing:-1px;margin-top:8px;line-height:1}
+.kpi .val small{font-size:12px;font-weight:700;color:var(--ink-3);letter-spacing:0}
+.kpi .meta{font-size:10.5px;color:var(--ink-4);margin-top:7px}
+.kpi.accent .val{color:var(--brand)}.kpi.warnk .val{color:var(--warn-d)}
+
+.dash{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-s);margin-bottom:18px;overflow:hidden}
+.panel .ph{display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid var(--line-2)}
+.panel .ph h3{font-size:13.5px;font-weight:800}.panel .ph .hint{font-size:11px;color:var(--ink-4)}.panel .ph .sp{flex:1}
+.panel .pb{padding:0}
+
+/* tabs + filters inside screen */
+.scrtabs{display:flex;gap:3px;padding:11px 16px 0;border-bottom:1px solid var(--line-2)}
+.scrtabs span{font-size:12px;font-weight:700;color:var(--ink-3);padding:8px 13px;border-radius:var(--r-s) var(--r-s) 0 0;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.scrtabs span.on{color:var(--brand-a);border-bottom-color:var(--brand)}
+.filters{display:flex;gap:6px;padding:12px 16px;flex-wrap:wrap;align-items:center}
+.filters .f{font-size:11px;font-weight:700;color:var(--ink-2);background:#fff;border:1px solid var(--line);padding:5px 11px;border-radius:var(--pill);cursor:pointer}
+.filters .f.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.filters .search{margin-left:auto;font-size:11.5px;color:var(--ink-4);background:#fff;border:1px solid var(--line);border-radius:var(--r-s);padding:6px 11px;min-width:180px}
+
+table.t{width:100%;border-collapse:collapse;font-size:12px}
+table.t th{text-align:left;font-size:10px;font-weight:800;letter-spacing:.3px;color:var(--ink-3);text-transform:uppercase;padding:9px 16px;background:var(--surf-2);border-bottom:1px solid var(--line)}
+table.t td{padding:11px 16px;border-bottom:1px solid var(--line-2);color:var(--ink-2);vertical-align:middle}
+table.t tr:last-child td{border-bottom:0}
+table.t .wk{font-weight:700;color:var(--ink)}
+table.t .ep{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+table.t .num,table.t th.num{text-align:right;font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:var(--pill)}
+.chip.ok{background:var(--ok-wash);color:var(--ok-d)}.chip.warn{background:var(--warn-wash);color:var(--warn-d)}
+.chip.wait{background:var(--surf-2);color:var(--ink-3);border:1px solid var(--line)}.chip.info{background:var(--info-wash);color:var(--info)}
+.chip.dgr{background:var(--danger-wash);color:var(--danger-d)}.chip.draft{background:#EFEEFC;color:var(--lav-d)}
+.act-link{font-size:11px;font-weight:700;color:var(--brand-a);cursor:pointer}
+.act-link.mut{color:var(--ink-3)}.act-link.dg{color:var(--danger-d)}
+
+/* price 2-stage (operator side) */
+.stepper-in{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:var(--r-s);overflow:hidden;background:#fff}
+.stepper-in.focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-wash)}
+.stepper-in button{width:26px;height:30px;border:0;background:var(--surf-2);color:var(--ink-2);font-size:14px;font-weight:800;cursor:pointer}
+.stepper-in .pv{width:54px;text-align:center;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper-in .un{font-size:10px;color:var(--ink-4);padding:0 7px 0 2px}
+.prop{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.flow{display:flex;align-items:center;gap:0;margin-bottom:16px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;box-shadow:var(--sh-s);flex-wrap:wrap}
+.flow .fs{display:flex;flex-direction:column;gap:2px}.flow .fs .b{font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:var(--pill)}
+.fs.s1 .b{background:var(--lav-wash);color:var(--lav-d)}.fs.s2 .b{background:var(--warn-wash);color:var(--warn-d)}
+.fs.s3 .b{background:var(--brand-wash);color:var(--brand-a)}.fs.s4 .b{background:var(--info-wash);color:var(--info)}
+.flow .fs small{font-size:10px;color:var(--ink-4)}.flow .arr{margin:0 12px;color:var(--ink-4);font-weight:800}
+
+/* review decision toolbar */
+.revbar{display:flex;align-items:center;gap:9px;padding:11px 16px;background:var(--warn-wash);border-bottom:1px solid #f0e0bd}
+.revbar .t{font-size:11.5px;color:var(--warn-d);font-weight:700}
+
+/* curation section row */
+.curow{display:flex;align-items:center;gap:11px;padding:12px 16px;border-bottom:1px solid var(--line-2)}
+.curow:last-child{border-bottom:0}
+.curow .gr{cursor:grab;color:var(--ink-4);font-size:14px}
+.curow .nm{font-size:12.5px;font-weight:700;color:var(--ink)}
+.curow .meta{font-size:10.5px;color:var(--ink-4)}
+.curow .sp{flex:1}
+.tg{width:38px;height:22px;border-radius:var(--pill);background:#d8d4cf;position:relative;flex:none;cursor:pointer}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.18s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.tg.on{background:var(--ok)}.tg.on::after{left:18px}
+.srcchip{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--ink-2);background:var(--surf-2);border:1px solid var(--line);padding:2px 7px;border-radius:var(--r-s)}
+
+/* ANNOTATION */
+.pin{position:absolute;width:23px;height:23px;border-radius:50%;background:var(--lav);color:#fff;font-size:11.5px;font-weight:800;display:grid;place-items:center;box-shadow:0 2px 8px rgba(110,95,184,.5);border:2px solid #fff;z-index:30}
+.pin.b{background:var(--brand);box-shadow:0 2px 8px rgba(199,36,45,.5)}.pin.k{background:var(--ink)}.pin.d{background:var(--danger)}
+body.no-ann .pin{display:none}
+.spec{margin-top:22px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-s)}
+.spec .sh{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}.spec .sh h3{font-size:13.5px;font-weight:800}
+.spec .sh .tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:var(--pill);color:var(--ink-2);background:var(--surf-2);border:1px solid var(--line)}
+.anns{padding:5px 0}
+.ann{display:grid;grid-template-columns:28px 1fr;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line-2)}.ann:last-child{border-bottom:0}
+.ann .n{width:23px;height:23px;border-radius:50%;color:#fff;font-size:11.5px;font-weight:800;display:grid;place-items:center;background:var(--ink)}
+.ann .n.b{background:var(--brand)}.ann .n.d{background:var(--danger)}
+.ann .body h4{font-size:12.5px;font-weight:800;color:var(--ink);margin-bottom:5px}
+.ann .body p{font-size:12px;color:var(--ink-2);line-height:1.6}
+.ann .body .meta{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px}
+.ann .body .meta .m{font-size:10px;font-weight:700;font-family:var(--mono);padding:2px 7px;border-radius:var(--r-s);background:var(--surf-2);border:1px solid var(--line);color:var(--ink-2)}
+.ann .body .ex{margin-top:8px;border-radius:var(--r-s);padding:9px 11px;font-size:11px;color:var(--ink-2);line-height:1.55;background:var(--surf-2);border:1px solid var(--line)}
+.ann .body .ex b{color:var(--ink)}
+.ann .body .ex.brandx{background:var(--brand-wash);border-color:#f1d4d5}.ann .body .ex.brandx b{color:var(--brand-a)}
+.ann .body .copy{margin-top:7px;font-size:11px;color:var(--ink-3)}.ann .body .copy code{font-family:var(--mono);font-size:10.5px;background:var(--surf-2);border:1px solid var(--line);padding:1px 5px;border-radius:4px}
+
+.states{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.st{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-s)}
+.st .sl{font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-3);padding:9px 12px;border-bottom:1px solid var(--line-2);background:var(--surf-2)}
+.st .sbody{padding:13px 12px;min-height:74px;display:flex;flex-direction:column;justify-content:center;gap:7px}
+.st small{font-size:10px;color:var(--ink-4);line-height:1.5}
+
+.asis{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.asis .box{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.asis .box.tobe{border-color:#f1d4d5;background:linear-gradient(180deg,var(--brand-wash),#fff 80%)}
+.asis .box h5{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;margin-bottom:7px;color:var(--ink-3)}
+.asis .box.tobe h5{color:var(--brand-a)}
+.asis .box p{font-size:11.5px;color:var(--ink-2);line-height:1.6}
+
+.foot{max-width:1340px;margin:36px auto 0;padding:20px 24px 0;border-top:1px solid var(--line);color:var(--ink-3);font-size:11px;line-height:1.75}.foot b{color:var(--ink-2)}
+
+@media(max-width:1080px){.app{grid-template-columns:1fr}.side{display:none}.dash{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.asis{grid-template-columns:1fr}}
+@media(max-width:640px){.tabs button{padding:5px 8px;font-size:10px}.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="docbar">
+  <div class="logo"><span class="sq">P</span> Playtoon Admin</div>
+  <span class="v">운영자 18화면 [1/3] · 개요·콘텐츠 · V1.1 · ScreenSpec V1.0</span>
+  <span class="sp"></span>
+  <div class="tabs">
+    <button class="on" data-v="s00">S-00 대시보드</button>
+    <button data-v="s10">S-10 시리즈·검수</button>
+    <button data-v="s11">S-11 회차·가격 ★</button>
+    <button data-v="s12">S-12 게시물</button>
+    <button data-v="s13">S-13 태그·금칙어</button>
+    <button data-v="s14">S-14 큐레이션</button>
+  </div>
+  <div class="ann-toggle on" id="annToggle"><span class="sw"></span> 주석</div>
+</div>
+
+<div class="stage">
+
+<!-- ============ S-00 ============ -->
+<section class="view on" id="v-s00">
+  <div class="screen-head"><span class="id">S-00</span><h1>대시보드 / 운영 개요</h1><span class="route">/dashboard</span><span class="sb thin">thin</span>
+    <p>로그인 직후 착지 화면. <b>권한(RBAC)에 따라 위젯이 갈린다</b>. 현재는 관리자·초대 통계형이라 얕음 — TO-BE는 role별 위젯(운영=검수 큐·정산 요약 / 작가=내 작품)과 매출·정산 요약을 얹는다.</p>
+    <div class="permrow"><span class="perm">dashboard.read</span><span class="perm">auditLog.read</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/dashboard</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-00"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb"><b>대시보드</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>운영 개요</h2></div><div class="sub">오늘의 운영 현황 · 2026년 6월 23일</div></div>
+          <div class="kpis">
+            <div class="kpi accent" style="position:relative"><span class="pin b" style="right:-9px;top:-9px;left:auto">1</span><div class="lab">오늘 GMV</div><div class="val num">₩8,420,000</div><div class="meta">전일 대비 +6%</div></div>
+            <div class="kpi warnk"><div class="lab">검수 대기</div><div class="val num">7<small> 건</small></div><div class="meta">→ S-10 시리즈 검수</div></div>
+            <div class="kpi"><div class="lab">환불 요청</div><div class="val num">3<small> 건</small></div><div class="meta">→ S-30 결제·환불</div></div>
+            <div class="kpi"><div class="lab">정산 대기</div><div class="val num">2<small> 건</small></div><div class="meta">→ S-33 정산 (todo)</div></div>
+          </div>
+          <div class="dash">
+            <div class="panel" style="margin-bottom:0;position:relative"><span class="pin" style="left:-11px;top:13px">2</span>
+              <div class="ph"><h3>운영 할 일 큐</h3><span class="sp"></span><span class="hint">권한 있는 항목만</span></div>
+              <div class="pb"><table class="t"><tbody>
+                <tr><td><span class="chip warn">검수</span></td><td class="wk">비 오는 날의 선택 Ep.05</td><td style="color:var(--ink-4)">10분 전</td><td style="text-align:right"><span class="act-link">검수하기</span></td></tr>
+                <tr><td><span class="chip dgr">환불</span></td><td class="wk">user_8842 · ₩4,400</td><td style="color:var(--ink-4)">32분 전</td><td style="text-align:right"><span class="act-link">처리</span></td></tr>
+                <tr><td><span class="chip info">가격</span></td><td class="wk">겨울 도서관 Ep.08 제안가 도착</td><td style="color:var(--ink-4)">1시간 전</td><td style="text-align:right"><span class="act-link">확정</span></td></tr>
+              </tbody></table></div>
+            </div>
+            <div class="panel" style="margin-bottom:0;position:relative"><span class="pin" style="right:13px;top:-9px;left:auto">3</span>
+              <div class="ph"><h3>최근 감사 로그</h3><span class="sp"></span><span class="hint">→ S-42</span></div>
+              <div class="pb"><table class="t"><tbody>
+                <tr><td class="ep">09:41</td><td>SERIES_REVIEW_DECIDE</td><td style="color:var(--ink-4)">momo</td></tr>
+                <tr><td class="ep">09:12</td><td>PAYMENT_PRODUCT_CREATED</td><td style="color:var(--ink-4)">2E_Soon</td></tr>
+                <tr><td class="ep">08:50</td><td>INVITATION_CREATED</td><td style="color:var(--ink-4)">momo</td></tr>
+              </tbody></table></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-00</h3><span class="tag">role별 위젯 · 운영 인박스</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>매출·운영 요약 KPI (TO-BE)</h4><p>현재는 관리자·초대 카운트만. TO-BE는 <b>오늘 GMV·검수 대기·환불 요청·정산 대기</b>를 운영 액션과 직결되는 KPI로. 각 KPI가 해당 화면으로 가는 진입점(meta에 → 표기).</p><div class="meta"><span class="m">권한별 조건부 렌더</span><span class="m">GMV --brand</span></div></div></div>
+    <div class="ann"><div class="n">2</div><div class="body"><h4>운영 할 일 큐</h4><p>흩어진 운영 액션(검수·환불·가격 확정)을 한 곳에. <b>권한 없는 항목은 숨김</b> — 정산 권한 없는 운영자는 정산 행이 안 보인다. 유형 칩 색으로 긴급도 구분.</p><div class="ex brandx"><b>예문</b> — "비 오는 날의 선택 Ep.05" 검수 [검수하기]→S-10 / "겨울 도서관 Ep.08 제안가 도착" [확정]→S-11 가격 확정.</div></div></div>
+    <div class="ann"><div class="n">3</div><div class="body"><h4>최근 감사 로그 미리보기</h4><p>실제 액션타입(<code>SERIES_REVIEW_DECIDE</code>·<code>PAYMENT_PRODUCT_CREATED</code>·<code>INVITATION_CREATED</code>) 노출. 전체는 S-42로. 위임 영구보존 원칙의 입구.</p></div></div>
+  </div></div>
+  <div class="asis"><div class="box"><h5>AS-IS (현재)</h5><p>관리자·초대 카운트 통계형. 매출·정산 위젯 없음. role 구분 없이 동일 화면.</p></div>
+    <div class="box tobe"><h5>TO-BE (디자인 대상)</h5><p>role별 위젯 분기 + 매출/검수/정산 요약 + 운영 할 일 큐. 권한 없는 위젯은 렌더하지 않음(숨김 우선).</p></div></div>
+</section>
+
+<!-- ============ S-10 ============ -->
+<section class="view" id="v-s10">
+  <div class="screen-head"><span class="id">S-10</span><h1>시리즈 관리 · 검수</h1><span class="route">/series</span><span class="sb live">live</span>
+    <p>작품(시리즈)을 등록·관리하고 <b>검수 결정</b>을 내린다. 검수는 시리즈 단위로 작동하며, 상태 필터로 검수 큐를 분산 관리한다(통합 검수 큐는 TO-BE).</p>
+    <div class="permrow"><span class="perm">series.read</span><span class="perm biz">series.review</span><span class="perm">series.update</span><span class="perm">series.delete</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/series</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-10"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">콘텐츠 · <b>시리즈</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>시리즈</h2><span class="sp"></span><button class="btn ghost sm">+ 작품 등록</button></div><div class="sub">작품을 검수·관리합니다.</div></div>
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:48px">1</span>
+            <div class="filters">
+              <span class="f on">전체</span><span class="f">초안</span><span class="f">검수중</span><span class="f">거부</span><span class="f">연재중</span><span class="f">완결</span><span class="f">휴재</span>
+              <input class="search" placeholder="제목 검색">
+            </div>
+            <div class="pb"><table class="t">
+              <thead><tr><th>작품</th><th>작가</th><th>상태</th><th class="num">회차</th><th>최근 업데이트</th><th style="text-align:right">액션</th></tr></thead>
+              <tbody>
+                <tr style="position:relative"><td class="wk">비 오는 날의 선택</td><td>이든 작가</td><td><span class="chip warn">검수중</span><span class="pin b" style="right:96px;top:6px;left:auto">2</span></td><td class="num">5</td><td style="color:var(--ink-4)">10분 전</td><td style="text-align:right"><span class="act-link">검수</span> · <span class="act-link mut">상세</span></td></tr>
+                <tr><td class="wk">별빛 정류장</td><td>이든 작가</td><td><span class="chip ok">연재중</span></td><td class="num">18</td><td style="color:var(--ink-4)">2일 전</td><td style="text-align:right"><span class="act-link mut">상세</span> · <span class="act-link mut">편집</span></td></tr>
+                <tr><td class="wk">한낮의 라디오</td><td>소이 작가</td><td><span class="chip draft">초안</span></td><td class="num">0</td><td style="color:var(--ink-4)">5일 전</td><td style="text-align:right"><span class="act-link mut">상세</span></td></tr>
+                <tr><td class="wk">여름의 끝</td><td>이든 작가</td><td><span class="chip wait">완결</span></td><td class="num">30</td><td style="color:var(--ink-4)">1개월 전</td><td style="text-align:right"><span class="act-link mut">상세</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-10</h3><span class="tag">검수 결정 · 7상태 필터</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>상태 필터 = 분산된 검수 큐</h4><p>7상태(초안/검수중/거부/연재중/완결/휴재 + 전체). "검수중" 필터가 사실상 검수 대기 큐 역할. 통합 검수 큐(여러 작품 모아보기)는 TO-BE.</p><div class="meta"><span class="m">필터=상태머신</span><span class="m">기본 전체</span></div></div></div>
+    <div class="ann"><div class="n b">2</div><div class="body"><h4>검수 결정 (SERIES_REVIEW_DECIDE)</h4><p><code>series.review</code> 권한자만 [검수] 노출. 클릭 → 승인/반려 결정 모달(반려 시 사유 필수). 결정은 감사 로그에 <code>SERIES_REVIEW_DECIDE</code>로 기록.</p><div class="ex brandx"><b>예문</b> — 검수중 작품 [검수] → "승인"(연재중 전환) 또는 "반려"(사유: 해상도 미달 → 작가 A1 "확인이 필요해요"에 반려 알림). 권한 없으면 [검수] 자체가 안 보임.</div><div class="copy">반려 토스트 <code>검수를 반려했습니다 · 기록됨</code> (위험·결정 액션은 "기록됨" 동반)</div></div></div>
+  </div></div>
+  <div class="states">
+    <div class="st"><div class="sl">상태 — 7종</div><div class="sbody"><div style="display:flex;gap:5px;flex-wrap:wrap"><span class="chip draft">초안</span><span class="chip warn">검수중</span><span class="chip dgr">거부</span><span class="chip ok">연재중</span><span class="chip wait">완결</span></div></div></div>
+    <div class="st"><div class="sl">권한 — 검수 없음</div><div class="sbody"><small>series.review 없으면 [검수] 버튼 숨김. 조회만.</small></div></div>
+    <div class="st"><div class="sl">빈 상태</div><div class="sbody" style="text-align:center"><small style="font-weight:700;color:var(--ink-2)">해당 상태의 작품이 없습니다</small></div></div>
+  </div>
+</section>
+
+<!-- ============ S-11 ★ ============ -->
+<section class="view" id="v-s11">
+  <div class="screen-head"><span class="id">S-11</span><h1>회차 관리 · 가격 · 예약공개</h1><span class="route">/episodes?seriesId=</span><span class="sb todo">todo ★</span>
+    <p>운영자가 회차를 관리하고 <b>가격을 확정</b>하는 화면. 가격 2단계의 <b>운영자 측</b> — 작가가 S-11에서 제안한 <code>pricePropose</code>를 받아 운영이 <code>priceConfirm</code>으로 확정한다. 독자에겐 확정가만 노출. 변경 시 <code>PRICE_CONFIRM</code> 감사 기록. (코드는 현재 단일가 → DB DDL·UI 신설 필요)</p>
+    <div class="permrow"><span class="perm">episode.read</span><span class="perm">episode.update</span><span class="perm biz">episode.review</span><span class="perm new">episode.pricePropose*</span><span class="perm new">episode.priceConfirm*</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/episodes?seriesId=rainy-day</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-11"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">콘텐츠 · 시리즈 · <b>비 오는 날의 선택 / 회차</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>회차 · 가격</h2><span class="sp"></span><button class="btn ghost sm">+ 회차 추가</button></div><div class="sub">작가 제안가를 검토해 확정하세요. 독자에게는 확정가만 노출됩니다.</div></div>
+
+          <div class="flow" style="position:relative"><span class="pin b" style="left:-11px;top:-9px">1</span>
+            <div class="fs s1"><span class="b">① 제안</span><small>작가 pricePropose</small></div><span class="arr">→</span>
+            <div class="fs s2"><span class="b">② 검토</span><small>운영</small></div><span class="arr">→</span>
+            <div class="fs s3"><span class="b">③ 확정</span><small>운영 priceConfirm</small></div><span class="arr">→</span>
+            <div class="fs s4"><span class="b">④ 노출</span><small>독자에게 확정가만</small></div>
+          </div>
+
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:48px">2</span>
+            <div class="filters"><span class="f on">전체</span><span class="f">초안</span><span class="f">검수중</span><span class="f">거부</span><span class="f">공개</span><span class="f">숨김</span></div>
+            <div class="pb"><table class="t">
+              <thead><tr><th>회차</th><th>제목</th><th>상태</th><th class="num">작가 제안가</th><th class="num">운영 확정가</th><th class="num">독자 노출</th><th>예약공개</th><th style="text-align:right">액션</th></tr></thead>
+              <tbody>
+                <tr style="position:relative"><td class="ep">Ep.05</td><td class="wk">우산 속 둘</td><td><span class="chip warn">검수중</span></td>
+                  <td class="num"><span class="prop">500 PT</span></td>
+                  <td class="num"><span class="stepper-in focus"><button>−</button><span class="pv">400</span><button>+</button><span class="un">PT</span></span><span class="pin b" style="right:-9px;top:-2px;left:auto">3</span></td>
+                  <td class="num" style="color:var(--ink-4)">—</td><td style="color:var(--ink-4)">—</td>
+                  <td style="text-align:right"><span class="act-link">확정</span></td></tr>
+                <tr><td class="ep">Ep.04</td><td class="wk">젖은 골목</td><td><span class="chip ok">공개</span></td>
+                  <td class="num"><span class="prop" style="text-decoration:line-through;color:var(--ink-4)">500 PT</span></td>
+                  <td class="num"><span style="font-weight:800;color:var(--ok-d)">350 PT</span></td>
+                  <td class="num"><span style="font-weight:800;color:var(--ok-d)">350 PT</span></td><td>—</td>
+                  <td style="text-align:right"><span class="act-link mut">재확정</span></td></tr>
+                <tr><td class="ep">Ep.06</td><td class="wk">새 신호</td><td><span class="chip draft">초안</span></td>
+                  <td class="num" style="color:var(--ink-4)">미제안</td><td class="num" style="color:var(--ink-4)">—</td><td class="num" style="color:var(--ink-4)">—</td>
+                  <td style="position:relative"><span class="act-link mut">예약 설정</span><span class="pin" style="right:-9px;top:-9px;left:auto">4</span></td><td style="text-align:right"><span class="act-link mut">—</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-11 ★ (가격 2단계 · 운영 측)</h3><span class="tag">priceConfirm · PRICE_CONFIRM Audit</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>가격 2단계 흐름 (운영자 관점)</h4><p>작가 A2에서 제안(pricePropose) → 이 화면에서 운영이 검토·확정(priceConfirm). 작가 화면엔 "확정" 버튼이 없고, 이 화면엔 있다. 독자에겐 확정가만.</p><div class="meta"><span class="m">제안 --lav (작가)</span><span class="m">확정 --brand (운영)</span><span class="m">노출 --info</span></div></div></div>
+    <div class="ann"><div class="n b">2</div><div class="body"><h4>3컬럼 분리: 제안가 / 확정가 / 독자 노출</h4><p>작가 제안가(읽기), 운영 확정가(여기서 입력), 독자 노출(=확정가 미러). <code>proposed</code>/<code>confirmed</code> 분리 저장(DB DDL 필요 — 현재 단일 price_cash).</p><div class="meta"><span class="m">제안가 read-only</span><span class="m">확정가 stepper 입력</span><span class="m">노출=confirmed</span></div></div></div>
+    <div class="ann"><div class="n b">3</div><div class="body"><h4>확정 입력 + PRICE_CONFIRM 감사</h4><p>운영 확정가를 스테퍼로 입력(작가 제안가가 placeholder 힌트). [확정] 시 priceConfirm 실행 + <code>PRICE_CONFIRM</code> 감사 기록. 확정 후 재확정도 기록.</p><div class="ex brandx"><b>핵심 예문</b> — Ep.05: 작가 <b>500PT 제안</b> → 운영이 <b>400PT로 확정</b> → 독자 노출 400PT. Ep.04는 500→350 확정 완료. 변경 토스트 <code>가격을 확정했습니다 · 350PT · 기록됨</code>.</div></div></div>
+    <div class="ann"><div class="n">4</div><div class="body"><h4>예약 공개</h4><p>검수 통과 회차의 공개 일시 예약. 초안·검수중은 예약 불가(비활성). 상태머신(초안→검수중→공개/숨김)과 연동.</p><div class="meta"><span class="m">검수 통과 후 활성</span><span class="m">datetime</span></div></div></div>
+  </div></div>
+  <div class="asis"><div class="box"><h5>AS-IS (현재)</h5><p>코드는 <code>Episodes.price_cash</code> 단일가 1개. 제안/확정 구분 없음. 작가가 어드민에서 직접 제안하는 동선 없음.</p></div>
+    <div class="box tobe"><h5>TO-BE (디자인 + DB DDL)</h5><p>proposed/confirmed 2컬럼 신설. pricePropose(작가)·priceConfirm(운영) 권한 enum 추가. PRICE_CONFIRM 감사 이벤트. 운영자 18화면 중 <b>1순위 신설 대상</b>.</p></div></div>
+  <div class="states">
+    <div class="st"><div class="sl">확정가 입력 — 포커스</div><div class="sbody"><span class="stepper-in focus"><button>−</button><span class="pv">400</span><button>+</button><span class="un">PT</span></span><small>제안가 placeholder · brand 링</small></div></div>
+    <div class="st"><div class="sl">확정 완료</div><div class="sbody"><span style="font-weight:800;color:var(--ok-d);font-size:13px">350 PT</span><small>제안 500(취소선) → 확정 350. 독자=350</small></div></div>
+    <div class="st"><div class="sl">미제안</div><div class="sbody"><small>작가 제안 전엔 "미제안" · 확정 불가(작가 제안 대기)</small></div></div>
+    <div class="st"><div class="sl">권한 — priceConfirm 없음</div><div class="sbody"><small>확정 권한 없는 운영자는 확정가 읽기만 · [확정] 숨김</small></div></div>
+  </div>
+</section>
+
+<!-- ============ S-12 ============ -->
+<section class="view" id="v-s12">
+  <div class="screen-head"><span class="id">S-12</span><h1>게시물 (공지 / 이벤트)</h1><span class="route">/posts</span><span class="sb capture">capture</span>
+    <p>공지·이벤트 게시물을 CRUD로 관리. 상태머신(초안→예약→게시→종료)으로 발행을 제어한다. 코드는 완성형, 문서는 역작성 대상.</p>
+    <div class="permrow"><span class="perm">post.read</span><span class="perm">post.create</span><span class="perm">post.update</span><span class="perm">post.delete</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/posts</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-12"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">콘텐츠 · <b>게시물</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>게시물</h2><span class="sp"></span><button class="btn brand sm">+ 공지 작성</button></div><div class="sub">공지·이벤트를 작성하고 게시 상태를 관리합니다.</div></div>
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:48px">1</span>
+            <div class="filters"><span class="f on">전체</span><span class="f">초안</span><span class="f">예약</span><span class="f">게시</span><span class="f">종료</span></div>
+            <div class="pb"><table class="t">
+              <thead><tr><th>제목</th><th>유형</th><th>상태</th><th>게시일</th><th>작성자</th><th style="text-align:right">액션</th></tr></thead>
+              <tbody>
+                <tr><td class="wk">6월 정기 점검 안내</td><td><span class="chip wait">공지</span></td><td><span class="chip ok">게시</span></td><td style="color:var(--ink-4)">2026.06.20</td><td style="color:var(--ink-4)">momo</td><td style="text-align:right"><span class="act-link mut">편집</span> · <span class="act-link dg">종료</span></td></tr>
+                <tr><td class="wk">여름 코인 더블 이벤트</td><td><span class="chip info">이벤트</span></td><td><span class="chip warn">예약</span></td><td style="color:var(--ink-4)">2026.07.01</td><td style="color:var(--ink-4)">2E_Soon</td><td style="text-align:right"><span class="act-link mut">편집</span></td></tr>
+                <tr><td class="wk">신작 라인업 소개</td><td><span class="chip wait">공지</span></td><td><span class="chip draft">초안</span></td><td style="color:var(--ink-4)">—</td><td style="color:var(--ink-4)">momo</td><td style="text-align:right"><span class="act-link">게시</span> · <span class="act-link mut">편집</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-12</h3><span class="tag">상태머신 초안→예약→게시→종료</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>발행 상태머신</h4><p>초안(작성중)→예약(게시일 지정)→게시(노출중)→종료(내림). 상태 칩 색으로 구분, 액션이 상태에 따라 분기([게시]는 초안에만, [종료]는 게시중에만).</p><div class="ex"><b>예문</b> — "신작 라인업 소개"(초안) [게시] → 즉시 게시 또는 예약일 설정. "6월 정기 점검 안내"(게시중) [종료] → 노출 내림(삭제 아님, 종료 상태로).</div><div class="copy">유형: 공지 / 이벤트 · 상태: 초안/예약/게시/종료</div></div></div>
+  </div></div>
+</section>
+
+<!-- ============ S-13 ============ -->
+<section class="view" id="v-s13">
+  <div class="screen-head"><span class="id">S-13</span><h1>태그 · 금칙어 모더레이션</h1><span class="route">/tags</span><span class="sb capture">capture</span>
+    <p>작품 태그와 금칙어를 관리. 2탭(태그·금칙어). 문서 전무, 코드 완성형 — 정본 IA가 처음 문서화하는 영역.</p>
+    <div class="permrow"><span class="perm">tag.read</span><span class="perm">tag.update</span><span class="perm">tag.delete</span><span class="perm">bannedWord.read</span><span class="perm">bannedWord.create</span><span class="perm">bannedWord.delete</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/tags</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-13"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">콘텐츠 · <b>태그·금칙어</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>태그 · 금칙어</h2></div></div>
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:14px">1</span>
+            <div class="scrtabs"><span class="on">태그</span><span>금칙어</span></div>
+            <div class="filters"><label style="font-size:11.5px;color:var(--ink-3);display:flex;align-items:center;gap:6px"><span class="tg"></span> 차단된 태그 포함</label><input class="search" placeholder="태그 검색"></div>
+            <div class="pb"><table class="t">
+              <thead><tr><th>태그</th><th class="num">ID</th><th class="num">사용 수</th><th>번역(EN)</th><th style="text-align:right">액션</th></tr></thead>
+              <tbody>
+                <tr><td class="wk">#로맨스</td><td class="num ep">1024</td><td class="num">312</td><td>romance</td><td style="text-align:right"><span class="act-link mut">편집</span> · <span class="act-link dg">삭제</span></td></tr>
+                <tr><td class="wk">#일상</td><td class="num ep">1037</td><td class="num">204</td><td>slice-of-life</td><td style="text-align:right"><span class="act-link mut">편집</span> · <span class="act-link dg">삭제</span></td></tr>
+                <tr><td class="wk">#판타지</td><td class="num ep">1042</td><td class="num">188</td><td>fantasy</td><td style="text-align:right"><span class="act-link mut">편집</span> · <span class="act-link dg">삭제</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-13</h3><span class="tag">2탭 · 금칙어 차단 토글</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>태그 / 금칙어 2탭</h4><p>태그 탭: 이름·ID·사용 수·번역(다국어) 관리. 금칙어 탭: 등록/삭제. "차단된 태그 포함" 토글로 비활성 태그도 조회. 태그 삭제는 사용 중이면 경고.</p><div class="copy">금칙어 탭 컬럼: 단어 / 등록일 / 등록자 / [삭제] · 등록 즉시 검색·업로드에서 차단</div></div></div>
+  </div></div>
+</section>
+
+<!-- ============ S-14 ============ -->
+<section class="view" id="v-s14">
+  <div class="screen-head"><span class="id">S-14</span><h1>큐레이션 · 배너</h1><span class="route">/curation</span><span class="sb live">live</span>
+    <p>소비자 플랫폼 <b>홈의 운영 콘솔</b>. 섹션을 만들고 소스·레이아웃·순서·노출을 제어한다. 섹션 13종 구현. 드래그 정렬은 추후 지원.</p>
+    <div class="permrow"><span class="perm">curation.read</span><span class="perm biz">curation.manage</span><span class="perm biz">banner.manage</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/curation</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-14"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">콘텐츠 · <b>큐레이션</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>홈 큐레이션</h2><span class="sp"></span><button class="btn brand sm">+ 섹션 생성</button></div><div class="sub">소비자 홈의 섹션 구성을 관리합니다.</div></div>
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:14px">1</span>
+            <div class="scrtabs"><span class="on">섹션</span><span>배너</span></div>
+            <div class="filters"><label style="font-size:11.5px;color:var(--ink-3);display:flex;align-items:center;gap:6px"><span class="tg on"></span> 비활성 포함</label><span class="sp" style="flex:1"></span><span class="hint" style="font-size:11px;color:var(--ink-4)">순서 = 홈 노출 순</span></div>
+            <div class="pb">
+              <div class="curow" style="position:relative"><span class="gr">⠿</span><div><div class="nm">메인 히어로</div><div class="meta">레이아웃 HERO_CAROUSEL</div></div><span class="sp"></span><span class="srcchip">BANNER</span><span class="tg on"></span><span class="pin b" style="right:-9px;top:-9px;left:auto">2</span></div>
+              <div class="curow"><span class="gr">⠿</span><div><div class="nm">지금 인기</div><div class="meta">레이아웃 RANKING_LIST</div></div><span class="sp"></span><span class="srcchip">RANKING</span><span class="tg on"></span></div>
+              <div class="curow"><span class="gr">⠿</span><div><div class="nm">새로 올라온 작품</div><div class="meta">레이아웃 GRID</div></div><span class="sp"></span><span class="srcchip">NEW</span><span class="tg on"></span></div>
+              <div class="curow"><span class="gr">⠿</span><div><div class="nm">이어보기</div><div class="meta">레이아웃 CONTINUE_LIST</div></div><span class="sp"></span><span class="srcchip">CONTINUE</span><span class="tg"></span></div>
+              <div class="curow"><span class="gr">⠿</span><div><div class="nm">에디터 추천</div><div class="meta">레이아웃 CAROUSEL</div></div><span class="sp"></span><span class="srcchip">MANUAL</span><span class="tg on"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-14</h3><span class="tag">소스 9종 · 레이아웃 6종 · REORDER</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>섹션 / 배너 2탭</h4><p>섹션 탭: 홈 섹션을 소스·레이아웃·순서·활성으로 관리. 배너 탭: 히어로 배너 등록·교체. "비활성 포함" 토글로 꺼진 섹션도 표시.</p>
+      <div class="meta"><span class="m">소스 9: BANNER·WEEKDAY·GENRE·RANKING·NEW·MANUAL·CONTINUE·EXCLUSIVE·PERSONALIZED_TAG</span></div>
+      <div class="meta"><span class="m">레이아웃 6: HERO_CAROUSEL·CAROUSEL·GRID·RANKING_LIST·BANNER_STRIP·CONTINUE_LIST</span></div></div></div>
+    <div class="ann"><div class="n b">2</div><div class="body"><h4>순서 · 활성 토글 · 드래그(추후)</h4><p>행 순서 = 홈 노출 순서. 활성 토글로 즉시 노출/숨김. <b>드래그 정렬은 "추후 지원"</b> — 현재는 순서 이동(REORDER) 버튼 방식. 핸들(⠿)은 미래 드래그 자리.</p><div class="copy">소스별 항목 편집 깊이는 보강 대상(TO-BE) · 활성 토글 변경 시 즉시 반영</div></div></div>
+  </div></div>
+</section>
+
+<div class="foot">
+  <b>Playtoon Admin · 운영자 18화면 [1/3] 개요·콘텐츠</b> — ScreenSpec V1.0 정본 기준 · 디자인 시스템 V1.1 · 2026.06.23<br>
+  S-00 대시보드(role별 위젯·운영 인박스 TO-BE) · S-10 시리즈·검수(SERIES_REVIEW_DECIDE) · S-11★ 회차·가격 2단계(priceConfirm·PRICE_CONFIRM Audit, DB DDL 신설) · S-12 게시물(상태머신) · S-13 태그·금칙어(2탭) · S-14 큐레이션(소스9·레이아웃6)<br>
+  권한 = RBAC enum 정본(19리소스×55액션), role은 런타임 조합 · 점선 권한칩 = 신설 예정(가격2단계) · 색=의미: 브랜드 레드 운영 액션 / danger 파괴 / Lavender 위임·제안<br>
+  남은 작업 — [2/3] 파트너십(S-20·21)+커머스(S-30·31·32·33★) · [3/3] 운영(S-40·41·42)+시스템(S-50·51·52)
+</div>
+
+</div>
+
+<script>
+// 6-group / 18-route operator sidebar (full IA) — rendered into every screen
+const IA=[
+  ['개요',[['S-00','대시보드','/dashboard']]],
+  ['콘텐츠',[['S-10','시리즈·검수','/series'],['S-11','회차·가격','/episodes'],['S-12','게시물','/posts'],['S-13','태그·금칙어','/tags'],['S-14','큐레이션·배너','/curation']]],
+  ['파트너십',[['S-20','크리에이터','/creators'],['S-21','파트너·위임','/partners']]],
+  ['커머스',[['S-30','결제·환불','/payments'],['S-31','지갑·원장','/wallets'],['S-32','쿠폰','/coupons'],['S-33','정산·RS·MG','—']]],
+  ['운영',[['S-40','알림·캠페인','/notifications'],['S-41','스케줄러·배치','/scheduler'],['S-42','감사 로그','/audit']]],
+  ['시스템',[['S-50','관리자','/admins'],['S-51','역할(RBAC)','/roles'],['S-52','초대','/invitations']]]
+];
+function buildSide(el){
+  const active=el.getAttribute('data-active');
+  let h='<div class="brand"><span class="sq">P</span> Playtoon <span class="opbadge">운영자</span></div>';
+  IA.forEach(([g,items])=>{
+    h+='<div class="grp">'+g+'</div><nav class="nav">';
+    items.forEach(([id,nm,rt])=>{
+      const on=id===active?' on':'';
+      const todo=(id==='S-11'||id==='S-33')?'<span class="sp"></span><span class="td"></span>':'';
+      h+='<a class="'+on.trim()+'" href="#"><span class="sid">'+id+'</span> '+nm+todo+'</a>';
+    });
+    h+='</nav>';
+  });
+  h+='<div class="me"><span class="av">운</span><div><div class="nm">momo</div><div class="rl">Super Admin</div></div></div>';
+  el.innerHTML=h;
+}
+document.querySelectorAll('.side[data-active]').forEach(buildSide);
+
+const tabs=[...document.querySelectorAll('.tabs button')];
+const views={s00:'v-s00',s10:'v-s10',s11:'v-s11',s12:'v-s12',s13:'v-s13',s14:'v-s14'};
+tabs.forEach(b=>b.addEventListener('click',()=>{tabs.forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  Object.values(views).forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById(views[b.dataset.v]).classList.add('on');window.scrollTo({top:0,behavior:'smooth'});}));
+const at=document.getElementById('annToggle');
+at.addEventListener('click',()=>{at.classList.toggle('on');document.body.classList.toggle('no-ann',!at.classList.contains('on'));});
+</script>
+<script>/*deeplink*/(function(){try{var p=new URLSearchParams(location.search).get("screen");if(p){var b=document.querySelector('.tabs button[data-v="'+p+'"]');if(b)b.click();}}catch(e){}})();</script>
+</body>
+</html>

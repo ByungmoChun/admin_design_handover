@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playtoon Admin · 운영자 18화면 [3/3] 운영·시스템 — S-40·S-41·S-42·S-50·S-51·S-52</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --bg:#F5F4F2;--surf:#FFFFFF;--surf-2:#FAFAF9;--line:#E6E4E1;--line-2:#F0EEEC;
+  --ink:#1A1917;--ink-2:#44423E;--ink-3:#6E6B66;--ink-4:#9C9893;
+  --brand:#C7242D;--brand-h:#A22F2C;--brand-a:#7F2523;--brand-wash:#FBEAEA;
+  --lav:#A99DE4;--lav-d:#6E5FB8;--lav-wash:#F1EFFB;--lav-line:#DCD6F4;
+  --danger:#E5484D;--danger-d:#C2363B;--danger-wash:#FDECEC;--danger-line:#F1C9CB;
+  --ok:#2E9E5B;--ok-d:#1F7A43;--ok-wash:#E8F6EE;
+  --warn:#D9870A;--warn-d:#B36C00;--warn-wash:#FCF3E2;
+  --info:#3A6FE0;--info-wash:#EAF0FD;
+  --r-s:6px;--r:10px;--r-l:14px;--pill:999px;
+  --sh-s:0 1px 2px rgba(26,25,23,.06),0 1px 1px rgba(26,25,23,.04);
+  --sh-m:0 4px 14px rgba(26,25,23,.08),0 1px 3px rgba(26,25,23,.05);
+  --skel-base:#EDECEA;--skel-shine:#F8F7F6;
+  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Segoe UI',Roboto,'Noto Sans KR',sans-serif;
+  --mono:'SFMono-Regular',ui-monospace,'JetBrains Mono','Roboto Mono',Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:#E9E7E3;color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+.num{font-variant-numeric:tabular-nums}
+
+.docbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:16px;padding:11px 22px;background:#161412;color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.4);flex-wrap:wrap}
+.docbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.docbar .logo .sq{width:22px;height:22px;border-radius:6px;background:var(--brand);display:grid;place-items:center;font-size:12px;font-weight:900}
+.docbar .v{font-size:11px;font-weight:700;color:#bdb9b3;font-family:var(--mono)}
+.docbar .sp{flex:1}
+.tabs{display:flex;gap:3px;background:#241f1c;padding:4px;border-radius:var(--pill);flex-wrap:wrap}
+.tabs button{appearance:none;border:0;background:transparent;color:#cfcbc5;font-family:var(--font);font-weight:700;font-size:11.5px;padding:6px 11px;border-radius:var(--pill);cursor:pointer;transition:.16s}
+.tabs button:hover{color:#fff}.tabs button.on{background:#fff;color:#161412}
+.ann-toggle{display:flex;align-items:center;gap:7px;font-size:12px;color:#cfcbc5;cursor:pointer;user-select:none}
+.ann-toggle .sw{width:34px;height:19px;border-radius:var(--pill);background:#4a443f;position:relative;transition:.18s}
+.ann-toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.18s}
+.ann-toggle.on .sw{background:var(--lav)}.ann-toggle.on .sw::after{left:17px}
+
+.stage{max-width:1340px;margin:0 auto;padding:28px 24px 90px}
+.view{display:none}.view.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.screen-head{display:flex;align-items:flex-end;gap:13px;margin:4px 2px 16px;flex-wrap:wrap}
+.screen-head .id{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;padding:5px 11px;border-radius:var(--r-s);background:var(--ink)}
+.screen-head h1{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.screen-head .route{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);background:var(--surf-2);border:1px solid var(--line);padding:4px 9px;border-radius:var(--r-s)}
+.sb{font-size:10px;font-weight:800;padding:4px 9px;border-radius:var(--pill);letter-spacing:.3px}
+.sb.live{background:var(--ok-wash);color:var(--ok-d)}.sb.thin{background:var(--warn-wash);color:var(--warn-d)}
+.sb.todo{background:var(--brand-wash);color:var(--brand-a)}.sb.capture{background:var(--info-wash);color:var(--info)}
+.screen-head p{flex-basis:100%;font-size:12.5px;color:var(--ink-3);margin-top:2px;max-width:880px}
+.permrow{flex-basis:100%;display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.perm{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--ink-3);background:var(--surf-2);border:1px solid var(--line);padding:2px 7px;border-radius:var(--r-s)}
+.perm.new{color:var(--brand-a);background:var(--brand-wash);border-color:#f1d4d5;border-style:dashed}
+.perm.biz{color:var(--lav-d);background:var(--lav-wash);border-color:var(--lav-line)}
+
+.frame{position:relative;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-m);overflow:hidden}
+.frame .browser{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--surf-2);border-bottom:1px solid var(--line)}
+.frame .browser .dots{display:flex;gap:6px}.frame .browser .dots i{width:10px;height:10px;border-radius:50%;display:block;background:#d8d4cf}
+.frame .browser .url{flex:1;font-family:var(--mono);font-size:11px;color:var(--ink-3);background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:5px 12px}
+
+.app{display:grid;grid-template-columns:236px 1fr;min-height:640px}
+.side{background:var(--surf);border-right:1px solid var(--line);padding:14px 11px;display:flex;flex-direction:column;overflow:auto}
+.side .brand{display:flex;align-items:center;gap:9px;padding:5px 8px 12px;font-weight:800;font-size:14px}
+.side .brand .sq{width:24px;height:24px;border-radius:7px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:900}
+.side .brand .opbadge{margin-left:auto;font-size:9px;font-weight:800;color:var(--ink-4);border:1px solid var(--line);border-radius:var(--pill);padding:2px 7px}
+.side .grp{font-size:9.5px;font-weight:800;letter-spacing:.5px;color:var(--ink-4);text-transform:uppercase;padding:11px 9px 4px}
+.nav a{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:var(--r-s);font-size:12px;font-weight:600;color:var(--ink-2);text-decoration:none;margin-bottom:1px}
+.nav a .sid{font-family:var(--mono);font-size:9px;color:var(--ink-4)}
+.nav a:hover{background:var(--surf-2);color:var(--ink)}
+.nav a.on{background:var(--brand-wash);color:var(--brand-a);font-weight:700}.nav a.on .sid{color:var(--brand-a)}
+.nav a .sp{flex:1}.nav a .td{width:6px;height:6px;border-radius:50%;background:var(--brand);flex:none}
+.side .me{margin-top:12px;display:flex;align-items:center;gap:9px;padding:9px;border-top:1px solid var(--line-2)}
+.side .me .av{width:28px;height:28px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;background:linear-gradient(135deg,#3a3733,#1a1917)}
+.side .me .nm{font-size:12px;font-weight:700;line-height:1.2}.side .me .rl{font-size:10px;color:var(--ink-3)}
+
+.main{display:flex;flex-direction:column;background:var(--bg);min-width:0}
+.topbar{display:flex;align-items:center;gap:13px;padding:12px 22px;background:var(--surf);border-bottom:1px solid var(--line)}
+.topbar .crumb{font-size:12px;color:var(--ink-3);font-weight:600}.topbar .crumb b{color:var(--ink);font-weight:700}
+.topbar .sp{flex:1}
+.topbar .bell{width:32px;height:32px;border-radius:var(--r-s);border:1px solid var(--line);background:#fff;display:grid;place-items:center;position:relative}
+.topbar .bell::after{content:"";position:absolute;top:7px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--brand)}
+.topbar .av{width:32px;height:32px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;background:linear-gradient(135deg,#3a3733,#1a1917)}
+.content{padding:20px 22px 34px;flex:1;min-width:0}
+
+.phead{margin-bottom:16px}.phead .row{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.phead h2{font-size:20px;font-weight:800;letter-spacing:-.4px}.phead .sub{font-size:12.5px;color:var(--ink-3);margin-top:5px}.phead .sp{flex:1}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font);font-weight:700;font-size:12.5px;padding:8px 15px;border-radius:var(--r-s);border:0;cursor:pointer}
+.btn.brand{background:var(--brand);color:#fff}.btn.brand:hover{background:var(--brand-h)}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink-2)}
+.btn.dgr{background:#fff;border:1px solid var(--danger-line);color:var(--danger-d)}
+.btn.ok{background:var(--ok);color:#fff}
+.btn.sm{padding:6px 11px;font-size:11.5px}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
+.kpi{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px;box-shadow:var(--sh-s)}
+.kpi .lab{font-size:11px;font-weight:700;color:var(--ink-3)}
+.kpi .val{font-size:24px;font-weight:800;letter-spacing:-1px;margin-top:8px;line-height:1}
+.kpi .val small{font-size:12px;font-weight:700;color:var(--ink-3);letter-spacing:0}
+.kpi .meta{font-size:10.5px;color:var(--ink-4);margin-top:7px}
+
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-s);margin-bottom:18px;overflow:hidden}
+.panel .ph{display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid var(--line-2)}
+.panel .ph h3{font-size:13.5px;font-weight:800}.panel .ph .hint{font-size:11px;color:var(--ink-4)}.panel .ph .sp{flex:1}
+.panel .pb{padding:0}
+
+.scrtabs{display:flex;gap:3px;padding:11px 16px 0;border-bottom:1px solid var(--line-2);flex-wrap:wrap}
+.scrtabs span{font-size:12px;font-weight:700;color:var(--ink-3);padding:8px 13px;border-radius:var(--r-s) var(--r-s) 0 0;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.scrtabs span.on{color:var(--brand-a);border-bottom-color:var(--brand)}
+.filters{display:flex;gap:6px;padding:12px 16px;flex-wrap:wrap;align-items:center}
+.filters .f{font-size:11px;font-weight:700;color:var(--ink-2);background:#fff;border:1px solid var(--line);padding:5px 11px;border-radius:var(--pill);cursor:pointer}
+.filters .f.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.filters .search{margin-left:auto;font-size:11.5px;color:var(--ink-4);background:#fff;border:1px solid var(--line);border-radius:var(--r-s);padding:6px 11px;min-width:180px}
+.filters .sel{font-size:11.5px;color:var(--ink-2);background:#fff;border:1px solid var(--line);border-radius:var(--r-s);padding:6px 11px}
+
+table.t{width:100%;border-collapse:collapse;font-size:12px}
+table.t th{text-align:left;font-size:10px;font-weight:800;letter-spacing:.3px;color:var(--ink-3);text-transform:uppercase;padding:9px 16px;background:var(--surf-2);border-bottom:1px solid var(--line)}
+table.t td{padding:11px 16px;border-bottom:1px solid var(--line-2);color:var(--ink-2);vertical-align:middle}
+table.t tr:last-child td{border-bottom:0}
+table.t .wk{font-weight:700;color:var(--ink)}table.t .ep{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+table.t .num,table.t th.num{text-align:right;font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:var(--pill)}
+.chip.ok{background:var(--ok-wash);color:var(--ok-d)}.chip.warn{background:var(--warn-wash);color:var(--warn-d)}
+.chip.wait{background:var(--surf-2);color:var(--ink-3);border:1px solid var(--line)}.chip.info{background:var(--info-wash);color:var(--info)}
+.chip.dgr{background:var(--danger-wash);color:var(--danger-d)}.chip.brandc{background:var(--brand-wash);color:var(--brand-a)}
+.act-link{font-size:11px;font-weight:700;color:var(--brand-a);cursor:pointer}.act-link.mut{color:var(--ink-3)}.act-link.dg{color:var(--danger-d)}
+.atype{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ink-2)}
+
+/* cron status */
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.dot.ok{background:var(--ok)}.dot.idle{background:var(--ink-4)}
+
+/* RBAC matrix (S-51) */
+.rbac{display:grid;grid-template-columns:230px 1fr;min-height:200px}
+.roles{border-right:1px solid var(--line-2);padding:8px}
+.roles .rrow{display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:var(--r-s);cursor:pointer;margin-bottom:2px}
+.roles .rrow:hover{background:var(--surf-2)}
+.roles .rrow.on{background:var(--brand-wash)}
+.roles .rrow .rn{font-size:12.5px;font-weight:700;color:var(--ink)}
+.roles .rrow.on .rn{color:var(--brand-a)}
+.roles .rrow .rm{font-size:10px;color:var(--ink-4)}
+.roles .rrow .sp{flex:1}
+.roles .rrow .cnt{font-size:10px;font-weight:700;color:var(--ink-3);background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:1px 7px}
+.matrix-wrap{overflow:auto}
+table.mx{width:100%;border-collapse:collapse;font-size:11.5px}
+table.mx th{text-align:center;font-size:9.5px;font-weight:800;color:var(--ink-3);text-transform:uppercase;padding:8px 6px;background:var(--surf-2);border-bottom:1px solid var(--line);position:sticky;top:0}
+table.mx th.res{text-align:left;padding-left:14px;min-width:130px}
+table.mx td{padding:7px 6px;border-bottom:1px solid var(--line-2);text-align:center}
+table.mx td.res{text-align:left;padding-left:14px;font-family:var(--mono);font-size:10.5px;color:var(--ink-2);font-weight:700}
+table.mx td.biz{text-align:left;padding-left:10px}
+.ck{width:17px;height:17px;border-radius:4px;border:1.5px solid var(--line);display:inline-grid;place-items:center;font-size:11px;font-weight:800}
+.ck.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.ck.new{border-style:dashed;border-color:#f1d4d5;color:var(--ink-4)}
+.bzchip{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--lav-d);background:var(--lav-wash);border:1px solid var(--lav-line);padding:1px 6px;border-radius:var(--r-s);margin:1px 2px;display:inline-block}
+.bzchip.on{color:#fff;background:var(--brand);border-color:var(--brand)}
+.bzchip.new{color:var(--brand-a);background:#fff;border-color:#f1d4d5;border-style:dashed}
+.sup-note{display:flex;gap:9px;align-items:center;padding:11px 16px;background:var(--brand-wash);border-bottom:1px solid #f1d4d5;font-size:11.5px;color:var(--brand-a)}
+
+/* ANNOTATION */
+.pin{position:absolute;width:23px;height:23px;border-radius:50%;background:var(--lav);color:#fff;font-size:11.5px;font-weight:800;display:grid;place-items:center;box-shadow:0 2px 8px rgba(110,95,184,.5);border:2px solid #fff;z-index:30}
+.pin.b{background:var(--brand);box-shadow:0 2px 8px rgba(199,36,45,.5)}.pin.k{background:var(--ink)}
+body.no-ann .pin{display:none}
+.spec{margin-top:22px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-s)}
+.spec .sh{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}.spec .sh h3{font-size:13.5px;font-weight:800}
+.spec .sh .tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:var(--pill);color:var(--ink-2);background:var(--surf-2);border:1px solid var(--line)}
+.anns{padding:5px 0}
+.ann{display:grid;grid-template-columns:28px 1fr;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line-2)}.ann:last-child{border-bottom:0}
+.ann .n{width:23px;height:23px;border-radius:50%;color:#fff;font-size:11.5px;font-weight:800;display:grid;place-items:center;background:var(--ink)}
+.ann .n.b{background:var(--brand)}
+.ann .body h4{font-size:12.5px;font-weight:800;color:var(--ink);margin-bottom:5px}
+.ann .body p{font-size:12px;color:var(--ink-2);line-height:1.6}
+.ann .body .meta{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px}
+.ann .body .meta .m{font-size:10px;font-weight:700;font-family:var(--mono);padding:2px 7px;border-radius:var(--r-s);background:var(--surf-2);border:1px solid var(--line);color:var(--ink-2)}
+.ann .body .ex{margin-top:8px;border-radius:var(--r-s);padding:9px 11px;font-size:11px;color:var(--ink-2);line-height:1.55;background:var(--surf-2);border:1px solid var(--line)}
+.ann .body .ex b{color:var(--ink)}.ann .body .ex.bx{background:var(--brand-wash);border-color:#f1d4d5}.ann .body .ex.bx b{color:var(--brand-a)}
+.ann .body .copy{margin-top:7px;font-size:11px;color:var(--ink-3)}.ann .body .copy code{font-family:var(--mono);font-size:10.5px;background:var(--surf-2);border:1px solid var(--line);padding:1px 5px;border-radius:4px}
+
+.states{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.st{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-s)}
+.st .sl{font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-3);padding:9px 12px;border-bottom:1px solid var(--line-2);background:var(--surf-2)}
+.st .sbody{padding:13px 12px;min-height:74px;display:flex;flex-direction:column;justify-content:center;gap:7px}
+.st small{font-size:10px;color:var(--ink-4);line-height:1.5}
+
+.asis{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.asis .box{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.asis .box.tobe{border-color:#f1d4d5;background:linear-gradient(180deg,var(--brand-wash),#fff 80%)}
+.asis .box h5{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;margin-bottom:7px;color:var(--ink-3)}
+.asis .box.tobe h5{color:var(--brand-a)}.asis .box p{font-size:11.5px;color:var(--ink-2);line-height:1.6}
+
+.done{margin-top:22px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-s);padding:18px 20px}
+.done h3{font-size:14px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.done .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.done .g{border:1px solid var(--line);border-radius:var(--r-s);padding:10px 12px;background:var(--surf-2)}
+.done .g .gt{font-size:10.5px;font-weight:800;color:var(--ink-3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px}
+.done .g .gi{font-size:11px;color:var(--ink-2);line-height:1.7}
+
+.foot{max-width:1340px;margin:36px auto 0;padding:20px 24px 0;border-top:1px solid var(--line);color:var(--ink-3);font-size:11px;line-height:1.75}.foot b{color:var(--ink-2)}
+
+@media(max-width:1080px){.app{grid-template-columns:1fr}.side{display:none}.kpis{grid-template-columns:repeat(2,1fr)}.rbac{grid-template-columns:1fr}.roles{border-right:0;border-bottom:1px solid var(--line-2)}.asis{grid-template-columns:1fr}.done .grid{grid-template-columns:1fr}}
+@media(max-width:640px){.tabs button{padding:5px 8px;font-size:10px}.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="docbar">
+  <div class="logo"><span class="sq">P</span> Playtoon Admin</div>
+  <span class="v">운영자 18화면 [3/3] · 운영·시스템 · ScreenSpec V1.0 · 완결</span>
+  <span class="sp"></span>
+  <div class="tabs">
+    <button class="on" data-v="s40">S-40 알림·캠페인</button>
+    <button data-v="s41">S-41 스케줄러</button>
+    <button data-v="s42">S-42 감사 로그</button>
+    <button data-v="s50">S-50 관리자</button>
+    <button data-v="s51">S-51 RBAC ★</button>
+    <button data-v="s52">S-52 초대</button>
+  </div>
+  <div class="ann-toggle on" id="annToggle"><span class="sw"></span> 주석</div>
+</div>
+
+<div class="stage">
+
+<!-- ============ S-40 ============ -->
+<section class="view on" id="v-s40">
+  <div class="screen-head"><span class="id">S-40</span><h1>알림 · 템플릿 · 캠페인</h1><span class="route">/notifications</span><span class="sb live">live</span>
+    <p>푸시·이메일 알림을 템플릿으로 관리하고 수동 발송·캠페인을 운영. PDF 마케팅 엔진의 운영 측. 3탭(템플릿·발송 내역·캠페인).</p>
+    <div class="permrow"><span class="perm">notification.read</span><span class="perm biz">notification.templateManage</span><span class="perm biz">notification.send</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/notifications</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-40"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">운영 · <b>알림</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>알림</h2><span class="sp"></span><button class="btn ghost sm">수동 발송</button><button class="btn brand sm">+ 템플릿 생성</button></div><div class="sub">알림 템플릿·발송·캠페인을 관리합니다.</div></div>
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:14px">1</span>
+            <div class="scrtabs"><span class="on">템플릿</span><span>발송 내역</span><span>캠페인</span></div>
+            <div class="filters"><input class="search" placeholder="템플릿 검색" style="margin-left:0"></div>
+            <div class="pb"><table class="t">
+              <thead><tr><th>이벤트</th><th>채널</th><th>locale</th><th>제목</th><th>상태</th><th style="text-align:right">액션</th></tr></thead>
+              <tbody>
+                <tr><td class="atype">REVIEW_REJECTED</td><td><span class="chip info">푸시</span></td><td class="ep">ko</td><td>검수가 반려되었습니다</td><td><span class="chip ok">활성</span></td><td style="text-align:right"><span class="act-link mut">편집</span></td></tr>
+                <tr><td class="atype">PRICE_CONFIRMED</td><td><span class="chip info">푸시</span></td><td class="ep">ko</td><td>가격이 확정되었습니다</td><td><span class="chip ok">활성</span></td><td style="text-align:right"><span class="act-link mut">편집</span> · <span class="act-link">테스트 발송</span></td></tr>
+                <tr><td class="atype">CHARGE_SUCCESS</td><td><span class="chip wait">이메일</span></td><td class="ep">ko·en</td><td>충전이 완료되었습니다</td><td><span class="chip ok">활성</span></td><td style="text-align:right"><span class="act-link mut">편집</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-40</h3><span class="tag">템플릿·발송·캠페인 3탭</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>이벤트 기반 템플릿</h4><p>이벤트(REVIEW_REJECTED·PRICE_CONFIRMED·CHARGE_SUCCESS 등)·채널(푸시/이메일)·locale(다국어)·제목·본문으로 템플릿 구성. 발송 내역 탭은 실제 전송 로그, 캠페인 탭은 일괄 발송 관리. 발송은 <code>notification.send</code> 권한.</p><div class="ex bx"><b>예문</b> — 검수 반려(S-10) 발생 → REVIEW_REJECTED 템플릿이 작가에게 푸시. [테스트 발송]으로 본인에게 미리 확인 후 활성화.</div></div></div>
+  </div></div>
+</section>
+
+<!-- ============ S-41 ============ -->
+<section class="view" id="v-s41">
+  <div class="screen-head"><span class="id">S-41</span><h1>스케줄러 · 배치</h1><span class="route">/scheduler</span><span class="sb capture">capture</span>
+    <p>cron 배치 작업을 조회하고 수동 실행. 현재 스토리지 정리 배치만 있고, <b>정산 월배치(S-33)를 여기 얹을지 미정</b> — 정산 구현 시 동반 결정.</p>
+    <div class="permrow"><span class="perm">scheduledTask.read</span><span class="perm biz">scheduledTask.run</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/scheduler</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-41"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">운영 · <b>스케줄러</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>스케줄러 · 배치</h2></div><div class="sub">정기 배치 작업의 실행 상태를 관리합니다.</div></div>
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:14px">1</span>
+            <div class="pb"><table class="t">
+              <thead><tr><th>작업</th><th>스케줄(cron)</th><th>마지막 실행</th><th>다음 실행</th><th class="num">소요</th><th>결과</th><th style="text-align:right">액션</th></tr></thead>
+              <tbody>
+                <tr><td class="wk">storage.assetSweep</td><td class="ep">0 4 * * *</td><td style="color:var(--ink-4)">06-23 04:00</td><td style="color:var(--ink-4)">06-24 04:00</td><td class="num">12s</td><td><span class="dot ok"></span> 성공</td><td style="text-align:right"><span class="act-link">수동 실행</span></td></tr>
+                <tr style="opacity:.6"><td class="wk">settlement.monthlyBatch <span class="chip brandc" style="margin-left:6px">신설 후보</span></td><td class="ep" style="color:var(--ink-4)">0 2 1 * *</td><td style="color:var(--ink-4)">—</td><td style="color:var(--ink-4)">미설정</td><td class="num">—</td><td><span class="dot idle"></span> 미구현</td><td style="text-align:right"><span class="act-link mut">—</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-41</h3><span class="tag">cron · 수동 실행 · 정산 배치(미정)</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>배치 작업 + 정산 배치 결정 보류</h4><p>작업명·cron·마지막/다음 실행·소요·결과(성공 점)·수동 실행. 현재는 <code>storage.assetSweep</code>만. <b>정산 월배치(settlement.monthlyBatch)를 여기 얹을지는 S-33 구현 시 동반 결정</b> — 회색 "신설 후보" 행으로 자리만 표시.</p><div class="meta"><span class="m">cron 표기</span><span class="m">성공=초록 점</span><span class="m">scheduledTask.run</span></div></div></div>
+  </div></div>
+</section>
+
+<!-- ============ S-42 ============ -->
+<section class="view" id="v-s42">
+  <div class="screen-head"><span class="id">S-42</span><h1>감사 로그 (Audit)</h1><span class="route">/audit</span><span class="sb live">live</span>
+    <p>모든 관리자 조작 이력을 행위자·액션·대상·시각으로 조회. <b>위임 영구보존 원칙</b>의 근거 화면. 가격 확정·환불·정산 승인 등 위험·결정 액션이 모두 여기 남는다.</p>
+    <div class="permrow"><span class="perm">auditLog.read</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/audit</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-42"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">운영 · <b>감사 로그</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>감사 로그</h2></div><div class="sub">관리자 조작 이력 (영구 보존)</div></div>
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:14px">1</span>
+            <div class="filters"><select class="sel"><option>액션: 전체</option><option>SERIES_REVIEW_DECIDE</option><option>PAYMENT_PRODUCT_CREATED</option></select><select class="sel"><option>대상: 전체</option><option>series</option><option>payment</option></select><input class="search" placeholder="행위자 검색"></div>
+            <div class="pb"><table class="t">
+              <thead><tr><th>시각</th><th>행위자</th><th>액션</th><th>대상</th><th style="text-align:right">상세</th></tr></thead>
+              <tbody>
+                <tr><td class="ep">06-23 09:41</td><td>momo</td><td class="atype">SERIES_REVIEW_DECIDE</td><td>series #102 (비 오는 날의 선택)</td><td style="text-align:right"><span class="act-link mut">보기</span></td></tr>
+                <tr><td class="ep">06-23 09:12</td><td>2E_Soon</td><td class="atype">PAYMENT_PRODUCT_CREATED</td><td>product #14</td><td style="text-align:right"><span class="act-link mut">보기</span></td></tr>
+                <tr><td class="ep">06-23 08:50</td><td>momo</td><td class="atype">CURATION_SECTION_REORDER</td><td>curation</td><td style="text-align:right"><span class="act-link mut">보기</span></td></tr>
+                <tr><td class="ep">06-22 17:30</td><td>momo</td><td class="atype">INVITATION_CREATED</td><td>invitation #8</td><td style="text-align:right"><span class="act-link mut">보기</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-42</h3><span class="tag">실 액션타입 · 영구보존</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>실 액션타입 + 필터</h4><p>실제 코드 액션타입(<code>SERIES_REVIEW_DECIDE</code>·<code>PAYMENT_PRODUCT_CREATED</code>·<code>CURATION_SECTION_REORDER</code>·<code>INVITATION_CREATED</code>) 노출. 액션·대상 타입 필터 + 행위자 검색. 다른 화면의 "기록됨" 토스트가 모두 여기로 모인다.</p><div class="ex bx"><b>정합</b> — S-10 검수 결정 → SERIES_REVIEW_DECIDE, S-11 가격 확정 → PRICE_CONFIRM, S-30 환불 → PAYMENT_REFUND, S-33 정산 승인 → SETTLEMENT_APPROVE(신설). 위임 영구보존 원칙(브리프 P-5)의 실현.</div></div></div>
+  </div></div>
+</section>
+
+<!-- ============ S-50 ============ -->
+<section class="view" id="v-s50">
+  <div class="screen-head"><span class="id">S-50</span><h1>관리자 로스터 · 역할 할당</h1><span class="route">/admins</span><span class="sb live">live</span>
+    <p>어드민 계정을 조회하고 <b>역할(role)을 할당·회수</b>한다. role은 S-51에서 정의한 권한 조합. 현재 momo·2E_Soon 둘 다 Super Admin.</p>
+    <div class="permrow"><span class="perm">admin.read</span><span class="perm biz">admin.assignRoles</span><span class="perm biz">admin.revoke</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/admins</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-50"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">시스템 · <b>관리자</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>관리자</h2><span class="sp"></span><input class="search" placeholder="이메일/닉네임 검색" style="margin-left:0"></div></div>
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:14px">1</span>
+            <div class="pb"><table class="t">
+              <thead><tr><th>이메일</th><th>닉네임</th><th>역할</th><th>등록일</th><th style="text-align:right">액션</th></tr></thead>
+              <tbody>
+                <tr><td class="ep">momo@superxcon.com</td><td class="wk">momo</td><td><span class="chip brandc">Super Admin</span></td><td style="color:var(--ink-4)">2026.06.09</td><td style="text-align:right"><span class="act-link">역할 할당</span> · <span class="act-link dg">회수</span></td></tr>
+                <tr><td class="ep">tnsgud9@superxcon.com</td><td class="wk">2E_Soon</td><td><span class="chip brandc">Super Admin</span></td><td style="color:var(--ink-4)">2026.06.09</td><td style="text-align:right"><span class="act-link">역할 할당</span> · <span class="act-link dg">회수</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-50</h3><span class="tag">역할 할당 · 회수</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>관리자 ↔ 역할 매핑</h4><p>관리자에게 S-51에서 만든 역할을 할당/회수. 한 관리자에 여러 역할 가능(권한 합집합). 회수는 즉시 권한 박탈. 본인의 마지막 Super Admin 회수는 차단(잠금 방지).</p><div class="meta"><span class="m">다중 역할=합집합</span><span class="m">admin.assignRoles/revoke</span></div><div class="copy">현재 momo·2E_Soon 모두 Super Admin → TO-BE: 콘텐츠/정산/CS 등 최소권한 역할로 분리 권장</div></div></div>
+  </div></div>
+</section>
+
+<!-- ============ S-51 ★ ============ -->
+<section class="view" id="v-s51">
+  <div class="screen-head"><span class="id">S-51</span><h1>역할(RBAC) · 권한 매트릭스</h1><span class="route">/roles</span><span class="sb live">live ★</span>
+    <p><b>정본의 심장.</b> role을 생성하고 권한 enum(<b>19 리소스 × 55 액션</b>)을 체크박스로 부여한다. role은 고정이 아니라 <b>권한 조합으로 런타임 생성</b> — RBAC Canon V1.0이 이 화면의 근거. 신설 권한(가격 2단계·정산)이 추가되면 여기 체크박스로 등장한다.</p>
+    <div class="permrow"><span class="perm">adminRole.read</span><span class="perm biz">adminRole.manage</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/roles</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-51"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">시스템 · <b>역할(RBAC)</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>역할 · 권한</h2><span class="sp"></span><button class="btn brand sm">+ 역할 생성</button></div><div class="sub">역할은 권한 조합으로 만듭니다. 고정 role이 아닙니다.</div></div>
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:14px">1</span>
+            <div class="rbac">
+              <div class="roles">
+                <div class="rrow"><div><div class="rn">Super Admin</div><div class="rm">전체 권한 · 검사 우회</div></div><span class="sp"></span><span class="cnt">2</span></div>
+                <div class="rrow on"><div><div class="rn">콘텐츠 운영</div><div class="rm">검수·큐레이션·게시물</div></div><span class="sp"></span><span class="cnt">0</span></div>
+                <div class="rrow"><div><div class="rn">정산 담당</div><div class="rm">정산·계약(신설 후)</div></div><span class="sp"></span><span class="cnt">0</span></div>
+                <div class="rrow"><div><div class="rn">CS 상담원</div><div class="rm">지갑·환불·결제 조회</div></div><span class="sp"></span><span class="cnt">0</span></div>
+                <div class="rrow"><div><div class="rn">마케팅</div><div class="rm">알림·쿠폰·큐레이션</div></div><span class="sp"></span><span class="cnt">0</span></div>
+              </div>
+              <div class="matrix-wrap">
+                <div class="sup-note" style="position:relative"><span class="pin b" style="right:14px;top:-9px;left:auto">2</span>⚑ <b>콘텐츠 운영</b> — 선택된 권한만 체크. 저장 시 이 조합이 곧 role.</div>
+                <table class="mx">
+                  <thead><tr><th class="res">리소스</th><th>조회</th><th>생성</th><th>수정</th><th>삭제</th><th>관리</th><th style="text-align:left;padding-left:10px">비즈 액션</th></tr></thead>
+                  <tbody>
+                    <tr><td class="res">dashboard</td><td><span class="ck on">✓</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="biz"></td></tr>
+                    <tr><td class="res">auditLog</td><td><span class="ck on">✓</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="biz"></td></tr>
+                    <tr style="position:relative"><td class="res">series</td><td><span class="ck on">✓</span></td><td><span class="ck"></span></td><td><span class="ck on">✓</span></td><td><span class="ck"></span></td><td>—</td><td class="biz"><span class="bzchip on">review</span><span class="pin b" style="right:8px;top:2px;left:auto">3</span></td></tr>
+                    <tr><td class="res">episode</td><td><span class="ck on">✓</span></td><td><span class="ck"></span></td><td><span class="ck on">✓</span></td><td><span class="ck"></span></td><td>—</td><td class="biz"><span class="bzchip on">review</span><span class="bzchip new">pricePropose*</span><span class="bzchip new">priceConfirm*</span></td></tr>
+                    <tr><td class="res">post</td><td><span class="ck on">✓</span></td><td><span class="ck on">✓</span></td><td><span class="ck on">✓</span></td><td><span class="ck on">✓</span></td><td>—</td><td class="biz"></td></tr>
+                    <tr><td class="res">tag</td><td><span class="ck on">✓</span></td><td>—</td><td><span class="ck on">✓</span></td><td><span class="ck on">✓</span></td><td>—</td><td class="biz"></td></tr>
+                    <tr><td class="res">bannedWord</td><td><span class="ck on">✓</span></td><td><span class="ck on">✓</span></td><td>—</td><td><span class="ck on">✓</span></td><td>—</td><td class="biz"></td></tr>
+                    <tr><td class="res">curation</td><td><span class="ck on">✓</span></td><td>—</td><td>—</td><td>—</td><td><span class="ck on">✓</span></td><td class="biz"></td></tr>
+                    <tr><td class="res">banner</td><td><span class="ck on">✓</span></td><td>—</td><td>—</td><td>—</td><td><span class="ck on">✓</span></td><td class="biz"></td></tr>
+                    <tr><td class="res">creator</td><td><span class="ck on">✓</span></td><td>—</td><td><span class="ck"></span></td><td>—</td><td>—</td><td class="biz"><span class="bzchip">invite</span><span class="bzchip">revoke</span></td></tr>
+                    <tr><td class="res">partner</td><td><span class="ck on">✓</span></td><td>—</td><td><span class="ck"></span></td><td>—</td><td>—</td><td class="biz"><span class="bzchip">invite</span><span class="bzchip">revoke</span></td></tr>
+                    <tr><td class="res">payment</td><td><span class="ck on">✓</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="biz"><span class="bzchip">refund</span><span class="bzchip">productManage</span></td></tr>
+                    <tr><td class="res">wallet</td><td><span class="ck on">✓</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="biz"><span class="bzchip">credit</span><span class="bzchip">refund</span></td></tr>
+                    <tr><td class="res">coupon</td><td><span class="ck on">✓</span></td><td><span class="ck"></span></td><td><span class="ck"></span></td><td>—</td><td>—</td><td class="biz"><span class="bzchip">issue</span><span class="bzchip">deactivate</span></td></tr>
+                    <tr><td class="res">notification</td><td><span class="ck on">✓</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="biz"><span class="bzchip">send</span><span class="bzchip">templateManage</span></td></tr>
+                    <tr><td class="res">scheduledTask</td><td><span class="ck on">✓</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="biz"><span class="bzchip">run</span></td></tr>
+                    <tr><td class="res">admin</td><td><span class="ck"></span></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="biz"><span class="bzchip">assignRoles</span><span class="bzchip">revoke</span></td></tr>
+                    <tr><td class="res">adminRole</td><td><span class="ck"></span></td><td>—</td><td>—</td><td>—</td><td><span class="ck"></span></td><td class="biz"></td></tr>
+                    <tr><td class="res">adminInvitation</td><td><span class="ck"></span></td><td><span class="ck"></span></td><td>—</td><td>—</td><td>—</td><td class="biz"><span class="bzchip">revoke</span></td></tr>
+                    <tr style="position:relative"><td class="res" style="color:var(--brand-a)">settlement*</td><td><span class="ck new">+</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="biz"><span class="bzchip new">read*</span><span class="bzchip new">approve*</span><span class="pin b" style="right:8px;top:2px;left:auto">4</span></td></tr>
+                    <tr><td class="res" style="color:var(--brand-a)">contract*</td><td><span class="ck new">+</span></td><td>—</td><td>—</td><td>—</td><td><span class="ck new">+</span></td><td class="biz"><span class="bzchip new">manage*</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-51 ★ (RBAC 정본의 심장)</h3><span class="tag">19리소스×55액션 · 런타임 조합</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>역할 = 권한 조합 (고정 아님)</h4><p>좌측 역할 목록(런타임 생성), 우측 선택 역할의 권한 매트릭스. "5 role 고정"·"7 role 고정" 논쟁을 폐기하고 <b>권한 enum이 단일 진실</b>, role은 그 조합. [역할 생성]으로 새 조합을 자유 구성.</p><div class="meta"><span class="m">RBAC Canon V1.0</span><span class="m">adminRole.manage</span><span class="m">다중 할당=합집합</span></div></div></div>
+    <div class="ann"><div class="n b">2</div><div class="body"><h4>Super Admin = 검사 우회</h4><p>일반 역할은 체크된 권한만. <b>Super Admin은 전체 권한 + 검사 우회</b>(개별 체크 무관). 위험 역할이라 할당은 신중히, 회수도 마지막 1인은 차단.</p><div class="copy">현재 momo·2E_Soon 2명. TO-BE: 최소권한 역할(콘텐츠/정산/CS)로 분리</div></div></div>
+    <div class="ann"><div class="n b">3</div><div class="body"><h4>표준 액션 + 비즈 액션</h4><p>리소스별 표준 5액션(조회/생성/수정/삭제/관리) 체크박스 + 리소스 고유 <b>비즈 액션 칩</b>(series.review·payment.refund·wallet.credit·coupon.issue 등). 체크된 비즈 액션은 채워진 칩.</p><div class="ex bx"><b>예문</b> — "콘텐츠 운영" 역할: series read+update+review ✓, payment는 read만(refund ✗ — 그건 CS/정산). 이렇게 화면별 권한이 메뉴 노출·버튼 노출을 결정(전 화면의 "권한 없으면 숨김"의 출처).</div></div></div>
+    <div class="ann"><div class="n b">4</div><div class="body"><h4>신설 권한 = 점선 체크박스</h4><p>가격 2단계(<code>episode.pricePropose/priceConfirm</code>)와 정산(<code>settlement.read/approve</code>·<code>contract.manage</code>)은 아직 코드 enum에 없어 <b>점선 칩·점선 체크박스</b>로 표시. 권한 신설되면 여기 정식 체크박스로 등장 → S-11·S-33이 이 권한을 따라 활성화.</p><div class="meta"><span class="m">점선=추가 예정</span><span class="m">enum 신설 시 정식 노출</span></div><div class="copy">생성 토스트 <code>역할을 저장했습니다 · 콘텐츠 운영 · 권한 24개 · 기록됨</code></div></div></div>
+  </div></div>
+  <div class="asis"><div class="box"><h5>AS-IS (현재)</h5><p>역할 생성(19리소스 체크박스) + 할당 인원 구현. 정본의 심장 — 1단계 RBAC 선언문이 이 화면의 근거.</p></div>
+    <div class="box tobe"><h5>TO-BE</h5><p>신설 권한(가격 2단계·정산) 체크박스 반영 + 프리셋 역할(콘텐츠/정산/CS/마케팅) 시드. 매트릭스 가독성(리소스 그룹핑) 보강.</p></div></div>
+</section>
+
+<!-- ============ S-52 ============ -->
+<section class="view" id="v-s52">
+  <div class="screen-head"><span class="id">S-52</span><h1>초대 (Invitation) · 토큰 · 만료</h1><span class="route">/invitations</span><span class="sb live">live</span>
+    <p>관리자 초대를 발행하고 상태(대기·수락·만료)를 관리. 토큰형·만료·회수. <b>위임 원칙(P-1 시한·P-2 발급자)이 어드민 초대로 실현</b>되는 화면.</p>
+    <div class="permrow"><span class="perm">adminInvitation.read</span><span class="perm biz">adminInvitation.create</span><span class="perm biz">adminInvitation.revoke</span></div>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/invitations</span></div>
+    <div class="app">
+      <aside class="side" data-active="S-52"></aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">시스템 · <b>초대</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">운</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>초대</h2><span class="sp"></span><button class="btn brand sm">+ 관리자 초대</button></div><div class="sub">관리자 초대를 발행하고 관리합니다.</div></div>
+          <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-11px;top:48px">1</span>
+            <div class="filters"><span class="f on">전체</span><span class="f">대기</span><span class="f">수락</span><span class="f">만료</span></div>
+            <div class="pb"><table class="t">
+              <thead><tr><th>이메일</th><th>부여 역할</th><th>상태</th><th>만료</th><th>발행자</th><th style="text-align:right">액션</th></tr></thead>
+              <tbody>
+                <tr><td class="ep">momo@superxcon.com</td><td><span class="chip brandc">Super Admin</span></td><td><span class="chip ok">수락</span></td><td style="color:var(--ink-4)">2026.06.25 09:59</td><td class="ep">tnsgud9@…</td><td style="text-align:right"><span class="act-link mut">—</span></td></tr>
+                <tr style="position:relative"><td class="ep">newop@superxcon.com</td><td><span class="chip wait">콘텐츠 운영</span></td><td><span class="chip warn">대기</span><span class="pin b" style="right:96px;top:6px;left:auto">2</span></td><td style="color:var(--ink-4)">2026.06.30 18:00</td><td class="ep">momo</td><td style="text-align:right"><span class="act-link dg">회수</span></td></tr>
+                <tr><td class="ep">temp@superxcon.com</td><td><span class="chip wait">CS 상담원</span></td><td><span class="chip dgr">만료</span></td><td style="color:var(--ink-4)">2026.06.15 12:00</td><td class="ep">momo</td><td style="text-align:right"><span class="act-link mut">재발행</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spec"><div class="sh"><h3>스펙 시트 — S-52</h3><span class="tag">토큰형 · 위임 원칙(시한·발행자)</span></div><div class="anns">
+    <div class="ann"><div class="n b">1</div><div class="body"><h4>3상태 + 부여 역할</h4><p>대기(PENDING)·수락(ACCEPTED)·만료(EXPIRED) 필터. 초대 시 <b>부여 역할(S-51)을 지정</b> → 수락하면 그 권한으로 admin 편입. 만료 토큰 재사용 불가, 만료 건은 [재발행].</p><div class="meta"><span class="m">상태 3종</span><span class="m">부여역할=S-51 role</span></div></div></div>
+    <div class="ann"><div class="n b">2</div><div class="body"><h4>위임 원칙 실현 — 시한·발행자</h4><p>모든 초대에 <b>만료(P-1 시한)</b>와 <b>발행자(P-2 발급자)</b>가 기록된다. [회수]는 대기 초대를 즉시 무효화. 위임 6원칙(외부)과 동일한 시한·발급자·영구보존 원칙이 어드민 초대에도 적용.</p><div class="ex bx"><b>예문</b> — momo가 "newop@…"을 콘텐츠 운영 역할로 초대(만료 6/30). 수락 전이면 [회수] 가능. 만료되면 "temp@…"처럼 [재발행]. 발행자·만료·회수 모두 감사 로그(S-42).</div><div class="copy">회수 토스트 <code>초대를 회수했습니다 · 기록됨</code></div></div></div>
+  </div></div>
+</section>
+
+<!-- DONE — 18 complete -->
+<div class="done">
+  <h3>✓ 운영자 18화면 완결 — 6그룹 전체</h3>
+  <div class="grid">
+    <div class="g"><div class="gt">개요</div><div class="gi">S-00 대시보드</div></div>
+    <div class="g"><div class="gt">콘텐츠</div><div class="gi">S-10 시리즈·검수 · S-11★ 회차·가격 · S-12 게시물 · S-13 태그·금칙어 · S-14 큐레이션</div></div>
+    <div class="g"><div class="gt">파트너십</div><div class="gi">S-20 크리에이터 · S-21 파트너·위임</div></div>
+    <div class="g"><div class="gt">커머스</div><div class="gi">S-30★ 결제·환불 · S-31 지갑·원장 · S-32 쿠폰 · S-33★★ 정산</div></div>
+    <div class="g"><div class="gt">운영</div><div class="gi">S-40 알림·캠페인 · S-41 스케줄러 · S-42 감사 로그</div></div>
+    <div class="g"><div class="gt">시스템</div><div class="gi">S-50 관리자 · S-51★ RBAC 매트릭스 · S-52 초대</div></div>
+  </div>
+</div>
+
+<div class="foot">
+  <b>Playtoon Admin · 운영자 18화면 [3/3] 운영·시스템 · 완결</b> — ScreenSpec V1.0 정본 · 디자인 시스템 V1.1 · 2026.06.23<br>
+  S-40 알림(이벤트 템플릿·3탭) · S-41 스케줄러(cron·정산 배치 미정) · S-42 감사(실 액션타입·영구보존) · S-50 관리자(역할 할당) · S-51★ RBAC 권한 매트릭스(19리소스×55액션·런타임 조합·정본의 심장) · S-52 초대(토큰·시한·발행자)<br>
+  권한 = RBAC enum 정본, role은 권한 조합으로 런타임 생성 · 신설 권한(pricePropose·priceConfirm·settlement·contract)은 점선 = enum 추가 예정 · 모든 위험·결정 액션은 감사 로그(S-42)에 영구 기록<br>
+  <b>완료</b> — 운영자 18화면 = [1/3 개요·콘텐츠] + [2/3 파트너십·커머스] + [3/3 운영·시스템]. 외부 파트너 어드민(M·A·CA·D·P·AC)과 함께 어드민 디자인 핸드오프 4단계 비주얼 시안 전 화면 완성.
+</div>
+
+</div>
+
+<script>
+const IA=[
+  ['개요',[['S-00','대시보드','/dashboard']]],
+  ['콘텐츠',[['S-10','시리즈·검수','/series'],['S-11','회차·가격','/episodes'],['S-12','게시물','/posts'],['S-13','태그·금칙어','/tags'],['S-14','큐레이션·배너','/curation']]],
+  ['파트너십',[['S-20','크리에이터','/creators'],['S-21','파트너·위임','/partners']]],
+  ['커머스',[['S-30','결제·환불','/payments'],['S-31','지갑·원장','/wallets'],['S-32','쿠폰','/coupons'],['S-33','정산·RS·MG','—']]],
+  ['운영',[['S-40','알림·캠페인','/notifications'],['S-41','스케줄러·배치','/scheduler'],['S-42','감사 로그','/audit']]],
+  ['시스템',[['S-50','관리자','/admins'],['S-51','역할(RBAC)','/roles'],['S-52','초대','/invitations']]]
+];
+function buildSide(el){
+  const active=el.getAttribute('data-active');
+  let h='<div class="brand"><span class="sq">P</span> Playtoon <span class="opbadge">운영자</span></div>';
+  IA.forEach(([g,items])=>{h+='<div class="grp">'+g+'</div><nav class="nav">';
+    items.forEach(([id,nm])=>{const on=id===active?' on':'';const todo=(id==='S-11'||id==='S-33')?'<span class="sp"></span><span class="td"></span>':'';
+      h+='<a class="'+on.trim()+'" href="#"><span class="sid">'+id+'</span> '+nm+todo+'</a>';});h+='</nav>';});
+  h+='<div class="me"><span class="av">운</span><div><div class="nm">momo</div><div class="rl">Super Admin</div></div></div>';
+  el.innerHTML=h;
+}
+document.querySelectorAll('.side[data-active]').forEach(buildSide);
+const tabs=[...document.querySelectorAll('.tabs button')];
+const views={s40:'v-s40',s41:'v-s41',s42:'v-s42',s50:'v-s50',s51:'v-s51',s52:'v-s52'};
+tabs.forEach(b=>b.addEventListener('click',()=>{tabs.forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  Object.values(views).forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById(views[b.dataset.v]).classList.add('on');window.scrollTo({top:0,behavior:'smooth'});}));
+const at=document.getElementById('annToggle');
+at.addEventListener('click',()=>{at.classList.toggle('on');document.body.classList.toggle('no-ann',!at.classList.contains('on'));});
+</script>
+<script>/*deeplink*/(function(){try{var p=new URLSearchParams(location.search).get("screen");if(p){var b=document.querySelector('.tabs button[data-v="'+p+'"]');if(b)b.click();}}catch(e){}})();</script>
+</body>
+</html>

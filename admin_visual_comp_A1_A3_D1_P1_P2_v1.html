@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playtoon Admin · 풀 비주얼 시안 — A1 · A3 · D1 · P1 · P2</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --bg:#F5F4F2;--surf:#FFFFFF;--surf-2:#FAFAF9;--line:#E6E4E1;--line-2:#F0EEEC;
+  --ink:#1A1917;--ink-2:#44423E;--ink-3:#6E6B66;--ink-4:#9C9893;
+  --brand:#C7242D;--brand-h:#A22F2C;--brand-a:#7F2523;--brand-wash:#FBEAEA;
+  --lav:#A99DE4;--lav-d:#6E5FB8;--lav-wash:#F1EFFB;--lav-line:#DCD6F4;
+  --danger:#E5484D;--danger-d:#C2363B;--danger-wash:#FDECEC;
+  --ok:#2E9E5B;--ok-d:#1F7A43;--ok-wash:#E8F6EE;
+  --warn:#D9870A;--warn-d:#B36C00;--warn-wash:#FCF3E2;
+  --info:#3A6FE0;--info-wash:#EAF0FD;
+  --r-s:6px;--r:10px;--r-l:14px;--pill:999px;
+  --sh-s:0 1px 2px rgba(26,25,23,.06),0 1px 1px rgba(26,25,23,.04);
+  --sh-m:0 4px 14px rgba(26,25,23,.08),0 1px 3px rgba(26,25,23,.05);
+  --sh-l:0 18px 50px rgba(26,25,23,.22),0 4px 14px rgba(26,25,23,.12);
+  --skel-base:#EDECEA;--skel-shine:#F8F7F6;
+  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Segoe UI',Roboto,'Noto Sans KR',sans-serif;
+  --mono:'SFMono-Regular',ui-monospace,'JetBrains Mono','Roboto Mono',Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:#E9E7E3;color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+.docbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:18px;padding:11px 22px;background:#161412;color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.4)}
+.docbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.docbar .logo .sq{width:22px;height:22px;border-radius:6px;background:var(--brand);display:grid;place-items:center;font-size:12px;font-weight:900}
+.docbar .v{font-size:11px;font-weight:700;color:#bdb9b3;font-family:var(--mono)}
+.docbar .sp{flex:1}
+.tabs{display:flex;gap:4px;background:#241f1c;padding:4px;border-radius:var(--pill)}
+.tabs button{appearance:none;border:0;background:transparent;color:#cfcbc5;font-family:var(--font);font-weight:700;font-size:12px;padding:7px 13px;border-radius:var(--pill);cursor:pointer;transition:.16s}
+.tabs button:hover{color:#fff}.tabs button.on{background:#fff;color:#161412}
+.ann-toggle{display:flex;align-items:center;gap:7px;font-size:12px;color:#cfcbc5;cursor:pointer;user-select:none}
+.ann-toggle .sw{width:34px;height:19px;border-radius:var(--pill);background:#4a443f;position:relative;transition:.18s}
+.ann-toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.18s}
+.ann-toggle.on .sw{background:var(--lav)}.ann-toggle.on .sw::after{left:17px}
+
+.stage{max-width:1320px;margin:0 auto;padding:30px 26px 90px}
+.view{display:none}.view.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.screen-head{display:flex;align-items:flex-end;gap:14px;margin:6px 2px 18px;flex-wrap:wrap}
+.screen-head .id{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;padding:5px 11px;border-radius:var(--r-s);background:var(--ink)}
+.screen-head .id.lav{background:var(--lav-d)}.screen-head .id.brand{background:var(--brand)}.screen-head .id.cp{background:#2c2a27}
+.screen-head h1{font-size:23px;font-weight:800;letter-spacing:-.5px}
+.screen-head .role{font-size:11px;font-weight:800;padding:5px 10px;border-radius:var(--pill)}
+.role.author{background:var(--brand-wash);color:var(--brand-a)}
+.role.deleg{background:var(--lav-wash);color:var(--lav-d)}
+.role.cp{background:#EDEAE6;color:var(--ink-2)}
+.screen-head p{flex-basis:100%;font-size:13px;color:var(--ink-3);margin-top:2px;max-width:800px}
+
+.frame{position:relative;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-m);overflow:hidden}
+.frame .browser{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--surf-2);border-bottom:1px solid var(--line)}
+.frame .browser .dots{display:flex;gap:6px}.frame .browser .dots i{width:10px;height:10px;border-radius:50%;display:block;background:#d8d4cf}
+.frame .browser .url{flex:1;font-family:var(--mono);font-size:11px;color:var(--ink-3);background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:5px 12px}
+
+.app{display:grid;grid-template-columns:228px 1fr;min-height:660px}
+.side{background:var(--surf);border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column}
+.side .brand{display:flex;align-items:center;gap:9px;padding:6px 8px 16px;font-weight:800;font-size:15px}
+.side .brand .sq{width:26px;height:26px;border-radius:7px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:900}
+.side .grp{font-size:10px;font-weight:800;letter-spacing:.6px;color:var(--ink-4);text-transform:uppercase;padding:14px 10px 6px}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-s);font-size:13px;font-weight:600;color:var(--ink-2);text-decoration:none;margin-bottom:2px;transition:.13s}
+.nav a .ic{width:17px;flex:none;opacity:.8;text-align:center}
+.nav a:hover{background:var(--surf-2);color:var(--ink)}
+.nav a.on{background:var(--brand-wash);color:var(--brand-a);font-weight:700}
+.nav a.lav{color:var(--lav-d)}.nav a.lav .dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--lav)}
+.nav a.on.lav{background:var(--lav-wash);color:var(--lav-d)}
+.side .me{margin-top:auto;display:flex;align-items:center;gap:9px;padding:10px;border-top:1px solid var(--line-2)}
+.side .me .av{width:30px;height:30px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800}
+.av.brandav{background:linear-gradient(135deg,#E0565E,#C7242D)}
+.av.cpav{background:linear-gradient(135deg,#5a5650,#2c2a27)}
+.side .me .nm{font-size:12.5px;font-weight:700;line-height:1.2}.side .me .rl{font-size:10.5px;color:var(--ink-3)}
+
+.main{display:flex;flex-direction:column;background:var(--bg)}
+.topbar{display:flex;align-items:center;gap:14px;padding:13px 26px;background:var(--surf);border-bottom:1px solid var(--line)}
+.topbar .crumb{font-size:12px;color:var(--ink-3);font-weight:600}.topbar .crumb b{color:var(--ink);font-weight:700}
+.topbar .sp{flex:1}
+.topbar .bell{width:34px;height:34px;border-radius:var(--r-s);border:1px solid var(--line);background:#fff;display:grid;place-items:center;position:relative}
+.topbar .bell::after{content:"";position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--brand)}
+.topbar .av{width:34px;height:34px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800}
+.content{padding:24px 26px 40px;flex:1}
+
+.phead{margin-bottom:18px}
+.phead .row{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.phead h2{font-size:21px;font-weight:800;letter-spacing:-.4px}
+.phead .sub{font-size:13px;color:var(--ink-3);margin-top:6px}
+.phead .sp{flex:1}
+.wsel{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:var(--r-s);padding:7px 12px;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
+.wsel .cv{color:var(--ink-4);font-size:11px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-family:var(--font);font-weight:700;font-size:13px;padding:9px 17px;border-radius:var(--r-s);border:0;cursor:pointer}
+.btn.brand{background:var(--brand);color:#fff}.btn.brand:hover{background:var(--brand-h)}
+.btn.lav{background:var(--lav-d);color:#fff}.btn.lav:hover{background:#5d4ea6}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink-2)}
+.btn.sm{padding:6px 12px;font-size:12px}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px;box-shadow:var(--sh-s);position:relative}
+.kpi .lab{font-size:11.5px;font-weight:700;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.kpi .val{font-size:27px;font-weight:800;letter-spacing:-1px;margin-top:9px;line-height:1}
+.kpi .val small{font-size:13px;font-weight:700;color:var(--ink-3);letter-spacing:0}
+.kpi .meta{font-size:11px;color:var(--ink-4);margin-top:8px}
+.kpi.lavk{border-color:var(--lav-line);background:linear-gradient(180deg,var(--lav-wash),#fff 75%)}
+.kpi.lavk .lab{color:var(--lav-d)}.kpi.lavk .val{color:var(--lav-d)}
+.kpi.accent .val{color:var(--brand)}
+
+.dash{display:grid;grid-template-columns:1.6fr 1fr;gap:18px}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-s);margin-bottom:20px;overflow:hidden}
+.panel .ph{display:flex;align-items:center;gap:9px;padding:14px 17px;border-bottom:1px solid var(--line-2)}
+.panel .ph h3{font-size:14px;font-weight:800}.panel .ph .hint{font-size:11.5px;color:var(--ink-4)}.panel .ph .sp{flex:1}
+.panel .ph a{font-size:11.5px;font-weight:700;color:var(--lav-d);text-decoration:none}
+.panel .pb{padding:0}
+
+table.t{width:100%;border-collapse:collapse;font-size:12.5px}
+table.t th{text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.3px;color:var(--ink-3);text-transform:uppercase;padding:10px 17px;background:var(--surf-2);border-bottom:1px solid var(--line)}
+table.t td{padding:12px 17px;border-bottom:1px solid var(--line-2);color:var(--ink-2);vertical-align:middle}
+table.t tr:last-child td{border-bottom:0}
+table.t .wk{font-weight:700;color:var(--ink)}
+table.t .nm2{font-weight:700;color:var(--ink)}
+table.t .num,table.t th.num{text-align:right;font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--pill)}
+.chip.ok{background:var(--ok-wash);color:var(--ok-d)}
+.chip.warn{background:var(--warn-wash);color:var(--warn-d)}
+.chip.wait{background:var(--surf-2);color:var(--ink-3);border:1px solid var(--line)}
+.chip.lavc{background:var(--lav-wash);color:var(--lav-d)}
+.chip.dgr{background:var(--danger-wash);color:var(--danger-d)}
+.chip.info{background:var(--info-wash);color:var(--info)}
+
+/* attention card */
+.attn{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-s);margin-bottom:22px;overflow:hidden}
+.attn .ah{padding:13px 17px;border-bottom:1px solid var(--line-2);font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
+.attn .ah .c{font-size:11px;font-weight:800;color:#fff;background:var(--brand);border-radius:var(--pill);padding:1px 8px}
+.attn .arow{display:flex;align-items:center;gap:12px;padding:12px 17px;border-bottom:1px solid var(--line-2)}
+.attn .arow:last-child{border-bottom:0}
+.attn .arow .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.attn .arow .tx{font-size:12.5px;color:var(--ink-2)}.attn .arow .tx b{color:var(--ink)}
+.attn .arow .sp{flex:1}
+
+/* delegation mini rows */
+.dmini{padding:6px 0}
+.drow{display:flex;align-items:center;gap:10px;padding:11px 17px;border-bottom:1px solid var(--line-2)}
+.drow:last-child{border-bottom:0}
+.drow .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#A99DE4,#6E5FB8);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
+.drow .nm{font-size:12.5px;font-weight:700;color:var(--ink)}
+.drow .sc{font-size:11px;color:var(--ink-4)}
+.drow .sp{flex:1}
+.dfoot{padding:13px 17px;display:flex;gap:9px;align-items:center;border-top:1px solid var(--line-2);background:var(--lav-wash)}
+
+/* distribution */
+.dist{padding:0}
+.distrow{display:flex;align-items:center;gap:12px;padding:13px 17px;border-bottom:1px solid var(--line-2)}
+.distrow .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#A99DE4,#6E5FB8);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
+.distrow .nm{font-size:12.5px;font-weight:700;color:var(--ink)}.distrow .rl{font-size:10.5px;color:var(--ink-4)}
+.distrow .sp{flex:1}
+.distrow .amt{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums}
+.distfoot{display:flex;align-items:center;gap:12px;padding:14px 17px;background:var(--surf-2);border-top:1px solid var(--line-2)}
+
+/* filter tabs */
+.ftabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.ftabs button{font-family:var(--font);border:1px solid var(--line);background:#fff;color:var(--ink-2);font-weight:700;font-size:12px;padding:7px 13px;border-radius:var(--pill);cursor:pointer}
+.ftabs button .c{color:var(--ink-4);font-weight:700;margin-left:3px}
+.ftabs button.on{background:var(--lav-d);border-color:var(--lav-d);color:#fff}
+.ftabs button.on .c{color:#e5dffa}
+
+/* bars */
+.bars{padding:15px 17px;display:grid;gap:11px}
+.bar{display:grid;grid-template-columns:130px 1fr 86px;align-items:center;gap:12px}
+.bar .bn{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .bt{height:14px;border-radius:var(--pill);background:var(--brand)}
+.bar .bv{font-size:12px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+
+/* P2 hidden-menu callout */
+.hidemenu{margin-top:6px;padding:10px;border:1px dashed var(--line);border-radius:var(--r-s);background:var(--surf-2)}
+.hidemenu .hl{font-size:9.5px;font-weight:800;color:var(--ink-4);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.hidemenu .hm{font-size:11px;color:var(--ink-4);padding:4px 8px;text-decoration:line-through;display:flex;align-items:center;gap:7px}
+.hidemenu .hm .ic{opacity:.5}
+
+/* ANNOTATION */
+.pin{position:absolute;width:24px;height:24px;border-radius:50%;background:var(--lav);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;box-shadow:0 2px 8px rgba(110,95,184,.5);border:2px solid #fff;z-index:30}
+.pin.b{background:var(--brand);box-shadow:0 2px 8px rgba(199,36,45,.5)}
+.pin.n{background:var(--ink)}
+body.no-ann .pin{display:none}
+.spec{margin-top:24px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-s)}
+.spec .sh{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.spec .sh h3{font-size:14px;font-weight:800}
+.spec .sh .tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--pill)}
+.tag.lavt{color:var(--lav-d);background:var(--lav-wash)}.tag.brandt{color:var(--brand-a);background:var(--brand-wash)}.tag.nt{color:var(--ink-2);background:var(--surf-2);border:1px solid var(--line)}
+.anns{padding:6px 0}
+.ann{display:grid;grid-template-columns:30px 1fr;gap:13px;padding:14px 20px;border-bottom:1px solid var(--line-2)}.ann:last-child{border-bottom:0}
+.ann .n{width:24px;height:24px;border-radius:50%;color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;background:var(--lav)}
+.ann .n.b{background:var(--brand)}.ann .n.k{background:var(--ink)}
+.ann .body h4{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:5px}
+.ann .body p{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+.ann .body .meta{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.ann .body .meta .m{font-size:10.5px;font-weight:700;font-family:var(--mono);padding:3px 8px;border-radius:var(--r-s);background:var(--surf-2);border:1px solid var(--line);color:var(--ink-2)}
+.ann .body .ex{margin-top:9px;border-radius:var(--r-s);padding:9px 12px;font-size:11.5px;color:var(--ink-2);line-height:1.6}
+.ex.lavx{background:var(--lav-wash);border:1px solid var(--lav-line)}.ex.lavx b{color:var(--lav-d)}
+.ex.brandx{background:var(--brand-wash);border:1px solid #f1d4d5}.ex.brandx b{color:var(--brand-a)}
+.ann .body .copy{margin-top:8px;font-size:11.5px;color:var(--ink-3)}
+.ann .body .copy code{font-family:var(--mono);font-size:11px;background:var(--surf-2);border:1px solid var(--line);padding:1px 6px;border-radius:4px;color:var(--ink-2)}
+
+.states{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.st{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-s)}
+.st .sl{font-size:10.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-3);padding:10px 13px;border-bottom:1px solid var(--line-2);background:var(--surf-2)}
+.st .sbody{padding:14px 13px;min-height:80px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.st small{font-size:10.5px;color:var(--ink-4);line-height:1.55}
+.demo-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-family:var(--font);font-weight:700;font-size:12.5px;padding:9px 15px;border-radius:var(--r-s);border:0;width:fit-content}
+.demo-btn.brand{background:var(--brand);color:#fff}.demo-btn.lav{background:var(--lav-d);color:#fff}.demo-btn.dis{background:#EDECEA;color:var(--ink-4)}
+
+.resp{margin-top:22px;background:var(--surf);border:1px dashed var(--line);border-radius:var(--r);padding:16px 19px}
+.resp h4{font-size:12.5px;font-weight:800;margin-bottom:9px}
+.resp ul{list-style:none;display:grid;gap:7px}
+.resp li{font-size:12px;color:var(--ink-2);display:flex;gap:9px}
+.resp li b{font-family:var(--mono);font-size:11px;color:var(--lav-d);min-width:108px}
+
+.foot{max-width:1320px;margin:40px auto 0;padding:22px 26px 0;border-top:1px solid var(--line);color:var(--ink-3);font-size:11.5px;line-height:1.8}
+.foot b{color:var(--ink-2)}
+
+@media(max-width:1080px){.app{grid-template-columns:1fr}.side{display:none}.dash{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.tabs button{padding:6px 9px;font-size:10.5px}.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="docbar">
+  <div class="logo"><span class="sq">P</span> Playtoon Admin</div>
+  <span class="v">풀 비주얼 시안 · V1.1 · 2026.06.23</span>
+  <span class="sp"></span>
+  <div class="tabs">
+    <button class="on" data-v="a1">A1 · 대시보드</button>
+    <button data-v="a3">A3 · 정산</button>
+    <button data-v="d1">D1 · 발급 목록</button>
+    <button data-v="p1">P1 · CP master</button>
+    <button data-v="p2">P2 · CP accounting</button>
+  </div>
+  <div class="ann-toggle on" id="annToggle"><span class="sw"></span> 주석</div>
+</div>
+
+<div class="stage">
+
+<!-- =================== A1 =================== -->
+<section class="view on" id="v-a1">
+  <div class="screen-head"><span class="id brand">A1</span><h1>대시보드</h1><span class="role author">개인 author (=팀장)</span>
+    <p>작가가 로그인하면 보는 홈. 작품·조회·정산을 요약하고, 팀장이므로 <b>활성 위임 KPI</b>가 함께 뜬다. 정산은 <b>작가가 직접 수령</b>한다(팀원 M1은 조회만). "확인이 필요한 일"을 최상단에 모아 행동을 유도한다.</p>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/dashboard</span></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand"><span class="sq">P</span> Playtoon</div>
+        <div class="grp">작가</div>
+        <nav class="nav"><a class="on" href="#"><span class="ic">▥</span> 대시보드</a><a href="#"><span class="ic">₩</span> 회차·가격 제안</a><a href="#"><span class="ic">◷</span> 정산 내역</a></nav>
+        <div class="grp">팀장 (위임)</div>
+        <nav class="nav"><a class="lav" href="#"><span class="ic">◆</span> 위임 관리 <span class="dot"></span></a></nav>
+        <div class="grp">계정</div>
+        <nav class="nav"><a href="#"><span class="ic">◐</span> 내 정보</a></nav>
+        <div class="me"><span class="av brandav">이</span><div><div class="nm">이든 작가</div><div class="rl">개인 author · 팀장</div></div></div>
+      </aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb"><b>대시보드</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av brandav">이</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>안녕하세요, 이든 작가님</h2></div><div class="sub">2026년 6월 23일 · 오늘도 좋은 하루 보내세요.</div></div>
+
+          <div class="kpis">
+            <div class="kpi"><div class="lab">연재 작품</div><div class="val num">3<small> 작품</small></div><div class="meta">연재 2 · 완결 1</div></div>
+            <div class="kpi"><div class="lab">이번 달 조회</div><div class="val num">620,940</div><div class="meta">전월 대비 +12%</div></div>
+            <div class="kpi accent"><div class="lab">정산 예정액</div><div class="val num">₩2,840,000</div><div class="meta">다음 정산 6/25 · 직접 수령</div></div>
+            <div class="kpi lavk" style="position:relative"><span class="pin" style="right:-10px;top:-10px;left:auto">1</span><div class="lab">◆ 활성 위임</div><div class="val num">2<small> 건</small></div><div class="meta">임박 1 · 만료 D-2</div></div>
+          </div>
+
+          <div class="attn" style="position:relative"><span class="pin b" style="left:-12px;top:14px">2</span>
+            <div class="ah">확인이 필요해요 <span class="c">2</span></div>
+            <div class="arow"><span class="dot" style="background:var(--danger)"></span><div class="tx"><b>검수 반려</b> — 〈비 오는 날의 선택〉 Ep.04 · 사유: 대사 오탈자</div><span class="sp"></span><button class="btn ghost sm">확인</button></div>
+            <div class="arow"><span class="dot" style="background:var(--ok)"></span><div class="tx"><b>가격 확정</b> — Ep.03 제안 500PT → 운영 확정 400PT</div><span class="sp"></span><button class="btn ghost sm">보기</button></div>
+          </div>
+
+          <div class="dash">
+            <div class="panel" style="position:relative;margin-bottom:0"><span class="pin b" style="left:-12px;top:14px">3</span>
+              <div class="ph"><h3>작품 현황</h3><span class="sp"></span><span class="hint">최근 갱신 09:12</span></div>
+              <div class="pb"><table class="t">
+                <thead><tr><th>작품</th><th>상태</th><th>최근 회차</th><th class="num">누적 조회</th><th>검수</th></tr></thead>
+                <tbody>
+                  <tr><td class="wk">비 오는 날의 선택</td><td><span class="chip info">연재중</span></td><td>Ep.05</td><td class="num">412,800</td><td><span class="chip warn">대기 1</span></td></tr>
+                  <tr><td class="wk">별빛 정류장</td><td><span class="chip info">연재중</span></td><td>Ep.18</td><td class="num">208,140</td><td><span class="chip ok">통과</span></td></tr>
+                  <tr><td class="wk">여름의 끝</td><td><span class="chip wait">완결</span></td><td>Ep.30</td><td class="num">96,500</td><td><span class="chip ok">정산완료</span></td></tr>
+                </tbody>
+              </table></div>
+            </div>
+            <div class="panel" style="position:relative;margin-bottom:0"><span class="pin" style="right:14px;top:-10px;left:auto">4</span>
+              <div class="ph"><h3 style="color:var(--lav-d)">◆ 위임 현황</h3><span class="sp"></span><a href="#">전체 보기 →</a></div>
+              <div class="dmini">
+                <div class="drow"><span class="av">하</span><div><div class="nm">하늘 작가</div><div class="sc">비 오는 날 · 3~8화</div></div><span class="sp"></span><span class="chip ok">D-12</span></div>
+                <div class="drow"><span class="av">민</span><div><div class="nm">민 작가</div><div class="sc">별빛 정류장 · 1~5화</div></div><span class="sp"></span><span class="chip warn">임박 D-2</span></div>
+              </div>
+              <div class="dfoot"><button class="btn lav sm">◆ 위임 발급</button><span style="font-size:11px;color:var(--lav-d)">새 팀원에게 권한 주기</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec"><div class="sh"><h3>스펙 시트 — A1</h3><span class="tag brandt">author 홈 · 활성 위임 KPI · 행동 유도</span></div>
+    <div class="anns">
+      <div class="ann"><div class="n">1</div><div class="body"><h4>활성 위임 KPI (A1 고유)</h4>
+        <p>일반 KPI 3개(작품·조회·정산)는 중립/브랜드, 4번째 <b>활성 위임</b>만 Lavender 카드로. 팀장이 발급한 위임이 몇 건 살아있고 몇 건이 만료 임박인지 홈에서 바로 파악. 위임을 안 가진 author(팀이 없는 경우)는 이 카드가 뜨지 않음.</p>
+        <div class="meta"><span class="m">--lav-wash 그라데이션</span><span class="m">값 --lav-d</span><span class="m">조건부 렌더</span></div></div></div>
+      <div class="ann"><div class="n b">2</div><div class="body"><h4>"확인이 필요해요" 카드</h4>
+        <p>흩어진 알림을 홈 최상단에 묶어 행동을 유도. 각 항목은 점 색으로 긴급도(빨강=반려, 초록=확정), 우측에 액션 버튼. 빈 상태일 땐 "지금 처리할 항목이 없습니다"로 안심시킴.</p>
+        <div class="ex brandx"><b>예문</b> — 검수 반려: "〈비 오는 날의 선택〉 Ep.04 · 사유: 대사 오탈자" [확인] → 회차 수정 화면. 가격 확정: "Ep.03 제안 500PT → 운영 확정 400PT" [보기] → A2.</div></div></div>
+      <div class="ann"><div class="n b">3</div><div class="body"><h4>작품 현황 테이블</h4>
+        <p>내 작품의 상태·최근 회차·조회·검수 상태를 한눈에. 검수 "대기" 칩은 행동이 필요한 신호(warn). 행 클릭 시 작품 상세로.</p>
+        <div class="meta"><span class="m">연재중 --info</span><span class="m">완결 wait</span><span class="m">검수 대기 --warn</span></div></div></div>
+      <div class="ann"><div class="n">4</div><div class="body"><h4>위임 현황 패널 + 발급 동선</h4>
+        <p>팀장이 발급한 위임 요약 + [위임 발급] CTA(→D2) + [전체 보기](→D1). 홈에서 위임 관리의 두 진입점을 모두 노출. 임박은 warn 칩으로 강조.</p>
+        <div class="meta"><span class="m">패널 헤더 --lav-d</span><span class="m">CTA --lav-d</span><span class="m">전체보기 → D1</span></div>
+        <div class="copy">D-day 규칙: D-3 이내 <code>임박</code>(warn), 그 외 <code>D-{n}</code>(ok)</div></div></div>
+    </div>
+  </div>
+  <div class="states">
+    <div class="st"><div class="sl">로딩 — 스켈레톤</div><div class="sbody"><div style="height:14px;width:55%;border-radius:6px;background:linear-gradient(90deg,var(--skel-base) 25%,var(--skel-shine) 37%,var(--skel-base) 63%);background-size:400% 100%;animation:none"></div><div style="height:24px;width:75%;border-radius:6px;background:var(--skel-base)"></div><small>shimmer 1.6s · 3초 타임아웃</small></div></div>
+    <div class="st"><div class="sl">확인 항목 — 비어있음</div><div class="sbody" style="text-align:center"><div style="font-size:18px">✓</div><small style="font-weight:700;color:var(--ink-2)">지금 처리할 항목이 없습니다</small></div></div>
+    <div class="st"><div class="sl">위임 없음 — 카드 숨김</div><div class="sbody"><small>팀이 없는 author는 활성 위임 KPI·위임 현황 패널이 <b style="color:var(--ink-2)">렌더되지 않음</b>(숨김 우선).</small></div></div>
+    <div class="st"><div class="sl">작품 없음 — 빈 상태</div><div class="sbody" style="text-align:center"><small style="font-weight:700;color:var(--ink-2)">아직 작품이 없습니다</small><small>에디터에서 첫 작품을 만들어 보세요.</small></div></div>
+  </div>
+  <div class="resp"><h4>📐 반응형</h4><ul><li><b>≥1080px</b> KPI 4열 · 본문 2열(작품 1.6 : 위임 1)</li><li><b>640–1080px</b> KPI 2열 · 본문 1열 stacked</li><li><b>&lt;640px</b> KPI 1열 · 테이블 가로 스크롤 · 확인 카드 액션 줄바꿈</li></ul></div>
+</section>
+
+<!-- =================== A3 =================== -->
+<section class="view" id="v-a3">
+  <div class="screen-head"><span class="id brand">A3</span><h1>정산 내역</h1><span class="role author">개인 author (=팀장)</span>
+    <p>작가가 정산을 <b>직접 수령</b>하고, 팀장이므로 받은 정산을 <b>팀원에게 수동 배분</b>한다. 팀원 화면(M1)에는 예정액이 조회 전용으로만 보이고, 실제 배분 실행은 이 화면에서 이뤄진다.</p>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/settlement</span></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand"><span class="sq">P</span> Playtoon</div>
+        <div class="grp">작가</div>
+        <nav class="nav"><a href="#"><span class="ic">▥</span> 대시보드</a><a href="#"><span class="ic">₩</span> 회차·가격 제안</a><a class="on" href="#"><span class="ic">◷</span> 정산 내역</a></nav>
+        <div class="grp">팀장 (위임)</div><nav class="nav"><a class="lav" href="#"><span class="ic">◆</span> 위임 관리 <span class="dot"></span></a></nav>
+        <div class="grp">계정</div><nav class="nav"><a href="#"><span class="ic">◐</span> 내 정보</a></nav>
+        <div class="me"><span class="av brandav">이</span><div><div class="nm">이든 작가</div><div class="rl">개인 author · 팀장</div></div></div>
+      </aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">작가 · <b>정산 내역</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av brandav">이</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>정산 내역</h2><span class="sp"></span><span class="wsel" style="position:relative">기간: 2026년 5월 <span class="cv">▾</span><span class="pin b" style="right:-10px;top:-10px;left:auto">1</span></span></div></div>
+
+          <div class="kpis">
+            <div class="kpi accent"><div class="lab">이번 달 정산 예정</div><div class="val num">₩2,840,000</div><div class="meta">지급일 6/25</div></div>
+            <div class="kpi"><div class="lab">누적 수령</div><div class="val num">₩18,200,000</div><div class="meta">2026년 누계</div></div>
+            <div class="kpi"><div class="lab">다음 정산일</div><div class="val" style="font-size:20px">2026.06.25</div><div class="meta">D-2</div></div>
+            <div class="kpi lavk" style="position:relative"><span class="pin" style="right:-10px;top:-10px;left:auto">3</span><div class="lab">◆ 팀 배분 예정</div><div class="val num">₩620,000</div><div class="meta">팀원 3명</div></div>
+          </div>
+
+          <div class="panel" style="position:relative"><span class="pin b" style="left:-12px;top:14px">2</span>
+            <div class="ph"><h3>정산 내역</h3><span class="sp"></span><span class="hint">작품별 · 월별</span></div>
+            <div class="pb"><table class="t">
+              <thead><tr><th>정산 월</th><th>작품</th><th class="num">총 정산액</th><th>상태</th><th>명세서</th></tr></thead>
+              <tbody>
+                <tr><td>2026.05</td><td class="wk">비 오는 날의 선택</td><td class="num">₩1,840,000</td><td><span class="chip warn">지급 예정</span></td><td><button class="btn ghost sm">PDF</button></td></tr>
+                <tr><td>2026.05</td><td class="wk">별빛 정류장</td><td class="num">₩1,000,000</td><td><span class="chip warn">지급 예정</span></td><td><button class="btn ghost sm">PDF</button></td></tr>
+                <tr><td>2026.04</td><td class="wk">비 오는 날의 선택</td><td class="num">₩2,100,000</td><td><span class="chip ok">지급 완료</span></td><td><button class="btn ghost sm">PDF</button></td></tr>
+                <tr><td>2026.04</td><td class="wk">별빛 정류장</td><td class="num">₩980,000</td><td><span class="chip ok">지급 완료</span></td><td><button class="btn ghost sm">PDF</button></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+
+          <div class="panel" style="position:relative"><span class="pin" style="left:-12px;top:14px">4</span>
+            <div class="ph"><h3 style="color:var(--lav-d)">◆ 팀 배분</h3><span class="hint">2026년 5월 · 비 오는 날의 선택</span><span class="sp"></span><span class="hint">배분 전</span></div>
+            <div class="dist">
+              <div class="distrow"><span class="av">하</span><div><div class="nm">하늘 작가</div><div class="rl">채색 · 배분율 15%</div></div><span class="sp"></span><span class="amt">₩276,000</span></div>
+              <div class="distrow"><span class="av">민</span><div><div class="nm">민 작가</div><div class="rl">배경 · 배분율 10%</div></div><span class="sp"></span><span class="amt">₩184,000</span></div>
+              <div class="distrow"><span class="av">서</span><div><div class="nm">서아 작가</div><div class="rl">글 · 배분율 9%</div></div><span class="sp"></span><span class="amt">₩160,000</span></div>
+            </div>
+            <div class="distfoot"><span style="font-size:12px;color:var(--ink-3)">팀 배분 합계</span><span style="font-size:14px;font-weight:800" class="num">₩620,000</span><span class="sp"></span><button class="btn lav">배분 실행</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec"><div class="sh"><h3>스펙 시트 — A3</h3><span class="tag brandt">작가 수령 · 팀 수동 배분 · 명세서</span></div>
+    <div class="anns">
+      <div class="ann"><div class="n b">1</div><div class="body"><h4>기간 선택</h4><p>월 단위 정산 기간 선택. 선택 시 정산 내역·팀 배분이 해당 월로 교체. 기본값은 직전 정산 월.</p><div class="meta"><span class="m">--line / #fff</span><span class="m">기본=직전 월</span></div><div class="copy">카피 <code>기간: 2026년 5월 ▾</code></div></div></div>
+      <div class="ann"><div class="n b">2</div><div class="body"><h4>정산 내역 — 작가가 수령</h4><p>M1(팀원)과 결정적 차이: 여기엔 실제 <b>총 정산액</b>이 잡히고 명세서(PDF)를 받는다. 작가는 정산의 수령 주체. 지급 예정 vs 지급 완료를 상태칩으로 구분.</p><div class="meta"><span class="m">예정 --warn</span><span class="m">완료 --ok</span><span class="m">명세서 PDF</span></div><div class="ex brandx"><b>대비</b> — 팀원 M1은 "내 정산 예정액"만 조회 전용(수령 버튼 없음). 작가 A3는 총액 수령 + 명세서 + 팀 배분 실행.</div></div></div>
+      <div class="ann"><div class="n">3</div><div class="body"><h4>팀 배분 예정 KPI</h4><p>받은 정산 중 팀원에게 나갈 몫을 Lavender KPI로. 위임/팀 맥락이라 Lavender. 팀이 없으면 이 카드와 아래 배분 패널 모두 숨김.</p><div class="meta"><span class="m">--lav-wash</span><span class="m">조건부 렌더</span></div></div></div>
+      <div class="ann"><div class="n">4</div><div class="body"><h4>팀 배분 — 수동 실행 (핵심)</h4><p>정책상 정산 수령은 팀장에게 모이고, <b>팀원 배분은 팀장이 수동으로 실행</b>한다. 작품·월 기준으로 팀원별 배분율·금액을 보여주고 [배분 실행]로 일괄 지급. 배분 전/배분 완료 상태 표시.</p><div class="meta"><span class="m">배분 실행 --lav-d</span><span class="m">합계 굵게</span><span class="m">상태 배분전/완료</span></div><div class="ex lavx"><b>예문</b> — 5월 〈비 오는 날의 선택〉 정산 ₩1,840,000 중 팀 배분 ₩620,000: 하늘(채색 15%) ₩276,000 · 민(배경 10%) ₩184,000 · 서아(글 9%) ₩160,000. [배분 실행] → 각 팀원 M1에 "수령 완료"로 반영.</div><div class="copy">실행 토스트 <code>팀 배분을 실행했습니다 · 3명 · ₩620,000</code></div></div></div>
+    </div>
+  </div>
+  <div class="states">
+    <div class="st"><div class="sl">상태 — 지급 예정 / 완료</div><div class="sbody"><div style="display:flex;gap:6px"><span class="chip warn">지급 예정</span><span class="chip ok">지급 완료</span></div><small>예정=warn, 완료=ok</small></div></div>
+    <div class="st"><div class="sl">배분 — 실행 전 / 완료</div><div class="sbody"><div style="display:flex;gap:6px"><button class="demo-btn lav">배분 실행</button></div><small>완료 시 버튼 → "배분 완료 ✓" 비활성 + 일시 표기</small></div></div>
+    <div class="st"><div class="sl">빈 상태 — 정산 없음</div><div class="sbody" style="text-align:center"><small style="font-weight:700;color:var(--ink-2)">이 기간에 정산 내역이 없습니다</small><small>다른 기간을 선택해 보세요.</small></div></div>
+    <div class="st"><div class="sl">팀 없음 — 배분 숨김</div><div class="sbody"><small>팀이 없는 author는 팀 배분 KPI·패널이 <b style="color:var(--ink-2)">렌더되지 않음</b>.</small></div></div>
+  </div>
+  <div class="resp"><h4>📐 반응형</h4><ul><li><b>≥1080px</b> KPI 4열 · 정산 테이블 + 배분 패널 세로</li><li><b>640–1080px</b> KPI 2열 · 테이블 가로 스크롤</li><li><b>&lt;640px</b> KPI 1열 · 배분 행=세로 카드 · 배분 실행 sticky 하단</li></ul></div>
+</section>
+
+<!-- =================== D1 =================== -->
+<section class="view" id="v-d1">
+  <div class="screen-head"><span class="id lav">D1</span><h1>위임 관리 — 발급 목록</h1><span class="role deleg">위임 (Delegation)</span>
+    <p>팀장이 발급한 모든 위임을 <b>4가지 상태(활성·임박·만료·회수)</b>로 관리. [회수]는 D3 모달, [재발급]은 D2 모달로 연결. 위임 전용 Lavender 정체성 유지.</p>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/delegation</span></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand"><span class="sq">P</span> Playtoon</div>
+        <div class="grp">작가</div><nav class="nav"><a href="#"><span class="ic">▥</span> 대시보드</a><a href="#"><span class="ic">₩</span> 회차·가격 제안</a><a href="#"><span class="ic">◷</span> 정산 내역</a></nav>
+        <div class="grp">팀장 (위임)</div><nav class="nav"><a class="on lav" href="#"><span class="ic">◆</span> 위임 관리 <span class="dot"></span></a></nav>
+        <div class="grp">계정</div><nav class="nav"><a href="#"><span class="ic">◐</span> 내 정보</a></nav>
+        <div class="me"><span class="av brandav">이</span><div><div class="nm">이든 작가</div><div class="rl">개인 author · 팀장</div></div></div>
+      </aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">위임 · <b>발급 목록</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av brandav">이</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2 style="color:var(--lav-d)">◆ 위임 관리</h2><span class="sp"></span><button class="btn lav" style="position:relative">◆ 위임 발급<span class="pin" style="right:-10px;top:-10px;left:auto">1</span></button></div><div class="sub">팀원에게 발급한 대리 작업 권한을 관리합니다.</div></div>
+
+          <div class="ftabs" style="position:relative"><span class="pin" style="left:-12px;top:-10px">2</span>
+            <button class="on">전체 <span class="c">7</span></button>
+            <button>활성 <span class="c">2</span></button>
+            <button>임박 <span class="c">1</span></button>
+            <button>만료 <span class="c">3</span></button>
+            <button>회수 <span class="c">1</span></button>
+          </div>
+
+          <div class="panel" style="position:relative"><span class="pin" style="left:-12px;top:14px">3</span>
+            <div class="pb"><table class="t">
+              <thead><tr><th>팀원</th><th>작품 · 범위</th><th>위임 작업</th><th>만료</th><th>상태</th><th style="text-align:right">액션</th></tr></thead>
+              <tbody>
+                <tr><td class="nm2">하늘 작가</td><td>비 오는 날 · 3~8화</td><td><span class="chip lavc">검수+수정</span></td><td class="num">2026.04.30</td><td><span class="chip ok">활성 · D-12</span></td><td style="text-align:right"><button class="btn ghost sm">회수</button></td></tr>
+                <tr style="position:relative"><td class="nm2">민 작가</td><td>별빛 정류장 · 1~5화</td><td><span class="chip lavc">검수</span></td><td class="num">2026.06.25</td><td><span class="chip warn">임박 · D-2</span><span class="pin" style="right:120px;top:8px;left:auto">4</span></td><td style="text-align:right"><button class="btn ghost sm">회수</button></td></tr>
+                <tr><td class="nm2">준 작가</td><td>여름의 끝 · 전체</td><td><span class="chip lavc">검수+수정</span></td><td class="num" style="color:var(--ink-4)">2026.05.31</td><td><span class="chip wait">만료</span></td><td style="text-align:right;position:relative"><button class="btn ghost sm">재발급</button><span class="pin" style="right:-10px;top:-10px;left:auto">5</span></td></tr>
+                <tr><td class="nm2">서아 작가</td><td>비 오는 날 · 9~10화</td><td><span class="chip lavc">검수</span></td><td class="num" style="color:var(--ink-4)">—</td><td><span class="chip dgr">회수됨</span></td><td style="text-align:right"><button class="btn ghost sm">재발급</button></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec"><div class="sh"><h3>스펙 시트 — D1</h3><span class="tag lavt">4상태 모델 · 액션 분기 · D-day</span></div>
+    <div class="anns">
+      <div class="ann"><div class="n">1</div><div class="body"><h4>위임 발급 CTA → D2</h4><p>우상단 [◆ 위임 발급] = Lavender. 누르면 D2 5-Step 모달. 목록이 비어도 항상 노출(첫 발급 유도).</p><div class="meta"><span class="m">--lav-d</span><span class="m">→ D2 모달</span></div></div></div>
+      <div class="ann"><div class="n">2</div><div class="body"><h4>상태 필터 탭</h4><p>전체·활성·임박·만료·회수를 카운트와 함께. 선택 탭은 Lavender 채움. 임박은 D-3 이내 활성 위임을 따로 모아 회수/연장 판단을 돕는 운영 탭.</p><div class="meta"><span class="m">on: --lav-d</span><span class="m">카운트 인라인</span></div><div class="copy">기본 선택 <code>전체</code> · URL <code>?status=active</code></div></div></div>
+      <div class="ann"><div class="n">3</div><div class="body"><h4>발급 목록 테이블</h4><p>팀원·작품/범위·위임 작업·만료·상태·액션. 만료/회수 행은 만료일·텍스트를 회색으로 죽여 시각적으로 비활성임을 표현(행 자체는 유지 — 이력 보존).</p><div class="meta"><span class="m">위임 작업 칩 lavc</span><span class="m">만료 텍스트 --ink-4</span></div></div></div>
+      <div class="ann"><div class="n">4</div><div class="body"><h4>상태칩 + D-day 규칙</h4><p>활성=ok(D-{n}), 임박=warn(D-3 이내), 만료=중립 wait, 회수됨=danger 톤 칩. D-day는 만료일 기준 자동 계산.</p><div class="meta"><span class="m">활성 ok</span><span class="m">임박 warn</span><span class="m">만료 wait</span><span class="m">회수 dgr</span></div><div class="ex lavx"><b>D-day</b> — 만료 2026.06.25, 오늘 06.23 → "임박 · D-2". D-0(당일)=임박, 만료일 지나면 "만료"로 자동 전환.</div></div></div>
+      <div class="ann"><div class="n">5</div><div class="body"><h4>액션 분기 — 상태별</h4><p>활성·임박 → [회수](D3 모달). 만료·회수됨 → [재발급](D2 모달, 직전 설정 프리필). "삭제" 버튼은 없음 — 위임은 삭제 대상이 아니라 회수/재발급 대상.</p><div class="meta"><span class="m">활성→회수 D3</span><span class="m">만료/회수→재발급 D2</span></div><div class="ex lavx"><b>재발급</b> — 만료된 준 작가 위임 [재발급] → D2가 직전 범위(여름의 끝 전체)·작업(검수+수정)을 미리 채운 채 열림. 기간만 새로 정하면 됨.</div></div></div>
+    </div>
+  </div>
+  <div class="states">
+    <div class="st"><div class="sl">상태칩 — 4종</div><div class="sbody"><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip ok">활성</span><span class="chip warn">임박 D-2</span><span class="chip wait">만료</span><span class="chip dgr">회수됨</span></div></div></div>
+    <div class="st"><div class="sl">액션 — 활성</div><div class="sbody"><button class="demo-btn" style="background:#fff;border:1px solid var(--line);color:var(--ink-2)">회수</button><small>→ D3 회수 모달</small></div></div>
+    <div class="st"><div class="sl">액션 — 만료/회수</div><div class="sbody"><button class="demo-btn" style="background:#fff;border:1px solid var(--line);color:var(--ink-2)">재발급</button><small>→ D2 (직전 설정 프리필)</small></div></div>
+    <div class="st"><div class="sl">빈 상태 — 발급 없음</div><div class="sbody" style="text-align:center"><div style="font-size:18px;color:var(--lav-d)">◆</div><small style="font-weight:700;color:var(--ink-2)">발급한 위임이 없습니다</small><small>[위임 발급]으로 팀원에게 권한을 줄 수 있어요.</small></div></div>
+  </div>
+  <div class="resp"><h4>📐 반응형</h4><ul><li><b>≥1080px</b> 6컬럼 테이블 · 필터 탭 가로</li><li><b>640–1080px</b> 테이블 가로 스크롤(팀원 컬럼 고정)</li><li><b>&lt;640px</b> 행=카드(팀원 헤더 + 범위/작업/상태 stacked + 액션 풀폭) · 탭 가로 스크롤</li></ul></div>
+</section>
+
+<!-- =================== P1 =================== -->
+<section class="view" id="v-p1">
+  <div class="screen-head"><span class="id cp">P1</span><h1>CP master 대시보드</h1><span class="role cp">CP master</span>
+    <p>CP(콘텐츠 사업자) 마스터가 보는 <b>회사 전체</b> 대시보드. 소속 작가·작품·매출·정산을 통합 조망한다. 5 role 중 <b>가장 넓은 메뉴</b> — P2(정산만)와 극명히 대비된다.</p>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/cp/dashboard</span></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand"><span class="sq">P</span> Playtoon</div>
+        <div class="grp">CP master</div>
+        <nav class="nav" style="position:relative"><span class="pin n" style="right:6px;top:2px;left:auto">2</span>
+          <a class="on" href="#"><span class="ic">▥</span> 대시보드</a>
+          <a href="#"><span class="ic">◐</span> 소속 작가</a>
+          <a href="#"><span class="ic">▤</span> 작품 관리</a>
+          <a href="#"><span class="ic">₩</span> 정산·계약</a>
+          <a class="lav" href="#"><span class="ic">◆</span> 위임 관리</a>
+          <a href="#"><span class="ic">⚙</span> 설정</a>
+        </nav>
+        <div class="me"><span class="av cpav">노</span><div><div class="nm">스튜디오 노을</div><div class="rl">CP master</div></div></div>
+      </aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">CP · <b>대시보드</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av cpav">노</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>스튜디오 노을 대시보드</h2></div><div class="sub">회사 전체 작가·작품·정산 현황 · 2026년 6월</div></div>
+          <div class="kpis" style="position:relative"><span class="pin n" style="left:-12px;top:-10px">1</span>
+            <div class="kpi"><div class="lab">소속 작가</div><div class="val num">12<small> 명</small></div><div class="meta">CP author 11 · accounting 1</div></div>
+            <div class="kpi"><div class="lab">연재 작품</div><div class="val num">28</div><div class="meta">연재 21 · 완결 7</div></div>
+            <div class="kpi accent"><div class="lab">이번 달 GMV</div><div class="val num">₩48,200,000</div><div class="meta">전월 대비 +8%</div></div>
+            <div class="kpi"><div class="lab">정산 예정</div><div class="val num">₩14,600,000</div><div class="meta">지급일 6/25</div></div>
+          </div>
+          <div class="dash">
+            <div class="panel" style="margin-bottom:0;position:relative"><span class="pin n" style="left:-12px;top:14px">3</span>
+              <div class="ph"><h3>작가별 현황</h3><span class="sp"></span><span class="hint">정산 예정 기준</span></div>
+              <div class="pb"><table class="t">
+                <thead><tr><th>작가</th><th class="num">작품</th><th class="num">이번 달 조회</th><th class="num">정산 예정</th></tr></thead>
+                <tbody>
+                  <tr><td class="nm2">이든 작가</td><td class="num">3</td><td class="num">620,940</td><td class="num">₩2,840,000</td></tr>
+                  <tr><td class="nm2">하루 작가</td><td class="num">2</td><td class="num">418,200</td><td class="num">₩1,920,000</td></tr>
+                  <tr><td class="nm2">소이 작가</td><td class="num">4</td><td class="num">512,600</td><td class="num">₩2,460,000</td></tr>
+                  <tr><td class="nm2">강 작가</td><td class="num">1</td><td class="num">98,400</td><td class="num">₩540,000</td></tr>
+                </tbody>
+              </table></div>
+            </div>
+            <div class="panel" style="margin-bottom:0"><div class="ph"><h3>작품 매출 Top</h3><span class="hint">이번 달 GMV</span></div>
+              <div class="bars">
+                <div class="bar"><span class="bn">비 오는 날의 선택</span><span class="bt" style="width:90%"></span><span class="bv">₩12.4M</span></div>
+                <div class="bar"><span class="bn">별빛 정류장</span><span class="bt" style="width:62%"></span><span class="bv">₩8.6M</span></div>
+                <div class="bar"><span class="bn">한낮의 라디오</span><span class="bt" style="width:48%"></span><span class="bv">₩6.6M</span></div>
+                <div class="bar"><span class="bn">겨울 도서관</span><span class="bt" style="width:33%"></span><span class="bv">₩4.5M</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec"><div class="sh"><h3>스펙 시트 — P1</h3><span class="tag nt">회사 전체 가시성 · 가장 넓은 메뉴</span></div>
+    <div class="anns">
+      <div class="ann"><div class="n k">1</div><div class="body"><h4>회사 전체 KPI</h4><p>개인 author(A1)는 자기 작품만, CP master는 <b>회사 전체</b>를 본다. 소속 작가 수·연재 작품·GMV·정산 예정을 회사 단위로 집계. GMV(총거래액)와 정산 예정(작가 지급분)을 구분 표기.</p><div class="meta"><span class="m">집계 단위=회사</span><span class="m">GMV ≠ 정산</span></div><div class="ex"><b>용어</b> — GMV=독자 결제 총액, 정산 예정=수수료 차감 후 작가/CP에게 갈 금액. 둘은 다른 수치라 라벨을 분명히.</div></div></div>
+      <div class="ann"><div class="n k">2</div><div class="body"><h4>가장 넓은 메뉴 (6개)</h4><p>대시보드·소속 작가·작품 관리·정산·계약·위임 관리·설정. 회사 운영에 필요한 전 영역. P2 CP accounting과 나란히 두면 권한별 메뉴 차이가 한눈에 — <b>권한이 메뉴 자체를 결정</b>한다.</p><div class="meta"><span class="m">6 메뉴</span><span class="m">위임 관리 lav</span></div><div class="copy">대비: P1=6메뉴 / P2=정산만. <code>P2 탭에서 확인</code></div></div></div>
+      <div class="ann"><div class="n k">3</div><div class="body"><h4>작가별 현황 + 매출 Top</h4><p>좌: 작가별 작품/조회/정산 테이블. 우: 작품 매출 Top 막대. 회사가 어떤 작가·작품에 의존하는지 빠르게 파악. 막대는 브랜드 레드 단색(과한 컬러 배제).</p><div class="meta"><span class="m">막대 --brand</span><span class="m">2열 대시</span></div></div></div>
+    </div>
+  </div>
+  <div class="states">
+    <div class="st"><div class="sl">로딩 — 스켈레톤</div><div class="sbody"><div style="height:24px;width:70%;border-radius:6px;background:var(--skel-base)"></div><div style="height:14px;width:50%;border-radius:6px;background:var(--skel-base)"></div><small>shimmer 1.6s</small></div></div>
+    <div class="st"><div class="sl">작가 없음 — 빈 상태</div><div class="sbody" style="text-align:center"><small style="font-weight:700;color:var(--ink-2)">소속 작가가 없습니다</small><small>작가를 초대해 회사를 구성하세요.</small></div></div>
+    <div class="st"><div class="sl">권한 — 위임 관리</div><div class="sbody"><small>CP master도 회사 내 위임을 발급/회수(D2·D3 동일). 위임 메뉴만 Lavender.</small></div></div>
+  </div>
+  <div class="resp"><h4>📐 반응형</h4><ul><li><b>≥1080px</b> KPI 4열 · 본문 2열(테이블+막대)</li><li><b>640–1080px</b> KPI 2열 · 본문 1열</li><li><b>&lt;640px</b> KPI 1열 · 막대 라벨 2줄 · 테이블 가로 스크롤</li></ul></div>
+</section>
+
+<!-- =================== P2 =================== -->
+<section class="view" id="v-p2">
+  <div class="screen-head"><span class="id cp">P2</span><h1>CP accounting — 정산</h1><span class="role cp">CP accounting</span>
+    <p>회사 <b>정산만</b> 담당하는 회계 role. 5 role 중 <b>가장 좁은 메뉴</b>로, "권한 없으면 숨김" 원칙의 극명한 예 — 작가·작품·위임·설정 메뉴는 <b>비활성이 아니라 아예 보이지 않는다</b>.</p>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/cp/settlement</span></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand"><span class="sq">P</span> Playtoon</div>
+        <div class="grp">CP accounting</div>
+        <nav class="nav" style="position:relative"><span class="pin n" style="right:6px;top:2px;left:auto">1</span>
+          <a class="on" href="#"><span class="ic">₩</span> 정산</a>
+          <a href="#"><span class="ic">◐</span> 내 정보</a>
+        </nav>
+        <div class="grp">권한 밖 (숨김)</div>
+        <div class="hidemenu">
+          <div class="hl">이 role에 없는 메뉴</div>
+          <div class="hm"><span class="ic">▥</span> 대시보드</div>
+          <div class="hm"><span class="ic">◐</span> 소속 작가</div>
+          <div class="hm"><span class="ic">▤</span> 작품 관리</div>
+          <div class="hm"><span class="ic">◆</span> 위임 관리</div>
+          <div class="hm"><span class="ic">⚙</span> 설정</div>
+        </div>
+        <div class="me"><span class="av cpav">한</span><div><div class="nm">한지 회계</div><div class="rl">CP accounting · 스튜디오 노을</div></div></div>
+      </aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">CP · <b>정산</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av cpav">한</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>정산</h2><span class="sp"></span><span class="wsel">기간: 2026년 5월 <span class="cv">▾</span></span></div><div class="sub">회사 전체 정산을 조회하고 명세서를 관리합니다.</div></div>
+          <div class="kpis"><div class="kpi accent"><div class="lab">이번 달 정산 총액</div><div class="val num">₩14,600,000</div><div class="meta">지급일 6/25</div></div>
+            <div class="kpi"><div class="lab">지급 완료</div><div class="val num">₩9,200,000</div><div class="meta">8건</div></div>
+            <div class="kpi"><div class="lab">미지급</div><div class="val num">₩5,400,000</div><div class="meta">4건</div></div>
+            <div class="kpi"><div class="lab">다음 정산일</div><div class="val" style="font-size:20px">2026.06.25</div><div class="meta">D-2</div></div>
+          </div>
+          <div class="panel" style="position:relative"><span class="pin n" style="left:-12px;top:14px">2</span>
+            <div class="ph"><h3>정산 내역</h3><span class="sp"></span><span class="hint">작가별 · 조회·명세서만</span></div>
+            <div class="pb"><table class="t">
+              <thead><tr><th>작가</th><th>작품</th><th class="num">정산액</th><th>상태</th><th>명세서</th></tr></thead>
+              <tbody>
+                <tr><td class="nm2">이든 작가</td><td>비 오는 날의 선택</td><td class="num">₩2,840,000</td><td><span class="chip warn">미지급</span></td><td><button class="btn ghost sm">PDF</button></td></tr>
+                <tr><td class="nm2">하루 작가</td><td>한낮의 라디오</td><td class="num">₩1,920,000</td><td><span class="chip warn">미지급</span></td><td><button class="btn ghost sm">PDF</button></td></tr>
+                <tr><td class="nm2">소이 작가</td><td>겨울 도서관 외 3</td><td class="num">₩2,460,000</td><td><span class="chip ok">지급 완료</span></td><td><button class="btn ghost sm">PDF</button></td></tr>
+                <tr><td class="nm2">강 작가</td><td>밤의 편의점</td><td class="num">₩540,000</td><td><span class="chip ok">지급 완료</span></td><td><button class="btn ghost sm">PDF</button></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec"><div class="sh"><h3>스펙 시트 — P2</h3><span class="tag nt">가장 좁은 메뉴 · 권한 없으면 숨김</span></div>
+    <div class="anns">
+      <div class="ann"><div class="n k">1</div><div class="body"><h4>가장 좁은 메뉴 — 숨김 원칙 (핵심)</h4><p>CP accounting은 <b>정산·내 정보</b> 2개만. 작가·작품·위임·설정은 <b>회색 비활성이 아니라 아예 렌더하지 않는다</b>. 권한 없는 메뉴를 남기면 "왜 못 누르지?" 혼란만 주기 때문. (이 시안에서는 설명을 위해 "권한 밖(숨김)" 영역에 취소선으로 보여주지만, <u>실제 화면엔 이 영역이 없다</u>.)</p><div class="meta"><span class="m">렌더 메뉴 2개</span><span class="m">숨김 ≠ 비활성</span></div><div class="ex"><b>대비</b> — P1 CP master 6메뉴 ↔ P2 CP accounting 2메뉴. 같은 회사, 같은 디자인, 다른 권한 → 메뉴 구성이 다르다. 이게 "메뉴 자체를 권한으로 분기"의 끝판.</div></div></div>
+      <div class="ann"><div class="n k">2</div><div class="body"><h4>정산 — 조회·명세서만</h4><p>회계 role이라 회사 전체 정산을 보지만 <b>편집 권한은 없다</b>. 작가/작품/정산액/상태/명세서(PDF)까지만. 가격 변경·배분 실행·작가 관리 같은 액션 버튼은 등장하지 않음.</p><div class="meta"><span class="m">read + 명세서</span><span class="m">편집 액션 없음</span></div><div class="copy">상태칩: 미지급=warn, 지급 완료=ok. 행 클릭 → 정산 상세(조회).</div></div></div>
+    </div>
+  </div>
+  <div class="states">
+    <div class="st"><div class="sl">메뉴 — 렌더되는 것</div><div class="sbody"><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:700">₩ 정산</span><span style="font-size:12px;font-weight:700">◐ 내 정보</span></div><small>이 2개만 실제 노출</small></div></div>
+    <div class="st"><div class="sl">메뉴 — 숨겨지는 것</div><div class="sbody"><small style="text-decoration:line-through;color:var(--ink-4)">대시보드 · 소속 작가 · 작품 관리 · 위임 관리 · 설정</small><small>DOM에 없음(렌더 안 함)</small></div></div>
+    <div class="st"><div class="sl">상태 — 미지급 / 완료</div><div class="sbody"><div style="display:flex;gap:6px"><span class="chip warn">미지급</span><span class="chip ok">지급 완료</span></div></div></div>
+    <div class="st"><div class="sl">빈 상태 — 정산 없음</div><div class="sbody" style="text-align:center"><small style="font-weight:700;color:var(--ink-2)">이 기간에 정산 내역이 없습니다</small></div></div>
+  </div>
+  <div class="resp"><h4>📐 반응형</h4><ul><li><b>≥1080px</b> 좁은 사이드바 + KPI 4열 + 정산 테이블</li><li><b>640–1080px</b> 사이드바 드로어 · KPI 2열</li><li><b>&lt;640px</b> KPI 1열 · 테이블 카드형 · 명세서 버튼 풀폭</li></ul></div>
+</section>
+
+<div class="foot">
+  <b>Playtoon Admin · 풀 비주얼 시안 V1.0</b> — 외부 파트너 어드민 · 디자인 시스템 V1.1 · 2026.06.23<br>
+  A1 대시보드(활성 위임 KPI · 작가 직접 수령) · A3 정산(작가 수령 + 팀 수동 배분) · D1 발급 목록(4상태 · 회수→D3 / 재발급→D2) · P1 CP master(회사 전체 · 6메뉴) · P2 CP accounting(정산만 · 2메뉴 · 권한 없으면 숨김)<br>
+  5 role: 운영 / 개인 author(=팀장) / CP author / CP accounting / CP master · 색=의미: 브랜드 레드 액션 · Lavender 위임 · danger 영구 삭제 전용<br>
+  앞 시안(M1·D2·A2·M2·D3)과 동일 토큰·컴포넌트 · 남은 후보 — CP author 화면 · 작가 정보(공통) · 운영자 18화면
+</div>
+
+</div>
+<script>
+const tabs=[...document.querySelectorAll('.tabs button')];
+const views={a1:document.getElementById('v-a1'),a3:document.getElementById('v-a3'),d1:document.getElementById('v-d1'),p1:document.getElementById('v-p1'),p2:document.getElementById('v-p2')};
+tabs.forEach(b=>b.addEventListener('click',()=>{tabs.forEach(x=>x.classList.remove('on'));b.classList.add('on');Object.values(views).forEach(v=>v.classList.remove('on'));views[b.dataset.v].classList.add('on');window.scrollTo({top:0,behavior:'smooth'});}));
+const at=document.getElementById('annToggle');
+at.addEventListener('click',()=>{at.classList.toggle('on');document.body.classList.toggle('no-ann',!at.classList.contains('on'));});
+</script>
+<script>/*deeplink*/(function(){try{var p=new URLSearchParams(location.search).get("screen");if(p){var b=document.querySelector('.tabs button[data-v="'+p+'"]');if(b)b.click();}}catch(e){}})();</script>
+</body>
+</html>

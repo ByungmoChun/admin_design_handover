@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playtoon Admin · 풀 비주얼 시안 — CA1 CP author 대시보드 · CA2 내 작품·매출</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --bg:#F5F4F2;--surf:#FFFFFF;--surf-2:#FAFAF9;--line:#E6E4E1;--line-2:#F0EEEC;
+  --ink:#1A1917;--ink-2:#44423E;--ink-3:#6E6B66;--ink-4:#9C9893;
+  --brand:#C7242D;--brand-h:#A22F2C;--brand-a:#7F2523;--brand-wash:#FBEAEA;
+  --lav:#A99DE4;--lav-d:#6E5FB8;--lav-wash:#F1EFFB;--lav-line:#DCD6F4;
+  --danger:#E5484D;--danger-d:#C2363B;--danger-wash:#FDECEC;
+  --ok:#2E9E5B;--ok-d:#1F7A43;--ok-wash:#E8F6EE;
+  --warn:#D9870A;--warn-d:#B36C00;--warn-wash:#FCF3E2;
+  --info:#3A6FE0;--info-wash:#EAF0FD;
+  /* CP 소속 강조용 (회사 정체성 = 중립 다크) */
+  --cp:#3D3A35;--cp-wash:#EDEAE6;--cp-line:#D9D5CF;
+  --r-s:6px;--r:10px;--r-l:14px;--pill:999px;
+  --sh-s:0 1px 2px rgba(26,25,23,.06),0 1px 1px rgba(26,25,23,.04);
+  --sh-m:0 4px 14px rgba(26,25,23,.08),0 1px 3px rgba(26,25,23,.05);
+  --sh-l:0 18px 50px rgba(26,25,23,.22),0 4px 14px rgba(26,25,23,.12);
+  --skel-base:#EDECEA;--skel-shine:#F8F7F6;
+  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Segoe UI',Roboto,'Noto Sans KR',sans-serif;
+  --mono:'SFMono-Regular',ui-monospace,'JetBrains Mono','Roboto Mono',Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:#E9E7E3;color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+.docbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:18px;padding:11px 22px;background:#161412;color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.4)}
+.docbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.docbar .logo .sq{width:22px;height:22px;border-radius:6px;background:var(--brand);display:grid;place-items:center;font-size:12px;font-weight:900}
+.docbar .v{font-size:11px;font-weight:700;color:#bdb9b3;font-family:var(--mono)}
+.docbar .sp{flex:1}
+.tabs{display:flex;gap:4px;background:#241f1c;padding:4px;border-radius:var(--pill)}
+.tabs button{appearance:none;border:0;background:transparent;color:#cfcbc5;font-family:var(--font);font-weight:700;font-size:12.5px;padding:7px 15px;border-radius:var(--pill);cursor:pointer;transition:.16s}
+.tabs button:hover{color:#fff}.tabs button.on{background:#fff;color:#161412}
+.ann-toggle{display:flex;align-items:center;gap:7px;font-size:12px;color:#cfcbc5;cursor:pointer;user-select:none}
+.ann-toggle .sw{width:34px;height:19px;border-radius:var(--pill);background:#4a443f;position:relative;transition:.18s}
+.ann-toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.18s}
+.ann-toggle.on .sw{background:var(--lav)}.ann-toggle.on .sw::after{left:17px}
+
+.stage{max-width:1320px;margin:0 auto;padding:30px 26px 90px}
+.view{display:none}.view.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.screen-head{display:flex;align-items:flex-end;gap:14px;margin:6px 2px 18px;flex-wrap:wrap}
+.screen-head .id{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;padding:5px 11px;border-radius:var(--r-s);background:var(--brand)}
+.screen-head h1{font-size:23px;font-weight:800;letter-spacing:-.5px}
+.screen-head .role{font-size:11px;font-weight:800;padding:5px 10px;border-radius:var(--pill);background:var(--brand-wash);color:var(--brand-a)}
+.screen-head .cpaff{font-size:11px;font-weight:800;padding:5px 10px;border-radius:var(--pill);background:var(--cp-wash);color:var(--cp);display:inline-flex;align-items:center;gap:5px}
+.screen-head p{flex-basis:100%;font-size:13px;color:var(--ink-3);margin-top:2px;max-width:820px}
+
+.frame{position:relative;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-m);overflow:hidden}
+.frame .browser{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--surf-2);border-bottom:1px solid var(--line)}
+.frame .browser .dots{display:flex;gap:6px}.frame .browser .dots i{width:10px;height:10px;border-radius:50%;display:block;background:#d8d4cf}
+.frame .browser .url{flex:1;font-family:var(--mono);font-size:11px;color:var(--ink-3);background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:5px 12px}
+
+.app{display:grid;grid-template-columns:228px 1fr;min-height:660px}
+.side{background:var(--surf);border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column}
+.side .brand{display:flex;align-items:center;gap:9px;padding:6px 8px 16px;font-weight:800;font-size:15px}
+.side .brand .sq{width:26px;height:26px;border-radius:7px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:900}
+/* CP 소속 배지 (사이드바 상단) */
+.side .cpbadge{display:flex;align-items:center;gap:8px;padding:8px 10px;margin:0 2px 8px;border:1px solid var(--cp-line);background:var(--cp-wash);border-radius:var(--r-s)}
+.side .cpbadge .ci{width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#5a5650,#2c2a27);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
+.side .cpbadge .ct{font-size:11.5px;font-weight:800;color:var(--ink);line-height:1.2}
+.side .cpbadge .cs{font-size:9.5px;color:var(--ink-3)}
+.side .grp{font-size:10px;font-weight:800;letter-spacing:.6px;color:var(--ink-4);text-transform:uppercase;padding:14px 10px 6px}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-s);font-size:13px;font-weight:600;color:var(--ink-2);text-decoration:none;margin-bottom:2px;transition:.13s}
+.nav a .ic{width:17px;flex:none;opacity:.8;text-align:center}
+.nav a:hover{background:var(--surf-2);color:var(--ink)}
+.nav a.on{background:var(--brand-wash);color:var(--brand-a);font-weight:700}
+.nav a.lav{color:var(--lav-d)}.nav a.lav .dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--lav)}
+.nav a.muted{color:var(--ink-4)}.nav a.muted .ic{opacity:.5}
+.side .me{margin-top:auto;display:flex;align-items:center;gap:9px;padding:10px;border-top:1px solid var(--line-2)}
+.side .me .av{width:30px;height:30px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;background:linear-gradient(135deg,#E0565E,#C7242D)}
+.side .me .nm{font-size:12.5px;font-weight:700;line-height:1.2}.side .me .rl{font-size:10.5px;color:var(--ink-3)}
+
+.main{display:flex;flex-direction:column;background:var(--bg)}
+.topbar{display:flex;align-items:center;gap:14px;padding:13px 26px;background:var(--surf);border-bottom:1px solid var(--line)}
+.topbar .crumb{font-size:12px;color:var(--ink-3);font-weight:600}.topbar .crumb b{color:var(--ink);font-weight:700}
+.topbar .sp{flex:1}
+.topbar .bell{width:34px;height:34px;border-radius:var(--r-s);border:1px solid var(--line);background:#fff;display:grid;place-items:center;position:relative}
+.topbar .bell::after{content:"";position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--brand)}
+.topbar .av{width:34px;height:34px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800;background:linear-gradient(135deg,#E0565E,#C7242D)}
+.content{padding:24px 26px 40px;flex:1}
+
+.phead{margin-bottom:18px}
+.phead .row{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.phead h2{font-size:21px;font-weight:800;letter-spacing:-.4px}
+.phead .sub{font-size:13px;color:var(--ink-3);margin-top:6px}.phead .sp{flex:1}
+.wsel{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:var(--r-s);padding:7px 12px;font-size:13px;font-weight:700;color:var(--ink)}.wsel .cv{color:var(--ink-4);font-size:11px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-family:var(--font);font-weight:700;font-size:13px;padding:9px 17px;border-radius:var(--r-s);border:0;cursor:pointer}
+.btn.brand{background:var(--brand);color:#fff}.btn.brand:hover{background:var(--brand-h)}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink-2)}
+.btn.sm{padding:6px 12px;font-size:12px}
+
+/* CP affiliation banner */
+.banner{display:flex;gap:11px;align-items:flex-start;border-radius:var(--r);padding:13px 15px;margin-bottom:18px}
+.banner.cpbn{background:var(--cp-wash);border:1px solid var(--cp-line)}
+.banner.info{background:var(--info-wash);border:1px solid #cdddfa}
+.banner .i{width:20px;height:20px;flex:none;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;margin-top:1px}
+.banner.cpbn .i{background:var(--cp)}.banner.info .i{background:var(--info)}
+.banner .t{font-size:12.5px;color:var(--ink-2);line-height:1.55}
+.banner.cpbn .t b{color:var(--cp)}.banner.info .t b{color:var(--info)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px;box-shadow:var(--sh-s);position:relative}
+.kpi .lab{font-size:11.5px;font-weight:700;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.kpi .val{font-size:27px;font-weight:800;letter-spacing:-1px;margin-top:9px;line-height:1}
+.kpi .val small{font-size:13px;font-weight:700;color:var(--ink-3);letter-spacing:0}
+.kpi .meta{font-size:11px;color:var(--ink-4);margin-top:8px}
+.kpi.accent .val{color:var(--brand)}
+.kpi .roTag{position:absolute;top:13px;right:13px;font-size:9.5px;font-weight:800;color:var(--ink-4);border:1px solid var(--line);border-radius:var(--pill);padding:2px 7px;background:var(--surf-2)}
+.kpi.cpk{border-color:var(--cp-line);background:linear-gradient(180deg,var(--cp-wash),#fff 75%)}
+.kpi.cpk .lab{color:var(--cp)}.kpi.cpk .val{font-size:17px;color:var(--cp)}
+
+.dash{display:grid;grid-template-columns:1.6fr 1fr;gap:18px}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-s);margin-bottom:20px;overflow:hidden}
+.panel .ph{display:flex;align-items:center;gap:9px;padding:14px 17px;border-bottom:1px solid var(--line-2)}
+.panel .ph h3{font-size:14px;font-weight:800}.panel .ph .hint{font-size:11.5px;color:var(--ink-4)}.panel .ph .sp{flex:1}
+.panel .pb{padding:0}
+.panel .pbox{padding:15px 17px}
+
+table.t{width:100%;border-collapse:collapse;font-size:12.5px}
+table.t th{text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.3px;color:var(--ink-3);text-transform:uppercase;padding:10px 17px;background:var(--surf-2);border-bottom:1px solid var(--line)}
+table.t td{padding:12px 17px;border-bottom:1px solid var(--line-2);color:var(--ink-2);vertical-align:middle}
+table.t tr:last-child td{border-bottom:0}
+table.t .wk{font-weight:700;color:var(--ink)}
+table.t .num,table.t th.num{text-align:right;font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--pill)}
+.chip.ok{background:var(--ok-wash);color:var(--ok-d)}
+.chip.warn{background:var(--warn-wash);color:var(--warn-d)}
+.chip.wait{background:var(--surf-2);color:var(--ink-3);border:1px solid var(--line)}
+.chip.info{background:var(--info-wash);color:var(--info)}
+.chip.cpc{background:var(--cp-wash);color:var(--cp);border:1px solid var(--cp-line)}
+.chip.rs{background:#EEF3FF;color:var(--info)}.chip.mg{background:#F3EEFF;color:var(--lav-d)}
+
+/* attention */
+.attn{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-s);margin-bottom:22px;overflow:hidden}
+.attn .ah{padding:13px 17px;border-bottom:1px solid var(--line-2);font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
+.attn .ah .c{font-size:11px;font-weight:800;color:#fff;background:var(--brand);border-radius:var(--pill);padding:1px 8px}
+.attn .arow{display:flex;align-items:center;gap:12px;padding:12px 17px;border-bottom:1px solid var(--line-2)}.attn .arow:last-child{border-bottom:0}
+.attn .arow .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.attn .arow .tx{font-size:12.5px;color:var(--ink-2)}.attn .arow .tx b{color:var(--ink)}.attn .arow .sp{flex:1}
+
+/* settlement-by-CP info panel */
+.cpinfo .row{display:flex;align-items:center;gap:10px;padding:12px 17px;border-bottom:1px solid var(--line-2)}
+.cpinfo .row:last-child{border-bottom:0}
+.cpinfo .row .k{font-size:11.5px;color:var(--ink-3);min-width:96px}
+.cpinfo .row .v{font-size:12.5px;font-weight:700;color:var(--ink)}
+.cpinfo .foot{padding:13px 17px;background:var(--cp-wash);border-top:1px solid var(--cp-line);font-size:11.5px;color:var(--cp);line-height:1.55}
+
+/* author/uploader/payout separation */
+.sep{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:15px 17px}
+.sepcard{border:1px solid var(--line);border-radius:var(--r-s);padding:13px 14px}
+.sepcard .lab{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-4)}
+.sepcard .nm{font-size:14px;font-weight:800;color:var(--ink);margin-top:5px}
+.sepcard .ds{font-size:11px;color:var(--ink-3);margin-top:4px}
+.sepcard.payout{border-color:var(--cp-line);background:var(--cp-wash)}
+.sepcard.payout .nm{color:var(--cp)}
+.sepnote{padding:0 17px 15px;font-size:11.5px;color:var(--ink-3)}
+
+/* ANNOTATION */
+.pin{position:absolute;width:24px;height:24px;border-radius:50%;background:var(--lav);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;box-shadow:0 2px 8px rgba(110,95,184,.5);border:2px solid #fff;z-index:30}
+.pin.b{background:var(--brand);box-shadow:0 2px 8px rgba(199,36,45,.5)}
+.pin.c{background:var(--cp)}
+body.no-ann .pin{display:none}
+.spec{margin-top:24px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-s)}
+.spec .sh{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.spec .sh h3{font-size:14px;font-weight:800}
+.spec .sh .tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--pill);color:var(--cp);background:var(--cp-wash);border:1px solid var(--cp-line)}
+.anns{padding:6px 0}
+.ann{display:grid;grid-template-columns:30px 1fr;gap:13px;padding:14px 20px;border-bottom:1px solid var(--line-2)}.ann:last-child{border-bottom:0}
+.ann .n{width:24px;height:24px;border-radius:50%;color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;background:var(--brand)}
+.ann .n.c{background:var(--cp)}
+.ann .body h4{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:5px}
+.ann .body p{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+.ann .body .meta{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.ann .body .meta .m{font-size:10.5px;font-weight:700;font-family:var(--mono);padding:3px 8px;border-radius:var(--r-s);background:var(--surf-2);border:1px solid var(--line);color:var(--ink-2)}
+.ann .body .ex{margin-top:9px;border-radius:var(--r-s);padding:9px 12px;font-size:11.5px;color:var(--ink-2);line-height:1.6;background:var(--cp-wash);border:1px solid var(--cp-line)}
+.ann .body .ex b{color:var(--cp)}
+.ann .body .copy{margin-top:8px;font-size:11.5px;color:var(--ink-3)}
+.ann .body .copy code{font-family:var(--mono);font-size:11px;background:var(--surf-2);border:1px solid var(--line);padding:1px 6px;border-radius:4px;color:var(--ink-2)}
+
+.states{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.st{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-s)}
+.st .sl{font-size:10.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-3);padding:10px 13px;border-bottom:1px solid var(--line-2);background:var(--surf-2)}
+.st .sbody{padding:14px 13px;min-height:80px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.st small{font-size:10.5px;color:var(--ink-4);line-height:1.55}
+
+.resp{margin-top:22px;background:var(--surf);border:1px dashed var(--line);border-radius:var(--r);padding:16px 19px}
+.resp h4{font-size:12.5px;font-weight:800;margin-bottom:9px}
+.resp ul{list-style:none;display:grid;gap:7px}
+.resp li{font-size:12px;color:var(--ink-2);display:flex;gap:9px}
+.resp li b{font-family:var(--mono);font-size:11px;color:var(--cp);min-width:108px}
+
+.foot{max-width:1320px;margin:40px auto 0;padding:22px 26px 0;border-top:1px solid var(--line);color:var(--ink-3);font-size:11.5px;line-height:1.8}
+.foot b{color:var(--ink-2)}
+
+@media(max-width:1080px){.app{grid-template-columns:1fr}.side{display:none}.dash{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.sep{grid-template-columns:1fr}}
+@media(max-width:640px){.tabs button{padding:7px 12px;font-size:11.5px}.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="docbar">
+  <div class="logo"><span class="sq">P</span> Playtoon Admin</div>
+  <span class="v">풀 비주얼 시안 · V1.1 · 2026.06.23</span>
+  <span class="sp"></span>
+  <div class="tabs">
+    <button class="on" data-v="ca1">CA1 · CP author 대시보드</button>
+    <button data-v="ca2">CA2 · 내 작품·매출</button>
+  </div>
+  <div class="ann-toggle on" id="annToggle"><span class="sw"></span> 주석</div>
+</div>
+
+<div class="stage">
+
+<!-- =================== CA1 =================== -->
+<section class="view on" id="v-ca1">
+  <div class="screen-head"><span class="id">CA1</span><h1>CP author 대시보드</h1>
+    <span class="role">CP author</span>
+    <span class="cpaff">▣ 스튜디오 노을 소속</span>
+    <p>CP(사업자)에 소속된 작가의 홈. <b>제작 권한은 개인 author와 동일</b>(작품 생성·편집·검수 제출·가격 제안·본인 팀 위임)하지만, <b>정산·계약·수익 수령은 소속 CP가 관리</b>한다. 그래서 개인 author의 "정산 수령"이 여기서는 "매출 조회 + CP 관리 안내"로 바뀐다.</p>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/dashboard</span></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand"><span class="sq">P</span> Playtoon</div>
+        <div class="cpbadge" style="position:relative"><span class="ci">노</span><div><div class="ct">스튜디오 노을</div><div class="cs">소속 CP · CP-001</div></div></div>
+        <div class="grp">작가</div>
+        <nav class="nav">
+          <a class="on" href="#"><span class="ic">▥</span> 대시보드</a>
+          <a href="#"><span class="ic">₩</span> 회차·가격 제안</a>
+          <a href="#"><span class="ic">▤</span> 내 작품·매출</a>
+        </nav>
+        <div class="grp">팀장 (위임)</div>
+        <nav class="nav"><a class="lav" href="#"><span class="ic">◆</span> 위임 관리</a></nav>
+        <div class="grp">계정</div>
+        <nav class="nav"><a href="#"><span class="ic">◐</span> 내 정보</a></nav>
+        <div class="me"><span class="av">소</span><div><div class="nm">소이 작가</div><div class="rl">CP author · 노을</div></div></div>
+      </aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb"><b>대시보드</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">소</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>안녕하세요, 소이 작가님</h2></div><div class="sub">2026년 6월 23일 · 스튜디오 노을 소속</div></div>
+
+          <div class="banner cpbn" style="position:relative"><span class="pin c" style="left:-12px;top:-10px">1</span>
+            <span class="i">▣</span>
+            <div class="t"><b>스튜디오 노을 소속 작가입니다.</b> 작품 제작·검수 제출·가격 제안은 직접 하시면 됩니다. <b>정산 수령·계약·계좌</b>는 소속 CP가 관리하므로, 이 화면에서는 매출을 조회만 할 수 있습니다.</div>
+          </div>
+
+          <div class="kpis">
+            <div class="kpi"><div class="lab">내 작품</div><div class="val num">4<small> 작품</small></div><div class="meta">연재 3 · 완결 1</div></div>
+            <div class="kpi"><div class="lab">이번 달 조회</div><div class="val num">512,600</div><div class="meta">전월 대비 +9%</div></div>
+            <div class="kpi accent" style="position:relative"><span class="pin c" style="right:-10px;top:-10px;left:auto">2</span><span class="roTag">조회 전용</span><div class="lab">이번 달 매출 (GMV)</div><div class="val num">₩6,600,000</div><div class="meta">정산은 소속 CP가 관리</div></div>
+            <div class="kpi"><div class="lab">검수 대기</div><div class="val num">1<small> 건</small></div><div class="meta">한낮의 라디오 Ep.12</div></div>
+          </div>
+
+          <div class="attn" style="position:relative"><span class="pin b" style="left:-12px;top:14px">3</span>
+            <div class="ah">확인이 필요해요 <span class="c">2</span></div>
+            <div class="arow"><span class="dot" style="background:var(--danger)"></span><div class="tx"><b>검수 반려</b> — 〈한낮의 라디오〉 Ep.12 · 사유: 해상도 미달</div><span class="sp"></span><button class="btn ghost sm">확인</button></div>
+            <div class="arow"><span class="dot" style="background:var(--ok)"></span><div class="tx"><b>가격 확정</b> — 〈겨울 도서관〉 Ep.08 제안 400PT → 확정 350PT</div><span class="sp"></span><button class="btn ghost sm">보기</button></div>
+          </div>
+
+          <div class="dash">
+            <div class="panel" style="margin-bottom:0;position:relative"><span class="pin b" style="left:-12px;top:14px">4</span>
+              <div class="ph"><h3>내 작품 현황</h3><span class="sp"></span><span class="hint">최근 갱신 09:12</span></div>
+              <div class="pb"><table class="t">
+                <thead><tr><th>작품</th><th>상태</th><th>최근 회차</th><th class="num">누적 조회</th><th>검수</th></tr></thead>
+                <tbody>
+                  <tr><td class="wk">한낮의 라디오</td><td><span class="chip info">연재중</span></td><td>Ep.12</td><td class="num">248,300</td><td><span class="chip warn">반려 1</span></td></tr>
+                  <tr><td class="wk">겨울 도서관</td><td><span class="chip info">연재중</span></td><td>Ep.08</td><td class="num">164,900</td><td><span class="chip ok">통과</span></td></tr>
+                  <tr><td class="wk">밤의 정원</td><td><span class="chip info">연재중</span></td><td>Ep.05</td><td class="num">62,100</td><td><span class="chip ok">통과</span></td></tr>
+                  <tr><td class="wk">첫 차</td><td><span class="chip wait">완결</span></td><td>Ep.20</td><td class="num">37,300</td><td><span class="chip ok">정산 완료(CP)</span></td></tr>
+                </tbody>
+              </table></div>
+            </div>
+            <div class="panel cpinfo" style="margin-bottom:0;position:relative"><span class="pin c" style="right:14px;top:-10px;left:auto">5</span>
+              <div class="ph"><h3>정산·계약 안내</h3></div>
+              <div class="row"><span class="k">수익 수령자</span><span class="v">스튜디오 노을 (CP)</span></div>
+              <div class="row"><span class="k">정산 관리</span><span class="v">소속 CP · 정산 담당</span></div>
+              <div class="row"><span class="k">내 계약</span><span class="v">회사 관리 · 조회 불가</span></div>
+              <div class="foot">정산 명세·계약 조건·지급일은 소속 CP가 관리합니다. 문의는 회사 정산 담당(한지 회계)에게 해주세요.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec"><div class="sh"><h3>스펙 시트 — CA1</h3><span class="tag">CP 소속 · 제작권 동일 · 정산은 CP</span></div>
+    <div class="anns">
+      <div class="ann"><div class="n c">1</div><div class="body"><h4>소속 CP 표시 + 경계 배너</h4>
+        <p>사이드바 상단 <b>소속 CP 배지</b>(회사명·CP-ID)와 본문 배너로 "나는 CP 소속 작가"임을 항상 표시. 배너가 무엇을 <b>할 수 있고(제작·검수·제안)</b> 무엇이 <b>회사 몫인지(정산·계약·계좌)</b>를 한 문장으로 정리.</p>
+        <div class="meta"><span class="m">배지 --cp-wash / --cp-line</span><span class="m">회사 아바타 다크 그라데이션</span></div>
+        <div class="ex"><b>확정 카피</b> — "스튜디오 노을 소속 작가입니다. 작품 제작·검수 제출·가격 제안은 직접 하시면 됩니다. 정산 수령·계약·계좌는 소속 CP가 관리하므로, 이 화면에서는 매출을 조회만 할 수 있습니다."</div></div></div>
+      <div class="ann"><div class="n b">2</div><div class="body"><h4>매출 KPI = 조회 전용 (개인 author와 차이)</h4>
+        <p>개인 author A1은 "정산 예정액"(수령 대상)이지만, CP author는 <b>"이번 달 매출(GMV)"</b> + <b>조회 전용</b> 태그. 금액은 보되 수령은 회사 몫. 라벨을 "정산"이 아니라 "매출"로 써서 오인을 막음.</p>
+        <div class="meta"><span class="m">우상단 roTag 조회전용</span><span class="m">라벨=매출(GMV)</span><span class="m">meta "정산은 CP 관리"</span></div>
+        <div class="ex"><b>대비</b> — 개인 author A1: 정산 예정액 ₩2,840,000(직접 수령). CP author CA1: 이번 달 매출 ₩6,600,000(조회만, 수령자=CP).</div></div></div>
+      <div class="ann"><div class="n b">3</div><div class="body"><h4>확인이 필요해요 (개인 author와 동일)</h4>
+        <p>검수 반려·가격 확정 알림은 제작 활동이라 개인 author A1과 동일하게 노출. 제작 권한이 같으므로 이 영역은 공유.</p>
+        <div class="ex"><b>예문</b> — 검수 반려: "〈한낮의 라디오〉 Ep.12 · 사유: 해상도 미달" [확인]. 가격 확정: "〈겨울 도서관〉 Ep.08 제안 400PT → 확정 350PT" [보기].</div></div></div>
+      <div class="ann"><div class="n b">4</div><div class="body"><h4>내 작품 현황</h4>
+        <p>본인 작품만(회사 전체 아님 — 그건 CP master P1). 완결 작품의 검수 칩은 "정산 완료(CP)"로, 정산 주체가 회사임을 칩 안에서도 환기.</p>
+        <div class="meta"><span class="m">본인 작품 한정</span><span class="m">완결=정산완료(CP)</span></div></div></div>
+      <div class="ann"><div class="n c">5</div><div class="body"><h4>정산·계약 안내 패널 (A3 대체)</h4>
+        <p>개인 author는 이 자리에 "정산 수령·팀 배분"이 오지만, CP author는 <b>수익 수령자=CP / 계약=회사 관리·조회 불가</b> 안내가 온다. 정산 화면을 주지 않는 대신 "회사가 관리한다"를 명확히. 하단에 문의처(회사 정산 담당) 안내.</p>
+        <div class="meta"><span class="m">수령자=CP 고정</span><span class="m">계약 조회 불가</span><span class="m">--cp-wash foot</span></div>
+        <div class="ex"><b>권한 근거</b> — CP author: 회사 소속 작품 정산 조회 ×, 계좌 변경 ×, 작가 초대 ×. 가능: 프로젝트 생성·편집 ●, 본인 검수 제출 ●, 위임 발급 ●(본인 팀).</div></div></div>
+    </div>
+  </div>
+  <div class="states">
+    <div class="st"><div class="sl">매출 KPI — 조회 전용</div><div class="sbody"><div style="font-size:22px;font-weight:800;color:var(--brand)" class="num">₩6,600,000</div><small>수령 버튼 없음 · 수령자=CP</small></div></div>
+    <div class="st"><div class="sl">정산 메뉴 — 없음</div><div class="sbody"><small>개인 author의 "정산 내역(A3)" 메뉴가 CP author 사이드바엔 <b style="color:var(--ink-2)">없음</b>. 대신 "내 작품·매출(조회)".</small></div></div>
+    <div class="st"><div class="sl">위임 — 가능(본인 팀)</div><div class="sbody"><small>CP author도 본인 팀에 위임 발급 가능(D2·D3 동일). 단 회사 전체 위임은 CP master만.</small></div></div>
+    <div class="st"><div class="sl">빈 상태 — 작품 없음</div><div class="sbody" style="text-align:center"><small style="font-weight:700;color:var(--ink-2)">아직 배정된 작품이 없습니다</small><small>소속 CP가 작품을 배정하면 표시됩니다.</small></div></div>
+  </div>
+  <div class="resp"><h4>📐 반응형</h4><ul><li><b>≥1080px</b> KPI 4열 · 본문 2열(작품 1.6 : 정산안내 1)</li><li><b>640–1080px</b> KPI 2열 · 본문 1열 · 소속 배지 상단 바로</li><li><b>&lt;640px</b> KPI 1열 · 테이블 가로 스크롤 · 배너 전체폭</li></ul></div>
+</section>
+
+<!-- =================== CA2 =================== -->
+<section class="view" id="v-ca2">
+  <div class="screen-head"><span class="id">CA2</span><h1>내 작품 · 매출</h1>
+    <span class="role">CP author</span><span class="cpaff">▣ 스튜디오 노을 소속</span>
+    <p>본인 작품의 <b>매출을 조회</b>하는 화면. 정산 수령·계약은 회사 몫이라 여기엔 수령·정산 액션이 없다. V2.1에서 명확히 하기로 한 <b>author / uploader / 수익 수령자(payout)</b> 분리를 시각적으로 드러낸다.</p>
+  </div>
+  <div class="frame">
+    <div class="browser"><div class="dots"><i></i><i></i><i></i></div><span class="url">admin.dev.platform.playtoon.studio/me/works</span></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand"><span class="sq">P</span> Playtoon</div>
+        <div class="cpbadge"><span class="ci">노</span><div><div class="ct">스튜디오 노을</div><div class="cs">소속 CP · CP-001</div></div></div>
+        <div class="grp">작가</div>
+        <nav class="nav"><a href="#"><span class="ic">▥</span> 대시보드</a><a href="#"><span class="ic">₩</span> 회차·가격 제안</a><a class="on" href="#"><span class="ic">▤</span> 내 작품·매출</a></nav>
+        <div class="grp">팀장 (위임)</div><nav class="nav"><a class="lav" href="#"><span class="ic">◆</span> 위임 관리</a></nav>
+        <div class="grp">계정</div><nav class="nav"><a href="#"><span class="ic">◐</span> 내 정보</a></nav>
+        <div class="me"><span class="av">소</span><div><div class="nm">소이 작가</div><div class="rl">CP author · 노을</div></div></div>
+      </aside>
+      <div class="main">
+        <div class="topbar"><span class="crumb">작가 · <b>내 작품·매출</b></span><span class="sp"></span><div class="bell">🔔</div><div class="av">소</div></div>
+        <div class="content">
+          <div class="phead"><div class="row"><h2>내 작품 · 매출</h2><span class="sp"></span><span class="wsel">기간: 2026년 5월 <span class="cv">▾</span></span></div></div>
+
+          <div class="banner info" style="position:relative"><span class="pin b" style="left:-12px;top:-10px">1</span>
+            <span class="i">i</span>
+            <div class="t"><b>매출은 조회 전용입니다.</b> 표시되는 금액은 작품 성과(GMV) 참고용이며, 실제 정산 수령·계약은 소속 CP(스튜디오 노을)가 관리합니다. 이 화면에는 수령·정산 액션이 없습니다.</div>
+          </div>
+
+          <div class="kpis">
+            <div class="kpi accent"><div class="lab">이번 달 매출 (GMV)</div><div class="val num">₩6,600,000</div><div class="meta">전월 대비 +9%</div></div>
+            <div class="kpi"><div class="lab">누적 매출</div><div class="val num">₩42,000,000</div><div class="meta">2026년 누계</div></div>
+            <div class="kpi cpk" style="position:relative"><span class="pin c" style="right:-10px;top:-10px;left:auto">2</span><div class="lab">▣ 수익 수령자</div><div class="val">스튜디오 노을</div><div class="meta">CP-001 · 회사 정산</div></div>
+            <div class="kpi"><div class="lab">진행 계약</div><div class="val num">4<small> 건</small></div><div class="meta">회사 관리 · 조회 불가</div></div>
+          </div>
+
+          <div class="panel" style="position:relative"><span class="pin b" style="left:-12px;top:14px">3</span>
+            <div class="ph"><h3>작품별 매출</h3><span class="hint">GMV · 조회 전용</span></div>
+            <div class="pb"><table class="t">
+              <thead><tr><th>작품</th><th class="num">참여 회차</th><th class="num">누적 조회</th><th class="num">이번 달 매출(GMV)</th><th>정산 방식</th><th>수익 수령자</th></tr></thead>
+              <tbody>
+                <tr><td class="wk">한낮의 라디오</td><td class="num">12</td><td class="num">248,300</td><td class="num">₩2,980,000</td><td><span class="chip rs">RS</span></td><td><span class="chip cpc">스튜디오 노을</span></td></tr>
+                <tr><td class="wk">겨울 도서관</td><td class="num">8</td><td class="num">164,900</td><td class="num">₩2,240,000</td><td><span class="chip mg">MG</span></td><td><span class="chip cpc">스튜디오 노을</span></td></tr>
+                <tr><td class="wk">밤의 정원</td><td class="num">5</td><td class="num">62,100</td><td class="num">₩980,000</td><td><span class="chip rs">RS</span></td><td><span class="chip cpc">스튜디오 노을</span></td></tr>
+                <tr><td class="wk">첫 차 (완결)</td><td class="num">20</td><td class="num">37,300</td><td class="num">₩400,000</td><td><span class="chip rs">RS</span></td><td><span class="chip cpc">스튜디오 노을</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+
+          <div class="panel" style="position:relative"><span class="pin c" style="left:-12px;top:14px">4</span>
+            <div class="ph"><h3>회차 발행 — author · uploader · 수익 수령자</h3><span class="hint">한낮의 라디오 Ep.12 예시</span></div>
+            <div class="sep">
+              <div class="sepcard"><div class="lab">Author (작가)</div><div class="nm">소이 작가</div><div class="ds">작품의 창작 주체. 외부(독자)에 표기되는 이름.</div></div>
+              <div class="sepcard"><div class="lab">Uploader (업로더)</div><div class="nm">소이 작가</div><div class="ds">실제 회차를 올린 계정. 팀원이 대리 업로드 시 팀원으로 기록(감사 로그).</div></div>
+              <div class="sepcard payout"><div class="lab">Payout (수익 수령자)</div><div class="nm">스튜디오 노을</div><div class="ds">정산금이 실제로 입금되는 주체. CP author는 회사가 수령.</div></div>
+            </div>
+            <div class="sepnote">셋은 다를 수 있습니다. 예: author=소이 작가, uploader=팀원(대리), 수익 수령자=스튜디오 노을. 독자에게는 author만 노출되고, uploader는 감사 로그, payout은 정산 시스템에서만 쓰입니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec"><div class="sh"><h3>스펙 시트 — CA2</h3><span class="tag">매출 조회 · payout=CP · 3주체 분리</span></div>
+    <div class="anns">
+      <div class="ann"><div class="n b">1</div><div class="body"><h4>매출 조회-전용 배너</h4>
+        <p>"이건 정산 화면이 아니라 <b>매출 참고</b> 화면"임을 못박는다. 작가가 수령 버튼을 찾다 헤매지 않도록. 금액은 작품 성과(GMV) 참고용임을 명시.</p>
+        <div class="ex"><b>확정 카피</b> — "매출은 조회 전용입니다. 표시되는 금액은 작품 성과(GMV) 참고용이며, 실제 정산 수령·계약은 소속 CP(스튜디오 노을)가 관리합니다. 이 화면에는 수령·정산 액션이 없습니다."</div></div></div>
+      <div class="ann"><div class="n c">2</div><div class="body"><h4>수익 수령자 KPI = CP 고정</h4>
+        <p>4번째 KPI를 금액이 아니라 <b>수익 수령자(회사명)</b>로. payout_recipient가 본인이 아니라 회사임을 KPI 자리에서 선언. CP 톤(다크 중립) 카드로 구분.</p>
+        <div class="meta"><span class="m">--cp-wash 카드</span><span class="m">값=회사명</span><span class="m">payout_recipient=cp_id</span></div></div></div>
+      <div class="ann"><div class="n b">3</div><div class="body"><h4>작품별 매출 테이블</h4>
+        <p>참여 회차·조회·이번 달 매출·정산 방식(RS/MG)·수익 수령자. 모든 행의 수익 수령자가 회사 칩으로 동일하게 찍혀 "내 작품이지만 정산은 회사로"가 반복 확인됨. 수령·편집 버튼 없음.</p>
+        <div class="meta"><span class="m">RS 파랑 / MG Lavender</span><span class="m">수령자 칩 --cp</span><span class="m">read-only</span></div></div></div>
+      <div class="ann"><div class="n c">4</div><div class="body"><h4>author / uploader / payout 분리 (V2.1 핵심)</h4>
+        <p>한 회차가 발행될 때 세 주체가 다를 수 있다는 정책을 카드 3장으로 시각화. 독자엔 author만, uploader는 감사 로그, payout은 정산 시스템. 수익 수령자 카드만 CP 톤으로 강조.</p>
+        <div class="meta"><span class="m">3카드 그리드</span><span class="m">payout 카드 --cp-wash</span></div>
+        <div class="ex"><b>예문</b> — 〈한낮의 라디오〉 Ep.12: author=소이 작가 / uploader=소이 작가(팀원 대리 시 팀원) / 수익 수령자=스튜디오 노을. 시나리오 3 정합 — 발행 author는 작가, payout은 CP.</div></div></div>
+    </div>
+  </div>
+  <div class="states">
+    <div class="st"><div class="sl">수익 수령자 — CP 고정</div><div class="sbody"><span class="chip cpc">스튜디오 노을</span><small>모든 작품 동일. 작가 변경 불가.</small></div></div>
+    <div class="st"><div class="sl">정산 방식 — RS / MG</div><div class="sbody"><div style="display:flex;gap:6px"><span class="chip rs">RS</span><span class="chip mg">MG</span></div><small>방식은 회사 계약. 작가는 조회만.</small></div></div>
+    <div class="st"><div class="sl">uploader — 대리 시</div><div class="sbody"><small>팀원이 위임으로 대리 업로드하면 uploader=팀원 기록(감사 로그). author·payout은 불변.</small></div></div>
+    <div class="st"><div class="sl">빈 상태 — 매출 없음</div><div class="sbody" style="text-align:center"><small style="font-weight:700;color:var(--ink-2)">이 기간에 매출이 없습니다</small><small>다른 기간을 선택해 보세요.</small></div></div>
+  </div>
+  <div class="resp"><h4>📐 반응형</h4><ul><li><b>≥1080px</b> KPI 4열 · 매출 테이블 · 3주체 카드 3열</li><li><b>640–1080px</b> KPI 2열 · 테이블 가로 스크롤 · 3주체 1열</li><li><b>&lt;640px</b> KPI 1열 · 테이블 카드형 · 3주체 stacked(payout 강조 유지)</li></ul></div>
+</section>
+
+<div class="foot">
+  <b>Playtoon Admin · 풀 비주얼 시안 V1.0</b> — 외부 파트너 어드민 · 디자인 시스템 V1.1 · 2026.06.23<br>
+  CA1 CP author 대시보드(소속 CP 표시 · 제작권=개인 author 동일 · 매출 조회 전용) · CA2 내 작품·매출(payout=CP 고정 · author/uploader/payout 3주체 분리)<br>
+  CP author 권한 정합 — 가능: 프로젝트 생성·편집 ● / 본인 검수 제출 ● / 가격 제안 ● / 위임 발급 ●(본인 팀) · 불가: 회사 정산·매출 전체 조회 × / 작가 초대 × / 계좌 변경 × / 파트너 어드민(회사 관리) ×<br>
+  앞 시안(M1·D2·A2·M2·D3·A1·A3·D1·P1·P2)과 동일 토큰·컴포넌트 · 가격 제안은 A2 공통 사용 · 남은 후보 — 작가 정보(공통 계정) · 운영자 18화면
+</div>
+
+</div>
+<script>
+const tabs=[...document.querySelectorAll('.tabs button')];
+const views={ca1:document.getElementById('v-ca1'),ca2:document.getElementById('v-ca2')};
+tabs.forEach(b=>b.addEventListener('click',()=>{tabs.forEach(x=>x.classList.remove('on'));b.classList.add('on');Object.values(views).forEach(v=>v.classList.remove('on'));views[b.dataset.v].classList.add('on');window.scrollTo({top:0,behavior:'smooth'});}));
+const at=document.getElementById('annToggle');
+at.addEventListener('click',()=>{at.classList.toggle('on');document.body.classList.toggle('no-ann',!at.classList.contains('on'));});
+</script>
+<script>/*deeplink*/(function(){try{var p=new URLSearchParams(location.search).get("screen");if(p){var b=document.querySelector('.tabs button[data-v="'+p+'"]');if(b)b.click();}}catch(e){}})();</script>
+</body>
+</html>
